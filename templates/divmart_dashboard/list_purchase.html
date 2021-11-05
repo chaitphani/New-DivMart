@@ -93,13 +93,14 @@
                         <td>{{ val.ref_no }}</td>
                         <td>{{ val.business_location }}</td>
                         <td>{{ val.supplier.first_name }}</td>
-                        <td>₹ {{ val.grand_total }}</td>
-                        <td>
+                        <td>&#8377; <span class="grand_total">{{ val.grand_total|floatformat:2 }}</span></td>
+                        <td>&#8377; <span class="due">
                             {% for v in pay_obj %}
                             {% if v.id == val.payment_info.id %}
-                            ₹ -{{ v.payment_due }}
+                            -{{ v.payment_due|floatformat:2 }}
                             {% endif %}
                             {% endfor %}
+                        </span>
                         </td>
                         <td>
                             <div class="btn-group">
@@ -124,6 +125,11 @@
                     </tr>
                     {% endfor %}
                 </tbody>
+                    <tr id="tfoot">
+                        <th colspan="4">Total</th>
+                        <td>&#8377; <span id="grand_total_sum"></span></td>
+                        <td>&#8377; <span id="due_total"></span></td>
+                    </tr>
             </table>
         </div>
     </div>
@@ -316,7 +322,6 @@
             </div>
         </div>
     </div>
-
 </div>
 <!-- view purchase modal end here -->
 <!-- payment status start here  -->
@@ -731,5 +736,24 @@
         setTimeout(function () { newWin.close(); }, 10);
     }
 </script>
+<script>
+    $(function() {
+        var TotalValue = 0;
+        $(".grand_total").each(function(index,value){
+        currentRow = parseFloat($(this).text());
+        TotalValue += currentRow
+        });
+        document.getElementById('grand_total_sum').innerHTML = parseFloat(TotalValue).toFixed(2);
+    });
 
+    $(function() {
+        var TotalValue = 0;
+        $(".due").each(function(index,value){
+            console.log('----index, ,value', index, value)
+        currentRow = parseFloat($(this).text());
+        TotalValue += currentRow
+        });
+        document.getElementById('due_total').innerHTML = parseFloat(TotalValue).toFixed(2);
+    });
+</script>
 {%endblock%}

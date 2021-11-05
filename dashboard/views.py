@@ -1286,18 +1286,12 @@ def list_products(request):
     sub_cat = SubCategory.objects.filter(status=True)
     locations = BusinessLocation.objects.filter(status=True)
 
-    prod_search = ''
     if request.method == 'POST':
         try:
             prod_unit = request.POST.get('prod_unit', 'None')
             prod_tax = request.POST.get('prod_tax', 'None')
             prod_brand = request.POST.get('prod_brand', 'None')
             business_location = request.POST.get('business_location', 'None')
-
-            print('---produnit---', prod_unit, type(prod_unit))
-            print('---prod tax---', prod_tax)
-            print('---prod brnad---', prod_brand)
-            print('---busines location---', business_location)
 
             if business_location != 'none' and prod_brand != 'none' and prod_unit != 'none' and prod_tax != 'none':
                 prod_search = Product.objects.filter(Q(business_location__name=business_location) & Q(brand__brand_name__icontains=prod_brand) & Q(unit__name__icontains=prod_unit) & Q(selling_price_tax_type__icontains=prod_tax)).filter(status=True)

@@ -1,0 +1,153 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<style>
+    .bg-primaryk{
+        background-color:#eee
+        }
+</style>
+<div class="container-fluid">
+    <h5>Manage your units</h5>
+
+    <div class="section card p-3" style="border-top:3px solid green">
+        <div class="row">
+            <div class="col-lg-12">
+                <p>All Your Units
+                    <span class="float-right">
+                        <a class="btn btn-primary btn-sm mb-2" href="#" data-toggle="modal" data-target="#xampleModal"> <i
+                         class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp; Add </a>
+                    </span>
+                </p>
+            </div>
+        </div>
+        {% if messages %}
+            <ul class="messages list-unstyled">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }} font-weight-bold p-2 m-0 text-center"{% endif %}>
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="overflow-auto">
+        <table class="table table-sm" id="variation">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Short Name</th>
+                    <th>Allow Decimal</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in units_list %}
+                <tr>
+                    <td>{{ u.name }}</td>
+                    <td>{{ u.short_name }}</td>
+                    <td>{% if u.allow_decimal == 'N' %}No{% else %}Yes{% endif %}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                Action
+                            </button>
+                            <div class="dropdown-menu bg-primary">
+                                <a href="{% url 'edit-units' u.id %}" class="dropdown-item">
+                                    <i class="fa fa-pencil"></i>&nbsp; Edit
+                                </a>
+                                <a href="{% url 'unit-delete' u.id %}" class="dropdown-item del_btn">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="xampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content p-2">
+                <div class="modal-header bg-primaryk">
+                    <p class="modal-title" id="exampleModalLabel">Add Unit</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label>Name:*</label>
+                            <input type="text" class="form-control" name="name" placeholder="name" required>
+                        </div>
+                        <div class="form-group row">
+                            <label>Short Name:*</label>
+                            <input type="text" class="form-control" name="short_name" placeholder="short name" required>
+                        </div>
+                        <div class="form-group row">
+                            <label>Allow Decimal:*</label>
+                            <select class="form-control" name="allow_decimal" required='required'>
+                                <option value="">Please select</option>
+                                <option value="Y">Yes</option>
+                                <option value="N">No</option>
+                            </select>
+                        </div>
+                        <input type="submit" class="btn btn-primary w-100 mt-3 mb-4" value="Save">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const edit = document.querySelectorAll(".uedit");
+    console.log(edit);
+    edit.forEach(pd => {
+        console.log(pd);
+        pd.addEventListener("click", () => {
+            let unit_id = pd.getAttribute("id");
+            console.log(unit_id);
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = "json";
+            xhr.open('GET', `/api/v1/units/${unit_id}`);
+            xhr.onload = () => {
+                const unit_inf = xhr.response;
+                console.log(unit_inf)
+                const un_name = document.getElementById("uname");
+                un_name.value = unit_inf.name
+                const s_name = document.getElementById("usn");
+                s_name.value = unit_inf.short_name
+                const all_decimal = document.getElementById("uad");
+                all_decimal.value = unit_inf.allow_decimal
+                const u_id = document.getElementById("uid");
+                u_id.value = unit_inf.id
+            }
+            xhr.send();
+        });
+    });
+</script>
+
+
+{%endblock%} {% block alljs %}
+<script>
+    $(document).ready(function () {
+        $('#variation').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+<script>
+    $('.del_btn').click(function(e){
+        e.preventDefault();
+        var action = confirm('Are you sure to remove..?');
+        if (action == false){
+            e.preventDefault();
+        }else{
+            location.reload();
+        }
+    })
+</script>
+{%endblock%}

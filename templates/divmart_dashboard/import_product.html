@@ -1,0 +1,156 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<style>
+    .btn-outline-primary {
+        width: 321px;
+    }
+</style>
+<div class="container">
+    <div class="section card p-3" style="border-top:3px solid green">
+        <h5 class="ml-2 text-center mt-2">Import Products</h5>
+        {% if messages %}
+        <ul class="messages list-unstyled">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }} p-2 font-weight-bold text-center" {% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+                </li>
+                {% endfor %}
+        </ul>
+        {% endif %}
+        <form action="" method="POST" enctype="multipart/form-data" class="p-5 text-center">
+            {%csrf_token %}
+            <div class="form-group">
+                <label for="exampleInputEmail1">File To Import</label><br>
+                <input type="file" name='products' class="btn btn-info" required /><br><br>
+            </div>
+            <input type="submit" value="Import" class="btn btn-primary w-50">
+        </form>
+        <div class="row ml-3 text-center">
+           <div class="col-12">
+           <small class="font-weight-bold"><span class="text-danger"> Note:</span> Please upload a CSV file to import
+                Products data.</small>
+            </div>
+            <!-- <a class="btn btn-success text-white mb-2 ml-2"> <i class="fa fa-download" aria-hidden="true"></i> Download CSV file template</a> -->
+        </div>
+    </div>
+    <div class="section card p-3" style="border-top:3px solid green">
+        <h6>Instruction</h6>
+        <p>Follow the instructions carefully before importing the file.</br>
+        <small>(The columns of the CSV file should be in the following order).</small></p>
+        <div class="overflow-auto">
+        <table class="table table-sm table-striped mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">Column Number</th>
+                    <th scope="col">Column Name</th>
+                    <th scope="col">Instruction</th>
+                </tr>
+            </thead>
+            <tbody class="h6">
+                <tr>
+                    <td>1</td>
+                    <td>Product Name (Required) </td>
+                    <td>Name of the product
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Unit (Required) </td>
+                    <td>Name of the Unit</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Selling price tax type (Required) </td>
+                    <td>E - Exclusive, I - Inclusive</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Product Type (Required) </td>
+                    <td>S - Single, V - variable</td>
+                </tr>
+                <!-- <tr>
+                    <td>5</td>
+                    <td>Brand (Optional) </td>
+                    <td>Name of brand</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Category (Optional) </td>
+                    <td>Name of Category</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Sub Category (Optional) </td>
+                    <td>Name of the Sub Category</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>SKU (Optional) </td>
+                    <td>Unique Id of Product</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Barcode Type (Optional) </td>
+                    <td>Type of the Barcode</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Alert Qunatity (Optional) </td>
+                    <td>Value to Alert the qunatity level</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>Product Description(Optional) </td>
+                    <td>Product description</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>Weight (Optional) </td>
+                    <td>weight of the product</td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>Applicable tax (Optional) </td>
+                    <td>Applicable tax of the product</td>
+                </tr>
+                <tr>
+                    <td>14</td>
+                    <td>Purchase price (Optional) </td>
+                    <td>Purchase price of the product</td>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>Purchase price Excluding tax (Optional) </td>
+                    <td>Purchase price of the product Excluding tax</td>
+                </tr>
+                <tr>
+                    <td>16</td>
+                    <td>Purchase price Including tax (Optional) </td>
+                    <td>Purchase price of the product including tax</td>
+                </tr>
+                <tr>
+                    <td>17</td>
+                    <td>Selling price (Optional) </td>
+                    <td>Selling price of the product</td>
+                </tr>
+                <tr>
+                    <td>18</td>
+                    <td>Selling price excluding tax(Optional) </td>
+                    <td>Selling price of the product excluding tax</td>
+                </tr>
+                <tr>
+                    <td>19</td>
+                    <td>Margin (Optional) </td>
+                    <td>Margin value of the product</td>
+                </tr>
+                <tr>
+                    <td>20</td>
+                    <td>Current stock (Optional) </td>
+                    <td>Current stock value of the product</td>
+                </tr> -->
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

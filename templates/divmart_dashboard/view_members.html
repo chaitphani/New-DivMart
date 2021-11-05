@@ -1,0 +1,123 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<div class="container">
+    <h4>View Member Details</h4>
+    <div class="section card p-3" style="border-top:3px solid green">
+        <div class="d-lg-flex d-md-flex">
+            <h5 class="font-weight-normal">{{obj.fname}} {{obj.lname}}</h5>
+        </div>
+        <div class="d-lg-flex d-md-flex">
+            <p><b>Status:<span class="pl-3">{% if obj.status == 1 %}Active{% else %}Inactive{% endif %}</span></b></p>
+        </div>
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>Email :</label> </div>
+                    <div class="pl-3">{{obj.email}}</div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>Member Amount :</label> </div>
+                    <div class="pl-3">{{obj.member_amount}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>Contact Number :</label> </div>
+                    <div class="pl-3">{{obj.contact}}</div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>Alternate Contact Number:</label> </div>
+                    <div class="pl-3">{{obj.alt_contact}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="d-lg-flex d-md-flex">
+            <h5 class="font-weight-normal">More Information</h5>
+        </div>
+        <hr>
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6">
+                <b>Permanent Address:</b>
+                <p>{{obj.perminent_address}}</p>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <b>Current Address:</b>
+                <p>{{obj.current_address}}</p>
+            </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>ID proof name :</label> </div>
+                    <div class="pl-3">{{obj.id_proof_name}}</div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>ID proof number: </label> </div>
+                    <div class="pl-3">{{obj.id_proof_number}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6">
+                <b>Upload Identity Proof:*</b>
+                <img src="{{obj.identity_proof.url}}" alt="" class="w-25">
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <b>Upload Address Proof:*</b>
+                <!-- <p>file here</p> -->
+                <img src="{{obj.address_proofs.url}}" alt="" class="w-25">
+            </div>
+        </div>
+        <div class="d-lg-flex d-md-flex">
+            <h5 class="font-weight-normal">Bank Details</h5>
+        </div>
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>Account Holder's Name :</label> </div>
+                    <div class="pl-3 text-uppercase">{{obj.account_holder_name}}</div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>Bank Name: </label> </div>
+                    <div class="pl-3 text-uppercase">{{obj.bank_name}}</div>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>Branch Name: </label> </div>
+                    <div class="pl-3 text-uppercase">{{obj.branch_name}}</div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>Account Number:</label> </div>
+                    <div class="pl-3 text-uppercase">{{obj.account_no}}</div>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <div class="col-lg-6 col-md-6">
+                <div class="d-lg-flex d-md-flex">
+                    <div> <label>Bank Identifier(IFSC) Code:</label> </div>
+                    <div class="pl-3 text-uppercase">{{obj.ifsc_code}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock%}

@@ -1,0 +1,25 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+{% load crispy_forms_tags %}
+
+<div class="container-fluid">
+    <h5>Business Locations Update <span class="text-danger">{{loc_obj.name}}</span> at <span
+            class="text-danger">{{loc_obj.location_id}}</span></h5>
+    <div class="section card p-3" style="border-top: 3px solid green;">
+        <form method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+            <input type="submit" class="btn btn-primary w-100" value="Update">
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block alljs %}
+
+<script>
+    $(document).ready(function () {
+        $('#role_table').DataTable();
+        // $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{% endblock %}

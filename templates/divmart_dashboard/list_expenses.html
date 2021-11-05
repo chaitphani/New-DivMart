@@ -1,0 +1,132 @@
+{% extends 'divmart_dashboard/index.html' %} {% load customtags %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h4>Expenses</h4>
+    <div clas="section card accordion p-3" id="accordionExample" style="border-top:3px solid green">
+        <div class="card-header bg-white" id="headingOne">
+            <i class="fas fa-filter accordion text-primary" id="accordionExample" data-toggle="collapse"
+                data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <b class="text-primary">Filters</b>
+            </i>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <div class="col-sm-3 col-md-3 col-lg-3">
+                            <label>Business Location</label>
+                            <select class="form-control" name="location">
+                                <option value="">Please select</option>
+                                {% for loc in locations %}
+                                <option value="{{loc.id}}">{{loc.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!-- <div class="col-sm-3 col-md-3 col-lg-3">
+                        <label>Business For</label>
+                        <select class="form-control" name="business_for">
+                            <option>All</option>
+                        </select>
+                    </div> -->
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <label>Expenses Category</label>
+                            <select class="form-control" name="category">
+                                <option value="">Please select</option>
+                                {% for cat in category %}
+                                <option value="{{cat.id}}">{{cat.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <label>Date Range</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                <input type="datetime-local" class="form-control" name="date"
+                                    placeholder="date range" />
+                            </div>
+                        </div>
+                        <!-- <div class="col-lg-3 col-md-3">
+                        <label>Payment Status</label>
+                        <select class="form-control" name="payment_status">
+                            <option></option>
+                        </select>
+                    </div> -->
+                    </div>
+                    <input type="submit" value="FILTER" class="btn btn-outline-primary w-25 float-right">
+                </form>
+                <!-- <div class="form-group row">
+                <div class="col-lg-3 col-md-3">
+                    <label>Payment Status</label>
+                    <select class="form-control" name="payment_status">
+                        <option></option>
+                    </select>
+                </div>
+            </div> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="section card p-3 table-responsive" style="border-top: 3px solid green;">
+        <h4>All expenses
+            <span class="float-right">
+                <a class="btn btn-primary mb-2" href="{% url 'add_expenses' %}">
+                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Add
+                </a>
+            </span>
+        </h4>
+        <div class="overflow-auto">
+        <table id="list_product_table" class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th class="th-sm">Date</th>
+                    <th class="th-sm">Refrence No</th>
+                    <th class="th-sm">Expense Category</th>
+                    <th class="th-sm">Location</th>
+                    <th class="th-sm">Total Amount</th>
+                    <th class="th-sm">Expense For</th>
+                    <th class="th-sm">Expense Note</th>
+                    <!-- <th class="th-sm">Action</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for v in list_expense %}
+                <tr>
+                    <td>{{ v.expenses_date|date:'d-m-Y H:i:s' }}</td>
+                    <td>{{ v.ref_no }}</td>
+                    <td>{{v.expense_category}}</td>
+                    <td>{{ v.business_location }}</td>
+                    <td>{{ v.total_amount }}</td>
+                    <td>{{ v.expense_for }}</td>
+                    <td>{{ v.expense_note }}</td>
+                    <!-- <td></td> -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+{%endblock%}{% block alljs %}
+
+<script>
+    $(document).ready(function () {
+        $('#list_product_table').dataTable({
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            }
+        });
+    });
+</script>
+
+{%endblock%}

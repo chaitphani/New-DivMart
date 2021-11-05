@@ -1,0 +1,108 @@
+{%extends 'webapp/index.html'%} {%load static%} {% block page %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 section-title pt-5">
+            <h2 class="text-center"><span>Feedback</span></h2>
+        </div>
+
+        <div class="col-12 feedback">
+            <div class="app">
+                <h1> Was we helpful?</h1>
+                <p>Let us know your shopping experience with divmart</p>
+              
+                <div class="container">
+                  <div class="item">
+                    <label for="0">
+                    <input class="radio" type="radio" name="feedback" id="0" value="0">
+                    <span>🤬</span>
+                  </label>
+                  </div>
+              
+                  <div class="item">
+                    <label for="1">
+                    <input class="radio" type="radio" name="feedback" id="1" value="1">
+                    <span>🙁</span>
+                  </label>
+                  </div>
+              
+                  <div class="item">
+                    <label for="2">
+                    <input class="radio" type="radio" name="feedback" id="2" value="2">
+                    <span>😶</span>
+                  </label>
+                  </div>
+              
+                  <div class="item">
+                    <label for="3">
+                    <input class="radio" type="radio" name="feedback" id="3" value="3">
+                    <span>😁</span>
+                  </label>
+                  </div>
+              
+                  <div class="item">
+                    <label for="4">
+                    <input class="radio" type="radio" name="feedback" id="4" value="4">
+                    <span>😍</span>
+                  </label>
+                  </div>
+              
+                </div>
+            </div>
+        </div>
+
+        <style>
+.feedback{
+    margin: 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  font-family: sans-serif;
+}
+.app h1,
+.app p {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.app {
+  width: 90%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.app .container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.app .item {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+.app .radio {
+  display: none;
+}
+.app .radio ~ span {
+  font-size: 3rem;
+  filter: grayscale(100);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.app .radio:checked ~ span {
+  filter: grayscale(0);
+  font-size: 4rem;
+}
+
+        </style>
+    </div>
+</div>
+{%endblock%}

@@ -1,0 +1,117 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Manage your Sub-Categories</h5>
+
+
+<div class="section card p-3" style="border-top:2px solid green">
+    <div class="row">
+        <div class="col-lg-12">
+            <h6>
+                <span class="float-right">
+                    <a class="btn btn-primary btn-sm mb-2" href="#" data-toggle="modal" data-target="#exampleModal"> 
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp; Add 
+                    </a>
+                </span>
+            </h6>
+        </div>
+    </div>
+    {% if messages %}
+        <ul class="messages list-unstyled">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }} font-weight-bold p-2 m-0 text-center"{% endif %}>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="overflow-auto">
+    <table class="table table-sm" id="variation">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in sub_categories %}
+                <tr>
+                    <td>{{ c.name }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'edit-sub-category' c.id %}" class="btn btn-primary btn-sm">
+                                <i class="fa fa-pencil"></i>&nbsp;Edit
+                            </a>
+                            <a href="{% url 'delete-sub-category' c.id %}" class="btn btn-danger btn-sm ml-1">
+                                <i class="fa fa-trash" ></i>&nbsp;Delete
+                            </a>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                Action
+                            </button>
+                            <div class="dropdown-menu bg-primary">
+                                <a href="{% url 'edit-sub-category' c.id %}" class="dropdown-item">
+                                    <i class="fa fa-pencil"></i>&nbsp;Edit
+                                </a>
+                                <a href="{% url 'delete-sub-category' c.id %}" class="dropdown-item del_btn">
+                                    <i class="fa fa-trash" ></i>&nbsp;Delete
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="modal-title" id="exampleModalLabel">Add Sub Category<p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'sub-category' %}">
+                {% csrf_token %}
+                <div class="modal-body ml-2 mr-2">
+                    <div class="form-group row">
+                        <label>Sub Category Name:*</label>
+                        <input type="text" class="form-control" name="name" placeholder="sub category name" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-outline-secondary">Close</button> -->
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{%endblock%} {% block alljs %}
+<script>
+    $(document).ready(function() {
+        $('#variation').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+<script>
+    $('.del_btn').click(function(e){
+        e.preventDefault();
+        var action = confirm('Are you sure to remove..?');
+        if (action == false){
+            e.preventDefault();
+        }else{
+            location.reload();
+        }
+    })
+</script>
+{%endblock%}

@@ -1,0 +1,172 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+<h5>Edit Supplier</h5>
+    <div class="section card p-3" style="border-top:3px solid green">
+        <p>Edit Supplier - <span class="text-danger">{{sup.first_name}}</span></p>
+        <form method="POST" action='' enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col-md-6 col-lg-6">
+                    <label>Name</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        </div>
+                        <input type="text" class="form-control" value="{{ sup.first_name }}" name="first_name"
+                            required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <label>Business Name</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        </div>
+                        <input type="text" value="{{ sup.business_name }}" class="form-control" name="business_name"
+                            required />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6 col-lg-6">
+                    <label>Contact ID</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-address-book-o" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input type="text" value="{{ sup.contact_id }}" class="form-control" name="contact_id"
+                            required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <label>Tax Number</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-info"></i></span>
+                        </div>
+                        <input type="text" value="{{ sup.tax_number }}" class="form-control" name="tax_number" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6 col-lg-6">
+                    <label>Opening Balance</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        </div>
+                        <input type="text"
+                            value="{% if sup.opening_balance %}{{ sup.opening_balance }}{% else %}0{% endif %}"
+                            class="form-control" name="opening_balance" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <label>Pay Term</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <input type="text" value="{% if sup.pay_term %}{{ sup.pay_term }}{% else %}0{% endif %}"
+                                class="form-control" name="pay_term" placeholder="pay term" />
+                            <!-- </span> -->
+                        </div>
+                        <!-- <select class="form-control" name="contact_type">
+                                        <option>month</option>
+                                        <option>day</option>
+                                    </select> -->
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group row">
+                <div class="col-md-3 col-lg-3">
+                    <label>Email</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                        </div>
+                        <input type="email" value="{{ sup.email }}" class="form-control" name="email" required />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <label>Mobile</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-mobile" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input type="number" value="{{ sup.mobile }}" class="form-control" name="mobile" required />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <label>Alt Contact No.</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-mobile"></i></span>
+                        </div>
+                        <input type="number" value="{{ sup.alternative_contact }}" class="form-control"
+                            name="alternative_contact" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <label>Landline</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                        </div>
+                        <input type="text" value="{{ sup.Landline }}" class="form-control" name="Landline" />
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group row">
+                <div class="col-md-3 col-lg-3">
+                    <label>City</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                        </div>
+                        <input type="text" value="{{ sup.city }}" class="form-control" name="city" required />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <label>State</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-map-marker" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input type="text" value="{{ sup.state }}" class="form-control" name="state" required />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <label>Country</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                        </div>
+                        <input type="globe" value="{{ sup.country }}" name="country" class="form-control" name="globe"
+                            required />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <label>Landmark</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                        </div>
+                        <input type="text" value="{{ sup.land_mark }}" name="land_mark" class="form-control"
+                            name="landmark" />
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <!-- <input type="hidden" name="user" value="{{ usr.id }}" /> -->
+            <input type="submit" value="UPDATE SUPPLIER" class="btn btn-primary float-right w-100 mb-4 mt-3" />
+        </form>
+    </div>
+</div>
+
+{%endblock%}{% block alljs %}
+
+{%endblock%}

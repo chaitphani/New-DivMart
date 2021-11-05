@@ -1,0 +1,398 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <h5>Edit Product - <span class="text-danger text-capitalize">{{prod.product_name}}</span></h5>
+        </div>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="section card p-3" style="border-top:3px solid green">
+            <div class="form-group row ">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Product Name*</label>
+                    <input type="text" class="form-control" name="product_name" value="{{ prod.product_name }}" required>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Units*</label>
+                    <div class="input-group mb-3">
+                        <select class="form-control" name="unit">
+                            <option value="">Please Select</option>
+                            {% for u in unit %}
+                                <option value="{{ u.id }}" {% if u.id == prod.unit.id %} selected {% endif %}>{{ u.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="input-group-append bg-white" data-toggle="modal" data-target="#exampleModals"
+                            style="cursor: pointer;">
+                            <!-- <span class="input-group-text" id="basic-addon2"><i class="fas fa-plus-circle text-primary"></i></span> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Brand*</label>
+                    <div class="input-group mb-3">
+                        <select class="form-control" name="brand">
+                            <option value="">Please Select</option>
+                            {% for b in brand %}
+                                <option value="{{ b.id }}" {% if b.id == prod.brand.id %}selected{% endif %}>{{ b.brand_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- <div class="input-group-append bg-white" data-toggle="modal" data-target="#exampleModal" style="cursor: pointer;">
+                            <span class="input-group-text" id="basic-addon2"><i class="fas fa-plus-circle text-primary"></i></span>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row ">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Category</label>
+                    <select class="form-control" name="category">
+                        <option value="">Please select</option>
+                        {% for u in cat %}
+                            <option value="{{ u.id }}" {% if u.id == prod.category.id %}selected{% endif %}>{{ u.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Sub Category</label>
+                    <select class="form-control" name="sub_category">
+                        <option value="">Please select</option>
+                        {% for u in sub_cat %}
+                            <option value="{{ u.id }}" {% if u.id == prod.sub_category.id %}selected{% endif %}>{{ u.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>SKU*</label>
+                    <input type="text" class="form-control" name="SKU" value="{{ prod.SKU }}">
+                </div>
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-4 col-md-4">
+                    <label>Barcode Type</label>
+                    <input type="text" name="barcode_type" class="form-control" value="{{prod.barcode_type}}">
+                    <!-- <select class="mdb-select form-control select2" name="barcode_type" searchable="Search here..">
+                        <option value="">Please Select</option>
+                        <option value="ean13" selected>EAN-13</option>
+                    </select> -->
+                </div>
+                <!-- <div class="col-sm-4 col-md-4 pt-4">
+                    <input type="checkbox"><label class="ml-1">Manage Stock</label> <br>
+                    <small>Enable stock management at product level</small>
+                </div> -->
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Alert Quantity</label>
+                    <input type="text" class="form-control" name="alert_quantity" value="{{ prod.alert_quantity }}">
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Business Location*</label>
+                    <select class="form-control" name="business_location" required>
+                        <option>Select Location</option>
+                        {% for location in locations %}
+                            <option value="{{location.id}}" {% if location.id == prod.business_location.id %}selected{% endif %}>
+                                {{location.name}}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-4 col-md-4">
+                    <label>Product Description</label>
+                    <textarea class="form-control rounded-0" name="Product_description" 
+                        id="exampleFormControlTextarea1" rows="1">{% if prod.Product_description %}{{ prod.Product_description }}{% endif %}
+                    </textarea>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Upload Image</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" readonly>
+                        <span class="input-group-btn">
+                            <span class="btn btn-primary btn-file">
+                                <i class="fa fa-folder-open text-white" aria-hidden="true"></i> Browse… 
+                                <input type="file" name="product_image" id="imgInp">
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Weight</label>
+                    <input type="number" class="form-control" name="weight" value="{% if prod.weight %}{{ prod.weight }}{% else %}0{% endif %}">
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="row card pl-3 ml-2 mr-2 pr-3 pt-3" style="border-top:2px solid green"> -->
+            <!-- <div class="form-group row">
+                <div class="col-lg-12 col-md-12">
+                    <input type="checkbox"><label class="ml-1"> Enable Product description, IMEI or Serial Number</label>
+                </div>
+            </div> -->
+            <!-- <div class="form-group row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Weight</label>
+                    <input type="number" class="form-control" name="weight" value="{{ prod.weight }}">
+                </div>
+            </div> -->
+            <!-- <div class="form-group row">
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Custom Field1</label>
+                    <input type="text" name="custom_field1" vlaue="{{ prod.custom_field1 }}" class="form-control"
+                        placeholder="custom_field1">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Custom Field2</label>
+                    <input type="text" class="form-control" vlaue="{{ prod.custom_field2 }}" name="custom_field2"
+                        placeholder="custom_field2">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Custom Field3</label>
+                    <input type="text" class="form-control" vlaue="{{ prod.custom_field3 }}" name="custom_field3"
+                        placeholder="custom_field3">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Custom Field4</label>
+                    <input type="text" class="form-control" vlaue="{{ prod.custom_field4 }}" name="custom_field4"
+                        placeholder="custom_field4">
+                </div>
+            </div> -->
+        <!-- </div> -->
+        <div class="section card p-3" style="border-top:3px solid green">
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>Applicable Tax</label>
+                    <!-- <input type="number" name="applicable_tax" class="form-control" value="{{prod.applicable_tax}}"> -->
+                    <select id="tax" class="form-control" name="applicable_tax" onchange="pricecal()">
+                        <option value="">Please select</option>
+                        {% for rate in rates %}
+                            <option value="{{rate.id}}" {% if rate.id == prod.applicable_tax.id %}selected{% endif %}>{{rate.name}}-{{rate.rate}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <label>Selling Price Tax Type*</label>
+                    <select class="form-control" name="selling_price_tax_type" required>
+                        <option value="I" {% if prod.selling_price_tax_type == 'I' %} selected {% else %} {% endif %}>Inclusive</option>
+                        <option value="E" {% if prod.selling_price_tax_type == 'E' %} selected {% else %} {% endif %}>Exclusive</option>
+                    </select>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <label>Product Type*</label>
+                    <select class="form-control" name="product_type" required>
+                        <option value="S" {% if prod.product_type == 'S' %} selected {% endif %}>single</option>
+                        <option value="V" {% if prod.product_type == 'V' %} selected {% endif %}>variable</option>
+                    </select>
+                </div>
+            </div>
+            <!-- <div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>Product Type</label>
+                    <select class="form-control" name="product_type">
+                        <option value="S" {% if prod.product_type == 'S' %} selected {% endif %}>single</option>
+                        <option value="V" {% if prod.product_type == 'V' %} selected {% endif %}>variable</option>
+                    </select>
+                </div>
+            </div> -->
+            <div class="row pl-10 pr-10 overflow-auto">
+                <table class="table table-bordered table-sm">
+                    <thead class="bg-secondary">
+                        <tr>
+                            <th scope="col">Default Purchase Price</th>
+                            <th scope="col">x Margin(%)</th>
+                            <th colspan="2" scope="col">Default Selling Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group row">
+                                    <div class="col-md-4 col-sm-4">
+                                        <label>Purchase Price</label>
+                                        <input type="number" id="prod_mrp" name="product purchase price" 
+                                            value="{% if prod.prod_mrp %}{{ prod.prod_mrp }}{% else %}0{% endif %}" class="form-control">
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <label>Exc. tax</label>
+                                        <input type="text" onkeyup="pricecal()" id="base_price"
+                                            name="purchase_price_exc_tax" value="{{ prod.purchase_price_exc_tax }}" class="form-control">
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <label>Inc. tax</label>
+                                        <input type="text" id="inc" name="purchase_price_inc_tax" value="{{ prod.purchase_price_inc_tax }}" class="form-control" readonly>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <label>Margin %</label>
+                                <input type="number" id="margin" name="margin" value="{{prod.margin}}" class="form-control" readonly>
+                            </td>
+                             <td>
+                                <label>MRP</label>
+                                <input type="number" id="MRP" name="same_mrp" value="{{prod.sale_mrp}}" class="form-control" required>
+                            </td>
+                            <td>
+                                <label>Exc. tax</label>
+                                <input type="text" id="selling_price_exc_tax" name="selling_price_exc_tax"
+                                    value="{{ prod.selling_price_exc_tax }}" class="form-control" onkeyup="pricecal()">
+                            </td>
+                        </tr>
+                        <!-- <input type="hidden" id="selling_price_exc_tax" name="selling_price_exc_tax"> -->
+                    </tbody>
+                </table>
+            </div>
+            <input type="submit" class="btn btn-primary mb-3 mt-3" value="UPDATE">
+        </div>
+    </form>
+</div>
+
+<!-- add unit modal start here -->
+<!-- <form name="myForm" method="POST" action="/api/v1/units/" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="modal fade" id="exampleModals" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Unit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pl-10 pr-10" style="padding-left:10%;padding-right:10%">
+                    <div class="form-group row">
+                        <label>Name</label>
+                        <input type="text" class="form-control" placeholder="name" name="name" />
+                    </div>
+                    <div class="form-group row">
+                        <label>Short Name</label>
+                        <input type="text" class="form-control" placeholder="short name" name="short_name" />
+                    </div>
+                    <!-- <div class="form-group row">
+                    <label>Allow Decimal</label>
+                    <select class="form-control">
+                        <option>Please Select</option>
+                    </select>
+                </div> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form> -->
+<!-- add unit modal end here -->
+
+
+<!-- add brand modal start here -->
+<!-- <form name="myForm" method="POST" action="/api/v1/brands/" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Brand</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pl-10 pr-10" style="padding-left:10%;padding-right:10%">
+                    <div class="form-group row">
+                        <label>Brand Name</label>
+                        <input type="text" class="form-control" placeholder="brand name" name="brand_name" />
+                    </div>
+                    <div class="form-group row">
+                        <label>Short Description</label>
+                        <input type="text" class="form-control" placeholder="short description" name="discription" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form> -->
+<!-- add brand modal end here -->
+</div>
+
+{%endblock%} {% block alljs %}
+<script>
+    function pricecal() {
+        let price = document.getElementById("base_price").value;
+        let tax = document.getElementById("tax").value;
+        let sell_aft_margin = document.getElementById("selling_price_exc_tax").value;
+
+        var cal_tax = parseFloat(price) * parseFloat(tax / 100)
+        var inc = parseFloat(price) + parseFloat(cal_tax)
+
+        var cal_margin = (parseFloat(sell_aft_margin) - parseFloat(inc))/parseFloat(inc)
+        var selling_price = parseFloat(cal_margin) * 100
+
+        if (tax.value != '') {
+            if (price.length != '') {
+                document.getElementById("inc").value = inc.toFixed(2)
+                document.getElementById("margin").value = selling_price.toFixed(2);
+            }
+            else {
+                document.getElementById("inc").value = (0).toFixed(2)
+                document.getElementById("margin").value = (0).toFixed(2);
+            }
+        }
+
+        // document.getElementById("selling_price").value = selling_price.toFixed(2);
+    }
+</script>
+
+<!-- <script>
+    $(document).ready(function () {
+        $('.select2').select2();
+    });
+</script> -->
+<script>
+
+    $(document).ready(function () {
+        $(document).on('change', '.btn-file :file', function () {
+            var input = $(this),
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [label]);
+        });
+
+        $('.btn-file :file').on('fileselect', function (event, label) {
+
+            var input = $(this).parents('.input-group').find(':text'),
+                log = label;
+
+            if (input.length) {
+                input.val(log);
+            } else {
+                if (log) alert(log);
+            }
+
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#img-upload').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
+    });
+</script>
+{%endblock%}

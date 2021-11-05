@@ -1,0 +1,218 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5> Add User</h5>
+    <form name="myForm" method="POST" enctype="multipart/form-data">
+        <div class="section card p-3" style="border-top:3px solid green">
+            {% csrf_token %}
+            <input type="hidden" name="_METHOD" value="PUT" />
+            <div class="form-group row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Prefix</label>
+                    <input type="text" class="form-control" name="Prefix" value="{{ usr.Prefix }}"
+                        placeholder="Mr/Mrs/Miss/" />
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>First Name</label>
+                    <input type="text" class="form-control" name="first_name" value="{{ usr.first_name }}"
+                        placeholder="first name" />
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Last Name</label>
+                    <input type="text" class="form-control" name="last_name" value="{{ usr.last_name }}"
+                        placeholder="last name" />
+                </div>
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+
+                    <label>Email</label>
+                    <input type="text" class="form-control" name="email" value="{{ usr.email }}" readonly />
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Business Location*</label>
+                   <select class="form-control" name="business_location" required>
+                       <option>Select Location</option>
+                       {% for location in locations %}
+                            <option value="{{location.id}}" {% if location.id == usr.business_location.id %}selected {% endif %}>
+                                {{location.name}}
+                            </option>
+                       {% endfor %}
+                   </select>
+                </div>
+
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+
+                    <label>Role</label>
+                    <input type="text" class="form-control" value="{{rol.title}}" id="rol" name="role" readonly />
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Username</label>
+
+                    <input type="text" class="form-control" name="username" value="{{ usr.username }}" readonly />
+                    <small>Leave blank to auto generate username
+
+                    </small>
+                </div>
+
+
+            </div>
+            <!-- <div class="form-group row ">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+
+                    <label>Password</label>
+                    <input type="password" class="form-control" name="password1" value= "{{ usr.password }}" placeholder="password">
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+
+                    <label>Confirm Password</label>
+                    <input type="password" class="form-control" name="password2" value= "{{ usr.password }}" placeholder=" confirm password">
+                </div>
+
+            </div> -->
+            <!-- <div class="form-group row ">
+                <div class="col-sm-4 col-md-6 col-lg-4">
+
+                    <label>Sales Commission Percentage(%)&nbsp;<i class="fa fa-info-circle text-success" data-placement="bottom" data-toggle="tooltip" title="Used only if sales Commission Agent Type setting is 'logged in user': or 'select from user list' " aria-hidden="true"></i>
+                    </label>
+                    <input type="text" class="form-control" name="seles_commission_percentage" value= "{{ usr.sales_commision_percentage }}" placeholder="Sales Commission Percentage(%)">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3 pt-4">
+
+                    <input type="checkbox" class="largerCheckbox mt-3" name="chk1" /><label class="ml-2 pt-1">Allow Selected Contacts</label>
+
+                </div>
+                <div class="col-sm-5 col-md-5 col-lg-5">
+
+                    <label>Select Contacts
+                    </label>
+                    <input type="text" class="form-control">
+                </div>
+
+            </div>
+
+            <div class="form-group row ">
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <input type="checkbox" class="largerCheckbox" name="chk2" /><label class="ml-2">Is Active?</label> <i class="fa fa-info-circle text-success" data-placement="bottom" data-toggle="tooltip" title="Check/Uncheck to make a user active/inactive "
+                        aria-hidden="true"></i>
+
+                </div>
+            </div> -->
+
+        </div>
+
+        <div class="section card p-3" style="border-top:3px solid green">
+            <h4>More Information</h4>
+            <!-- <div class="form-group row ">
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Date Of Birth</label>
+                    <input type="date" class="form-control" value="{{ usr.birth_date }}" id=ad_bdy min="1920-01-01"
+                        max="2002-12-31" name="birth_date" placeholder="date of birth" readonly>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Contact Number</label>
+                    <input type="text" class="form-control" name="mobile" value="{{ usr.mobile }}"
+                        placeholder="contact no" read>
+                </div>
+
+            </div> -->
+            <div class="form-group row ">
+
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Guardian Name</label>
+                    <input type="text" class="form-control" name="guardian_name" value="{{ usr.guardian_name }}">
+                </div>
+                <!-- <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Guardian Contact Number</label>
+                    <input type="text" class="form-control" name="contact" value="{{ usr.contact }}">
+                </div> -->
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Upload Id Proof(Front)</label>
+                    <input type="file" class="form-control" name="id_proof_front" value="{{ usr.id_proof_front }}">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Upload Id Proof (Back)</label>
+                    <input type="file" class="form-control" name="id_proof_back" value="{{ usr.id_proof_back }}">
+                </div>
+            </div>
+
+            <div class="form-group row ">
+
+                <div class="col-sm-6 col-md-6 col-lg-6">
+
+                    <label>Permanent Address</label>
+                    <textarea class="form-control" name="permanent_address" value="{{ usr.permanent_address }}"
+                        rows="3">{{ usr.permanent_address }}</textarea>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+
+                    <label>Current Address</label>
+                    <textarea class="form-control" name="current_address" value="{{ usr.current_address }}"
+                        rows="3">{{ usr.current_address }}</textarea>
+                </div>
+            </div>
+            <hr>
+            <h4>Bank Details</h4>
+
+            <div class="form-group row ">
+
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Account Holder's name</label>
+                    <input type="text" class="form-control" name="account_holder_name"
+                        value="{{ usr.account_holder_name }}">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Account Number</label>
+                    <input type="text" class="form-control" name="account_no" value="{{ usr.account_number }}">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Bank Name</label>
+                    <input type="text" class="form-control" name="bank_name" value="{{ usr.bank_name }}">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Bank Identifier Code&nbsp; <i class="fa fa-info-circle text-success" data-placement="bottom"
+                            data-toggle="tooltip"
+                            title="A unique code to identify the bank in your country, For example IFSC code"
+                            aria-hidden="true"></i> </label>
+                    <input type="text" class="form-control" name="bank_identifier_code"
+                        value="{{ usr.bank_identifier_code }}">
+                </div>
+            </div>
+
+            <div class="form-group row ">
+
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Branch</label>
+                    <input type="text" class="form-control" name="branch" value="{{ usr.branch }}">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+
+                    <label>Tax Payer ID</label>
+                    <input type="text" class="form-control" name="tax_payer_id" value="{{ usr.tax_payer_id }}">
+                </div>
+                <input type="hidden" name="user" value="{{ usr.id }}" />
+            </div>
+            <button type="submit" class="btn btn-info nav-btn text-white f-25 nav-btn"
+                style="padding-top:2px">SUBMIT</button>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{%endblock%}

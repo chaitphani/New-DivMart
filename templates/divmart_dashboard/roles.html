@@ -1,0 +1,78 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h5>All Roles
+                <span class="float-right">
+                    <a class="btn btn-primary btn-sm mb-2" href="{% url 'add_role' %}"> 
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp; Add 
+                    </a>
+                </span>
+            </h5>
+        </div>
+    </div>
+
+    <div class="section card p-3" style="border-top:3px solid green">
+        {% if messages %}
+        <ul class="messages list-unstyled">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }} font-weight-bold text-center p-2" {% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="overflow-auto">
+        <table class="table table-sm" id="role_table">
+            <thead>
+                <tr>
+                    <th>Roles</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for role in main_role %}
+                <tr>
+                    <td>{{ role.title }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                Action
+                            </button>
+                            <div class="dropdown-menu bg-primary">
+                                <a href="{% url 'edit_role' role.id %}" class="dropdown-item">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;Edit
+                                </a>
+                                <a href="{% url 'role_deletion' role.id %}" class="dropdown-item del_btn">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+{%endblock%}{% block alljs %}
+<script>
+    $(document).ready(function () {
+        $('#role_table').DataTable();
+        // $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+<script>
+    $('.del_btn').click(function(e){
+        e.preventDefault();
+        var action = confirm('Are you sure to remove..?');
+        if (action == false){
+            e.preventDefault();
+        }else{location.reload();}
+    })
+</script>
+{%endblock%}

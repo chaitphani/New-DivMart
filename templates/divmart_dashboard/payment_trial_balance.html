@@ -1,0 +1,168 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<style>
+    .table-nostriped tbody tr:nth-of-type(odd) {
+        background-color: transparent;
+    }
+
+    .br-right {
+        border-right: 1px solid black;
+    }
+</style>
+<div class="container-fluid">
+    <h4>Payment Trial Balance</h4>
+    <div class="section card p-3 overflow-auto" style="border-top: 3px solid green;">
+        <table class="table table-sm no-border">
+            <thead>
+                <tr class="bg-secondary">
+                    <th>Trial Balance</th>
+                    <th>Credit</th>
+                    <th>Debit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>Supplier Due:</th>
+                                    <!-- <td>
+                                        <!-- <input type="hidden" id="hidden_supplier_due" class="liability" value="0.00"> 
+                                        <span class="remote-data" id="supplier_due">₹ {% if sdue %}{{sdue|floatformat:2}}{% else %}0.00{% endif %}</span>
+                                    </td> -->
+                                </tr>
+                                <tr>
+                                    <th>Customer Due:</th>
+                                    <!-- <td>
+                                        <!-- <input type="hidden" id="hidden_supplier_due" class="liability" value="0.00">
+                                        <span class="remote-data" id="supplier_due">₹ {% if pdue %}{{pdue|floatformat:2}}{% else %}0.00{% endif %}</span>
+                                    </td> -->
+                                </tr>
+                                <tr>
+                                    <th>Account Balance:</th>
+                                    <!-- <td>
+                                        <!-- <input type="hidden" id="hidden_supplier_due" class="liability" value="0.00">
+                                        <span class="remote-data" id="supplier_due">₹ 0.00</span>
+                                    </td> -->
+                                </tr>
+                                <tr>
+                                    <td>Rajk:</td>
+                                    <!-- <td>
+                                        <!-- <input type="hidden" id="hidden_supplier_due" class="liability" value="0.00"> 
+                                        <span class="remote-data" id="supplier_due">₹ 0.00</span>
+                                    </td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table" id="assets_table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="remote-data" id="customer_due">₹ 0.00</span>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <span class="remote-data" id="closing_stock">₹ {% if pdue %}{{pdue|floatformat:2}}{% else %}0.00{% endif %}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="remote-data" id="closing_stock">₹ 0.00</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="remote-data" id="closing_stock">₹ 0.00</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="remote-data" id="supplier_due">₹ {% if sdue %}{{sdue|floatformat:2}}{% else %}0.00{% endif %}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="remote-data" id="supplier_due">₹ 0.00</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="remote-data" id="supplier_due">₹ 0.00</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="remote-data" id="supplier_due">₹ 0.00</span>
+                                    </td>
+                                </tr>                                                                                                
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="bg-secondary">
+                    <td>
+                        <table class=" table bg-secondary mb-0 no-border ">
+                            <tbody>
+                                <tr>
+                                    <th>
+                                        Total:
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table bg-secondary mb-0 no-border ">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span id="total_assets ">₹ 00.00</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table bg-secondary mb-0 no-border ">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span id="total_assets ">₹ 0.00</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <!-- <div class="box-footer col-lg-12 col-md-12">
+            <button type="button " class="btn btn-primary no-print float-right mb-2" onclick="window.print() ">
+                <i class="fa fa-print "></i> Print</button>
+        </div> -->
+</div>
+
+{%endblock%}{% block alljs %}
+
+<script>
+    $(document).ready(function () {
+        $('#role_table').DataTable();
+        // $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{%endblock%}

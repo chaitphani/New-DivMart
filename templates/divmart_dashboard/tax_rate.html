@@ -1,0 +1,132 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container">
+    <h5>Tax Rates</h5>
+    <div class="section card p-3" style="border-top:3px solid green">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <a class="btn btn-info text-white float-right" data-toggle="modal" data-target="#exampleModal">
+                    <i class="fa fa-plus text-white"></i>&nbsp;Add
+                </a>
+            </div>
+        </div>
+        <br>
+        <div class="overflow-auto">
+        <table class="table  table-sm" id="printertable">
+            <thead>
+                <tr>
+                    <th>S.no</th>
+                    <th>Name</th>
+                    <th>Tax Rate(%)</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rate in rates %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{rate.name}}</td>
+                    <td>{{rate.rate}}</td>
+                    <td>{% if rate.status == True %}Active{% else %}Inactive{% endif %}</td>
+                    <td>
+                        <div class="btn-group btn-sm">
+                            <a href="{% url 'tax-rate-update' rate.id %}" class="btn btn-outline-info btn-sm rounded">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;Edit
+                            </a>
+                            <a href="{% url 'tax-rate-remove' rate.id %}" class="btn btn-outline-danger btn-sm ml-1 rounded del_btn">
+                                <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="card modal-content p-3">
+                    <div class="modal-header bg-primary">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Tax Rate</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{% url 'tax-rate' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label>Name*</label>
+                                <input type="text" class="form-control" name="name" placeholder="Name" required>
+                            </div>
+                            <div class="form-group row">
+                                <label>Tax Rate(%)*</label>
+                                <input type="text" class="form-control" name="rate" placeholder="15" required>
+                            </div>
+                        </div>
+                        <input type="submit" class="btn btn-primary w-100" value="ADD">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="card p-2" style="box-shadow:0 6px 12px rgb(0 0 0 / 18%);border-top:3px solid #17a2b8">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <h5>Tax groups ( Combination of multiple taxes )
+                    <a class="btn btn-info text-white float-right" data-toggle="modal" data-target="#exampleModal"><i
+                            class="fa fa-plus text-white"></i>&nbsp;Add</a>
+                </h5>
+            </div>
+        </div>
+        <br>
+        <table class="table  table-sm" id="printertable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Tax Rate(%)</th>
+                    <th>Sub Taxes</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>xxxx</td>
+                    <td>xxxx</td>
+                    <td>xxxx</td>
+                    <td>
+                        <div class="btn-group btn-sm">
+                            <a href="#"><button type="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil"
+                                        aria-hidden="true"></i>&nbsp;Edit</button></a>
+                            <a href="#"><button type="button" class="btn btn-danger btn-sm ml-1"><i class="fa fa-trash"
+                                        aria-hidden="true"></i>&nbsp;Delete </button></a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div> -->
+
+<script>
+    $(document).ready(function () {
+        $('#printertable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+
+    $('.del_btn').click(function(e){
+        e.preventDefault();
+        var action = confirm('Are you sure to remove...?')
+        if (action == false){
+            e.preventDefault();
+        }
+        else{
+            location.reload();
+        }
+    });
+
+</script>
+{%endblock%}

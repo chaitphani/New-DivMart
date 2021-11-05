@@ -1,0 +1,86 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid ">
+    <h5>Register Report</h5>
+    <!-- filter box -->
+    <div class="section card p-3" style="border-top: 3px solid green;">
+        <div class="row">
+            <div class="col-lg-12">
+                <a data-toggle="collapse" href="#collapsebox" role="button" aria-expanded="true"
+                    aria-controls="collapsebox">
+                    <div><i class="fa fa-filter"></i>Filters</div>
+                </a>
+                <div class="collapse show" id="collapsebox">
+                    <div class="row">
+                        <div class="col-lg-4 filterbox">
+                            <label>User:</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1"><i
+                                            class="fa fa-map-marker"></i></span>
+                                </div>
+                                <select class="custom-select" title="Please Select" aria-describedby="basic-addon1">
+                                    <option>All Users</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 filterbox">
+                            <label>Status:</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1"><i
+                                            class="fa fa-map-marker"></i></span>
+                                </div>
+                                <select class="custom-select" title="Please Select" aria-describedby="basic-addon1">
+                                    <option>All Users</option>
+                                    <option>Open</option>
+                                    <option>Close</option>
+                                </select>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="section card p-3 overflow-auto" style="border-top: 3px solid green;">
+        <table class="table table-striped  table-sm" id="register_product_table">
+            <thead>
+                <tr>
+                    <th>Open Time</th>
+                    <th>Close Time</th>
+                    <th>User</th>
+                    <th>Total Card Slips</th>
+                    <th>Total Cheques</th>
+                    <th>Total Cash</th>
+                    <!-- <th>Action</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for cashier in cashiers %}
+                <tr>
+                    <td>06/20/2019 01:08 PM</td>
+                    <td>09/02/2020 08:52 PM</td>
+                    <td>{{cashier.username}}</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>₹ 18,385.75</td>
+                    <!-- <td><input type="button" value="View" class="btn btn-primary bt-sm"></td> -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#register_report').dataTable();
+    });
+</script>
+{%endblock%}

@@ -1,0 +1,36 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Update categories - <small class="text-danger">{{obj.name}}</small></h5>
+    <div class="section card p-4" id="accordionExample" style="border-top:3px solid green">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Category Name:*</label>
+                <input type="text" id="cat_name" class="form-control" name="name" placeholder="category name"
+                    value="{{obj.name}}">
+            </div>
+            <div class="form-group">
+                <label>Category code:</label>
+                <input type="text" class="form-control" name="category_code" placeholder="category code"
+                    value="{{obj.category_code}}">
+            </div>
+            <div class="form-group">
+                <label>Select Parent Ctegory:</label>
+                <select class="form-control" name="sub_category" multiple>
+                    {% for sub in sub_category_list %}
+                    <option value="{{ sub.id }}" {% for sc in obj.sub_category.all %} {% if sc.id == sub.id %} selected {%
+                        else %} {% endif %}{% endfor %}>
+                        {{ sub.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" class="btn btn-primary btn-sm w-100" value="Save">
+        </form>
+    </div>
+</div>
+
+{%endblock%} {% block alljs %}
+
+{%endblock%}

@@ -1,0 +1,71 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5> New Members</h5>
+    <div class="section card p-3" style="border-top:3px solid green">
+        <p>All New Members</p>
+        {% if messages %}
+        <ul class="messages list-unstyled">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }} text-center font-weight-bold p-2 m-0" {% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+                </li>
+                {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="overflow-auto">
+        <table class="table w-100 table-sm" id="usertable">
+            <thead>
+                <tr>
+                    <th>S.no</th>
+                    <th>UserName</th>
+                    <!-- <th>Name</th> -->
+                    <th>Email</th>
+                    <th>Mobile Number</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in data %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <!-- <td>{{ member.fname }}</td> -->
+                    <td>{{ member.fname }} {{member.lname}}</td>
+                    <td>{{member.email}}</td>
+                    <td>{{member.contact}}</td>
+                    <!-- <td>{{member.email}}</td> -->
+                    <td>{% if member.status == 0 %}Inactive{% else %}Active{% endif %}</td>
+                    <td>
+                        <div class="btn-group btn-sm">
+                            <a href="{% url 'edit_members' member.id %}"><button type="button"
+                                    class="btn btn-primary btn-sm"><i class="fa fa-pencil"
+                                        aria-hidden="true"></i>&nbsp;Edit</button></a>
+                            <a href="{%url 'view_members' member.id %}" class="btn btn-success btn-sm ml-1"><i
+                                    class="fa fa-eye" aria-hidden="true"></i>&nbsp;View</a>
+                            <!-- <a href="#"><button type="button" class="btn btn-danger btn-sm ml-1"><i class="fa fa-trash"
+                                    aria-hidden="true"></i>&nbsp;Delete </button></a> -->
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+</div>
+    </div>
+
+</div>
+
+
+
+{%endblock%} {% block alljs %}
+<script>
+    $(document).ready(function () {
+        $('#usertable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{%endblock%}

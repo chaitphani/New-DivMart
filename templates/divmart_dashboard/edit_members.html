@@ -1,0 +1,177 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+  <h5>Update Member</h5>
+
+ <div class="section card p-3" style="border-top:3px solid green">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+            <p>Member - <span class="text-danger">{{obj.fname}}</span></p>
+            <hr>
+            <div class="form-group row">
+                <!-- <div class="col-lg-6 col-md-6">
+                <label>Sponser ID:</label>
+                <input type="text" class="form-control" placeholder="Enter Member Sponser Id" required>
+            </div> -->
+                <div class="col-lg-4 col-md-4">
+                    <label>Member Amount*:</label>
+                    <input type="text" class="form-control" name="member_amount" placeholder="Enter amount"
+                        value="{{obj.member_amount}}" required>
+                    <!-- <select class="form-control" name="member_amount" required>
+                    <option>10,000</option>
+                    <option>20,000</option>
+                </select> -->
+                </div>
+            </div>
+            <hr>
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>First Name*:</label>
+                    <input type="text" class="form-control" value="{{obj.fname}}" name="fname" placeholder="First Name"
+                        required>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <label>Last Name*:</label>
+                    <input type="text" class="form-control" value="{{obj.lname}}" name="lname" placeholder="Last Name"
+                        required>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <label>Email*:</label>
+                    <input type="email" class="form-control" value="{{obj.email}}" name="email" placeholder="Email"
+                        required>
+                </div>
+                <!-- <div class="col-lg-2 col-md-2">
+                    <label>Password*:</label>
+                    <input type="password" class="form-control" value="{{obj.password}}" name="password" placeholder="Password" required>
+                </div> -->
+            </div>
+            <!-- <div class="form-group row">
+            </div> -->
+            <hr>
+            <div class="d-lg-flex d-md-flex">
+                <p>More Informations</p>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>Contact Number:*</label>
+                    <input type="text" class="form-control" value="{{obj.contact}}" name="contact"
+                        placeholder="Contact Number" required>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <label>Altnate Contact Number:</label>
+                    <input type="text" class="form-control" value="{{obj.alt_contact}}" name="alt_contact"
+                        placeholder="Altnate Contact Number:">
+                </div>
+                
+
+            </div>
+
+            <!-- <div class="form-group row">
+            </div> -->
+            <div class="form-group row">
+                <div class="col-lg-6 col-md-6">
+                    <label>Permanent Address:*</label>
+                    <textarea class="form-control" rows="2" name="perminent_address" placeholder="Permanent Address"
+                        required>{{obj.perminent_address}}</textarea>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="checkboxes">
+                    <small><label>Current Address:</label> <input type="checkbox"><span>&nbsp;check if both addresses same</span></small>
+                    </div>
+                    <textarea class="form-control" rows="2" name="current_address" placeholder="Current Address">{{obj.current_address}}</textarea>
+                    <style>
+                        .checkboxes label {
+                        display: inline-block;
+                        padding-right: 10px;
+                        white-space: nowrap;
+                        }
+                        .checkboxes input {
+                        vertical-align: middle;
+                        }
+                        .checkboxes label span {
+                        vertical-align: middle;
+                        }
+                    </style>
+                </div>
+</div>
+                 
+<div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>ID proof name:*</label>
+                    <input type="text" class="form-control" value="{{obj.id_proof_name}}" name="id_proof_name"
+                        placeholder="ID proof name:" required>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <label>ID proof number:*</label>
+                    <input type="text" class="form-control" value="{{obj.id_proof_number}}" name="id_proof_number"
+                        placeholder="ID proof number:" required>
+                </div>
+</div>
+<div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>Upload Identity Proof:*</label>
+                    <input type="file" name="identity_proof" value="{% if obj.identity_proof %}{{obj.identity_proof.url}}{% endif %}" class="form-control">
+                    <small>Note: Upload JPG, JPEG and PNG files.</small>
+                    <div><img src="{% if obj.identity_proof %}{{obj.identity_proof.url}}{% endif %}" alt="" class="w-25"></div>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <label>Upload Address Proof:*</label>
+                    <input type="file" name="address_proofs" class="form-control">
+                    <small>Note: Upload JPG, JPEG and PNG files.</small>
+                    <div><img src="{% if obj.address_proofs %}{{obj.address_proofs.url}}{% endif %}" alt="" class="w-25"></div>
+                </div>
+
+            </div>
+            <!-- <div class="form-group row">
+            </div> -->
+            <hr>
+            <div class="d-lg-flex d-md-flex">
+                <h5>Bank Details:</h5>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>Account Holder's Name:*</label>
+                    <input type="text" class="form-control" value="{{obj.account_holder_name}}"
+                        name="account_holder_name" placeholder="Account Holder's Name" required>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <label>Account Number:*</label>
+                    <input type="text" class="form-control" value="{{obj.account_no}}" name="account_no"
+                        placeholder="Altnate Contact Number" required>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <label>Bank Name:*</label>
+                    <input type="text" class="form-control" value="{{obj.bank_name}}" name="bank_name"
+                        placeholder="Bank Name" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>IFSC Code:*</label>
+                    <input type="text" class="form-control" value="{{obj.ifsc_code}}" name="ifsc_code"
+                        placeholder="Bank Identifier(IFSC) Code" required>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <label>Branch Name:*</label>
+                    <input type="text" class="form-control" value="{{obj.branch_name}}" name="branch_name"
+                        placeholder="Branch Name" required>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <label>Status:*</label>
+                    <select name="status" class="form-control">
+                        <option value="">Please select</option>
+                        <option value="1" {% if obj.status == 1 %}selected{% endif %}>Active</option>
+                        <option value="0" {% if obj.status == 0 %}selected{% endif %}>Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <input type="submit" class="btn btn-info w-100" value="Update Member">
+        </div>
+    </form>
+</div>
+</div>
+{%endblock%}

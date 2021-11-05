@@ -1,0 +1,158 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h4 class="ml-1">Expense Categories</h4>
+</div>
+<div class="section card pl-3 ml-2 mr-2 pr-3 pt-3" style="border-top:2px solid green">
+    <div class="row">
+        <div class="col-lg-12">
+            <h6>All your expense categories
+                <span class="float-right">
+                    <a class="btn btn-primary mb-2" href="#" data-toggle="modal" data-target="#ampleModal">
+                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add
+                    </a>
+                </span>
+            </h6>
+        </div>
+    </div>
+    <div class="overflow-auto">
+    <table class="table  table-sm" id="variation">
+        <thead>
+            <tr>
+                <th>S.no</th>
+                <th>Category Name</th>
+                <th>Category Code</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in exp_cat %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{ c.name }}</td>
+                <td>{{ c.category_code }}</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" id="{{ c.id }}" class="btn btn-primary btn-sm edit_cat"
+                            data-toggle="modal" data-target="#exampleModal">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;Edit
+                        </button>
+                        <a href="{% url 'delete_exp_category' c.id %}" class="btn btn-danger btn-sm ml-1 del_cate">
+                            <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+<div class="modal fade" id="ampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title" id="exampleModalLabel">Add Expense Category</h5>
+                <button type="button" class="close text-warning" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="/api/v1/expcategories/" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body p-3">
+                    <input type="hidden" name="cid" />
+                    <div class="form-group">
+                        <label>Category Name</label>
+                        <input type="text" class="form-control" name="name" placeholder="category name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category code</label>
+                        <input type="text" class="form-control" name="category_code" placeholder="category code" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary float-right w-100 mb-5">SUBMIT</button>
+                    <!-- <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div> -->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title" id="exampleModalLabel">Update Expense Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-warning">&times;</span>
+                </button>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body p-3">
+                    <input type="hidden" name="cid" id="c_id" />
+                    <div class="form-group">
+                        <label>Category Name</label>
+                        <input type="text" class="form-control" id="ex_name" name="name" placeholder="category name">
+                    </div>
+                    <div class="form-group">
+                        <label>Category code</label>
+                        <input type="text" class="form-control" id="ex_code" name="category_code" placeholder="category code">
+                    </div>
+                    <button type="submit" class="btn btn-primary float-right w-100 mb-5">UPDATE</button>
+                    <!-- <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div> -->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // function edit_get_id(){
+    var catid = document.querySelectorAll(`.edit_cat`);
+    catid.forEach(pd => {
+        pd.addEventListener("click", () => {
+            let cat_id = pd.getAttribute('id')
+            // console.log(cat_id)
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = "json";
+            xhr.open('GET', `/api/v1/expcategories/${cat_id}`);
+            xhr.onload = () => {
+                const cat_info = xhr.response;
+                // console.log(cat_info)
+                var cat_name = document.getElementById(`ex_name`)
+                var cat_code = document.getElementById(`ex_code`)
+                var cat_d = document.getElementById(`c_id`)
+                cat_name.value = cat_info.name
+                cat_code.value = cat_info.category_code
+                cat_d.value = cat_id
+            };
+            xhr.send();
+
+        });
+    });
+</script>
+
+{%endblock%} {% block alljs %}
+<script>
+    $(document).ready(function () {
+        $('#variation').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+
+
+    $('.del_cate').click(function(e){
+        var action = confirm('Are you sure to remove..?');
+        if (action == false){e.preventDefault();}
+        else{location.reload();}
+    })
+</script>
+
+
+
+{%endblock%}

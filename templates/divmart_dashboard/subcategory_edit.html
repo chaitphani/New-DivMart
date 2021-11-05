@@ -1,0 +1,21 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Update Sub-Category - <small class="text-danger">{{obj.name}}</small></h5>
+    <div class="section card p-3" style="border-top: 3px solid green;">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Sub Category Name:*</label>
+                <input type="text" class="form-control" name="name" placeholder="sub category name" value="{{obj.name}}"
+                    required>
+            </div>
+            <!-- <button type="button" class="btn btn-outline-secondary">Close</button> -->
+            <button type="submit" class="btn btn-primary float-right w-25">Save</button>
+        </form>
+    </div>
+</div>
+
+{%endblock%} {% block alljs %}
+
+{%endblock%}

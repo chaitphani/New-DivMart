@@ -1,0 +1,24 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h4>Update Selling Group - <span class="text-danger">{{obj.name}}</span></h4>
+</div>
+<div class="card p-5">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group row">
+            <label>Group Name:*</label>
+            <input type="text" class="form-control" name="name" value="{{obj.name}}">
+        </div>
+        <div class="form-group row">
+            <label>Description:</label>
+            <textarea class="form-control" name="description">{{obj.description}}</textarea>
+        </div>
+        <input type="submit" class="btn btn-outline-primary" value="Update">
+    </form>
+</div>
+
+{%endblock%} {% block alljs %}
+
+
+{%endblock%}

@@ -1,0 +1,70 @@
+{% extends 'membership/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+
+<div class="container-fluid">
+    <h5>
+        Manage Withdrawal Transaction
+    </h5>
+    <div class="section card p-3" style="border-top:3px solid #00c0ef">
+        {% if messages %}
+        <ul class="messages list-unstyled">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }} p-2 font-weight-bold text-center" {% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+                </li>
+                {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if not exist and obj.commission == 100 %}
+        <h6 class="text-dark">My Withdrawal Transaction 
+            <span class="float-right">
+                <a class="btn btn-info btn-sm text-white" href="{%url 'withdrawal_request'%}">
+                        <i class="fa fa-plus-circle">&nbsp;</i> Create Request
+                </a> 
+            </span>
+        </h6>
+        {% endif %}
+
+        <table class="table table-sm" id="mdtable">
+            <thead>
+                <tr>
+                    <th>S.no</th>
+                    <th>Withdraw Amount</th>
+                    <th>Payment Status</th>
+                    <th>Your Note</th>
+                    <!-- <th>Admin Note</th> -->
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trans in withdraw_trans %}
+                <tr class="font-weight-bold">
+                    <td>{{forloop.counter}}</td>
+                    <td>&#8377; {{trans.amount|floatformat:2}}</td>
+                    <td>
+                        <button class="btn btn-sm font-weight-bold {% if trans.payment_status == 'Paid' %}btn-success
+                        {% elif trans.payment_status == 'Pending' %}btn-secondary{% else %}btn-danger{% endif %}">
+                        {{trans.payment_status}}
+                        </button>
+                    </td>
+                    <td>{{trans.user_note}}</td>
+                    <!-- <td>{{trans.admin_note}}</td> -->
+                    <td>{{trans.created|date:'d-m-Y H:i'}}</td>
+                    <td>{{trans.updated|date:'d-m-Y H:i'}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#mdtable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{%endblock%}

@@ -1,0 +1,232 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Add User</h5>
+    <form id="myForm" method="POST" enctype="multipart/form-data">
+        <div class="section card p-3" style="border-top:3px solid green">
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Prefix</label>
+                    <input type="text" class="form-control" name="prefix" placeholder="Mr/Mrs/Miss/">
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>First Name</label>
+                    <input type="text" class="form-control" name="first_name" placeholder="first name">
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Last Name</label>
+                    <input type="text" class="form-control" name="last_name" placeholder="last name">
+                </div>
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Email*</label>
+                    <input type="email" class="form-control" name="email" placeholder="email" required>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Business Location*</label>
+                   <select class="form-control" name="business_location" required>
+                       <option value="">Please select</option>
+                       {% for location in locations %}
+                            <option value="{{location.id}}">{{location.name}}</option>
+                       {% endfor %}
+                   </select>
+                </div>
+            </div>
+            <span style="color: red;">{{error}}</span>
+            <div class="form-group row ">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Role*</label>
+                    <select class="form-control" id="role" name="role" required="required">
+                        <option value="">Please select</option>
+                        {% for role in main_role %}
+                            {% if role.is_deleted == 0 %}
+                                <option value="{{ role.title }}">{{ role.title }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Username*</label>
+                    <input type="text" class="form-control" name="username" placeholder="Username" required>
+                </div>
+                <span style="color: red;">{{errore}}</span>
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Password*</label>
+                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password"
+                        required>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Confirm Password*</label>
+                    <input type="password" onkeyup="checkPasswordMatch();" class="form-control" id="password2"
+                        name="password" placeholder="Confirm Password" required>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Sales Commission Percentage(%)&nbsp;
+                        <!-- <i class="fa fa-info-circle text-success" data-placement="bottom" data-toggle="tooltip"
+                            title="Used only if sales Commission Agent Type setting is 'logged in user': or 'select from user list' "
+                            aria-hidden="true">
+                        </i> -->
+                    </label>
+                    <input type="text" class="form-control" name="seles_commission_percentage"
+                        value="{{ usr.sales_commision_percentage }}" placeholder="Sales Commission Percentage(%)">
+                </div>
+            </div>
+            <div style="color: red;" class="pl-3" id="divCheckPasswordMatch"></div>
+            <!-- <div class="form-group row"> -->
+                <!-- <div class="col-sm-4 col-md-6 col-lg-4">
+                    <label>Sales Commission Percentage(%)&nbsp;
+                        <!-- <i class="fa fa-info-circle text-success" data-placement="bottom" data-toggle="tooltip"
+                            title="Used only if sales Commission Agent Type setting is 'logged in user': or 'select from user list' "
+                            aria-hidden="true">
+                        </i> 
+                    </label>
+                    <input type="text" class="form-control" name="seles_commission_percentage"
+                        value="{{ usr.sales_commision_percentage }}" placeholder="Sales Commission Percentage(%)">
+                </div> -->
+                <!-- <div class="col-sm-3 col-md-3 col-lg-3">
+                    <input type="checkbox" class="largerCheckbox" name="chk2" checked />
+                    <label class="ml-2">Is Active?</label>
+                    <i class="fa fa-info-circle text-success" data-placement="bottom" data-toggle="tooltip"
+                        title="Check/Uncheck to make a user active/inactive" aria-hidden="true">
+                    </i>
+                </div> -->
+            <!-- </div> -->
+        </div>
+        <div class="section card p-3" style="border-top:3px solid green">
+            <h6>More Information</h6><br>
+            <div class="form-group row ">
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Date Of Birth</label>
+                    <input type="date" class="form-control" name="birth_date" min="1920-01-01" max="2002-12-31"
+                        placeholder="date of birth">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Blood Group</label>
+                    <input type="text" class="form-control" name="blood_group" placeholder="Blood Group">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Contact Number</label>
+                    <input type="text" class="form-control" name="mobile" placeholder="Contact Number">
+                </div>
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Guardian Name</label>
+                    <input type="text" class="form-control" name="guardian_name" placeholder="Guardain Name">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Guardian Contact Number</label>
+                    <input type="text" class="form-control" name="contact" placeholder="Guardain Contact">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Upload Id Proof(Front)</label>
+                    <input type="file" class="form-control" name="id_proof_front">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Upload Id Proof (Back)</label>
+                    <input type="file" class="form-control" name="id_proof_back">
+                </div>
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Permanent Address</label>
+                    <textarea class="form-control" name="permanent_address" rows="3"></textarea>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Current Address</label>
+                    <textarea class="form-control" name="current_address" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="section card p-3" style="border-top:3px solid green">
+            <h5>
+                <a data-toggle="collapse" href="#multiCollapseExample1" class="text-dark text-decoration-none" 
+                    role="button" aria-expanded="false"  aria-controls="multiCollapseExample1">Bank Details
+                </a>
+            </h5>
+            <div id="multiCollapseExample1">
+                <div class="form-group row">
+                    <div class="col-sm-3 col-md-3 col-lg-3">
+                        <label>Account Holder's name</label>
+                        <input type="text" class="form-control" name="account_holder_name"
+                            value="{{ usr.account_holder_name }}" placeholder="Account Holder's name">
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3">
+                        <label>Account Number</label>
+                        <input type="text" class="form-control" name="account_no" value="{{ usr.account_no }}"
+                            placeholder="Account no.">
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3">
+                        <label>Bank Name</label>
+                        <input type="text" class="form-control" name="bank_name" value="{{ usr.bank_name }}"
+                            placeholder="Bank Name">
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3">
+                        <label>Bank Identifier Code/IFSC&nbsp;
+                            <i class="fa fa-info-circle text-success" data-placement="bottom" data-toggle="tooltip"
+                                title="A unique code to identify the bank in your country, For example IFSC code"
+                                aria-hidden="true">
+                            </i>
+                        </label>
+                        <input type="text" class="form-control" name="bank_identifier_code"
+                            value="{{ usr.bank_identifier_code }}" placeholder="Bank Identifier Code">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-3 col-md-3 col-lg-3">
+                        <label>Branch</label>
+                        <input type="text" class="form-control" name="branch" value="{{ usr.branch }}" placeholder="Branch">
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3">
+                        <label>Tax Payer ID</label>
+                        <input type="text" class="form-control" name="tax_payer_id" value="{{ usr.tax_payer_id }}" placeholder="Tax Payer ID">
+                    </div>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary mt-3 mb-3" value="SUBMIT">
+        </div>
+    </form>
+</div>
+
+<!-- <script>
+    function user_creation() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let role = document.getElementById("role").value;
+            }
+            if (role == "A") {
+                xhttp.open("POST", "http://127.0.0.1:8000/api/adminusers/", true);
+                xhttp.send();
+            } else if (role=="C") {
+                xhttp.open("POST", "http://127.0.0.1:8000/api/cashierusers/", true);
+                xhttp.send();
+            } else {
+            }
+        };
+    };
+</script> -->
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script>
+    function checkPasswordMatch() {
+        var password = $("#password1").val();
+        var confirmPassword = $("#password2").val();
+
+        if (password != confirmPassword)
+            $("#divCheckPasswordMatch").html("Passwords do not match!");
+        else
+            $("#divCheckPasswordMatch").html("Passwords match.");
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{%endblock%}

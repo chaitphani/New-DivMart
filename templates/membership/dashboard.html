@@ -1,0 +1,131 @@
+{% extends 'membership/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <div class="content-header p-0" style="position: relative;">
+        <h4 class="font-weight-normal text-capitalize">welcome {{obj.fname}} {{obj.lname}}</h4>
+        <p>Member Points: 0</p>
+    </div>
+
+<div class="row mt-3">
+<div class="col-12">
+    <div class="d-flex" style="box-shadow: 0 1px 1px rgb(0 0 0 / 10%);background-color: white;">
+        <div class="bg-info align-self-center p-3">
+            <i class="fa fa-share-square-o h2 fa-fw fa-md" aria-hidden="true"></i>
+        </div>
+        <div class="pl-3">
+             <small class="mt-2">REFERRAL LINK<br>
+                <a href="{{ref_link}}" target="_blank">{{ref_link}}</a>
+            </small>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mt-3">
+    <div class="d-flex" style="box-shadow: 0 1px 1px rgb(0 0 0 / 10%);background-color: white;">
+        <div class="bg-info align-self-center p-3">
+           <i class="fa fa-smile-o h2 fa-fw fa-md" aria-hidden="true"></i>
+        </div>
+        <div class="pl-3">
+              <small>USER ID<br>
+                        <b>{{obj.self_ref_id}}</b></small>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mt-3">
+    <div class="d-flex" style="box-shadow: 0 1px 1px rgb(0 0 0 / 10%);background-color: white;">
+        <div class="bg-primary align-self-center p-3">
+           <i class="fa fa-calendar h2 fa-fw fa-md" aria-hidden="true"></i>
+        </div>
+        <div class="pl-3">
+            <small>JOINING DATE<br>
+            <b>{{obj.created|date:'d-m-Y H:i'}}</b></small>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mt-3">
+    <div class="d-flex" style="box-shadow: 0 1px 1px rgb(0 0 0 / 10%);background-color: white;">
+        <div class="bg-warning align-self-center p-3">
+           <i class="fa fa-money h2 fa-fw fa-md" aria-hidden="true"></i>
+        </div>
+        <div class="pl-3">
+            <small>DIRECT PENDING 
+           <br>
+            <b>Amount/Points: 0</b></small>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mt-3">
+    <div class="d-flex" style="box-shadow: 0 1px 1px rgb(0 0 0 / 10%);background-color: white;">
+        <div class="bg-success align-self-center p-3">
+           <i class="fa fa-money h2 fa-fw fa-md" aria-hidden="true"></i>
+        </div>
+        <div class="pl-3">
+            <small>DIRECT APPROVED
+             <br>
+            <b>Amount/Points: 0</b></small>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mt-3">
+    <div class="d-flex" style="box-shadow: 0 1px 1px rgb(0 0 0 / 10%);background-color: white;">
+        <div class="bg-danger align-self-center p-3">
+           <i class="fa fa-money h2 fa-fw fa-md" aria-hidden="true"></i>
+        </div>
+        <div class="pl-3">
+            <small>WITHDRAWAL PENDING
+               <br>
+             <b>Amount/Points: {% if with_points %}{{with_points.amount}}{% else %}0{% endif %}</b></small>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mt-3">
+    <div class="d-flex" style="box-shadow: 0 1px 1px rgb(0 0 0 / 10%);background-color: white;">
+        <div class="bg-success align-self-center p-3">
+           <i class="fa fa-money h2 fa-fw fa-md" aria-hidden="true"></i>
+        </div>
+        <div class="pl-3">
+             <small>JOINING DATE
+             <br>
+             <b>Approved Amount: 0</b>
+            </small>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mt-3">
+    <div class="d-flex" style="box-shadow: 0 1px 1px rgb(0 0 0 / 10%);background-color: white;">
+        <div class="bg-warning align-self-center p-3">
+           <i class="fa fa-money h2 fa-fw fa-md" aria-hidden="true"></i>
+        </div>
+        <div class="pl-3">
+           <small>PENDING <br>
+           <b>Points: 0</b>
+           </small>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mt-3">
+    <div class="d-flex" style="box-shadow: 0 1px 1px rgb(0 0 0 / 10%);background-color: white;">
+        <div class="bg-success align-self-center p-3">
+           <i class="fa fa-money h2 fa-fw fa-md" aria-hidden="true"></i>
+        </div>
+        <div class="pl-3">
+               <small>APPROVED <br>
+              <b>Points: 0</b></small>
+        </div>
+    </div>
+</div>
+
+</div>
+    <br>
+</div>
+
+
+</div>
+{%endblock%}

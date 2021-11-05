@@ -1,0 +1,125 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<style>
+    .table-nostriped tbody tr:nth-of-type(odd) {
+        background-color: transparent;
+    }
+
+    .br-right {
+        border-right: 1px solid black;
+    }
+</style>
+<div class="container-fluid">
+    <h3 class="ml-2">Trial Balance</h3>
+    <div class="section card p-3" style="border-top: 3px solid green;">
+        <div class="box-header print_section">
+            <h3>Divmart Balance Sheet
+                 <!-- - <span id="hidden_date">09/17/2020</span> -->
+            </h3>
+        </div>
+        <div class="overflow-auto">
+        <table class="table no-border mt-3">
+            <thead>
+                <tr class="bg-light">
+                    <th>Liability</th>
+                    <th>Assets</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>Supplier Due:</th>
+                                    <td>
+                                        <input type="hidden" id="hidden_supplier_due" class="liability" value="0.00">
+                                        <span class="remote-data" id="supplier_due">₹ {% if sdue %} {{sdue}}{% else %}0.00{% endif %}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table" id="assets_table">
+                            <tbody>
+                                <tr>
+                                    <th>Customer Due:</th>
+                                    <td>
+                                        <input type="hidden" id="hidden_customer_due" class="asset" value="50.00">
+                                        <span class="remote-data" id="customer_due">₹ {% if pdue %}{{pdue|floatformat:2}}{% else %}0.00{% endif %}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Closing stock:</th>
+                                    <td>
+                                        <input type="hidden" id="hidden_closing_stock" class="asset" value="973,715.00">
+                                        <span class="remote-data" id="closing_stock">₹ {% if c_s %}{{c_s|floatformat:2}}{% else %}0.00{% endif %}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">Account Balances:</th>
+                                </tr>
+                            </tbody>
+                            <tbody id="account_balances" class="pl-20-td">
+                                <tr>
+                                    <td class="pl-20-td">Rahul Roy:</td>
+                                    <td><input type="hidden" class="asset" value="₹ 0.00">₹ 0.00</td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="bg-light">
+                    <td>
+                        <table class="table bg-light mb-0 no-border">
+                            <tbody>
+                                <tr>
+                                    <th>
+                                        Total Liability:
+                                    </th>
+                                    <td>
+                                        <span id="total_liabilty ">₹ 0.00</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table bg-light mb-0 no-border">
+                            <tbody>
+                                <tr>
+                                    <th>
+                                        Total Assets:
+                                    </th>
+                                    <td>
+                                        <span id="total_assets">₹ 0.00</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        </div>
+        <!-- <div class="box-footer col-lg-12 col-md-12">
+            <button type="button " class="btn btn-primary no-print float-right mb-2" onclick="window.print() ">
+                <i class="fa fa-print "></i> Print</button>
+        </div> -->
+    </div>
+</div>
+
+
+{%endblock%}{% block alljs %}
+<script>
+    $(document).ready(function () {
+        $('#role_table').DataTable();
+        // $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{%endblock%}

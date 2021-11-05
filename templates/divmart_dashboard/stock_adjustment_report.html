@@ -1,0 +1,101 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<div class="container-fluid">
+    <h5>Stock Adjustment Report</h5>
+    <div class="section card p-3" id="accordionExample" style="border-top:3px solid green">
+        <div class="card-header bg-white" id="headingOne">
+            <i class="fas fa-filter accordion text-primary" id="accordionExample" data-toggle="collapse"
+                data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><b
+                    class="text-primary">Filters</b></i>
+        </div>
+
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <div class="col-sm-3 col-md-3 col-lg-3">
+                            <label>Adjustment Type</label>
+                            <select class="form-control" name="type">
+                                <option value="">Please select</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Abnormal">Abnormal</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3 col-md-3 col-lg-3">
+                            <label>Business Location</label>
+                            <select class="form-control" name="business_location">
+                                <option value="">Please select</option>
+                                {% for location in locations %}
+                                    <option value="{{location.name}}">{{location.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3 col-md-3 col-lg-3">
+                        <label>Date Range</label>
+                        <div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">
+									<i class="fa fa-calendar"></i></span>
+								</div>
+								<input type="datetime-local" name="date_range" class="form-control">
+							</div>
+                        </div>
+
+                        <div class="col-sm-3 col-md-3 col-lg-3 pt-4">
+                        <input type="submit" class="btn btn-primary btn-block">
+                        </div>
+
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- top trending products list -->
+    <div class="section card p-3" style="border-top:3px solid green">
+    <div class="section">
+                <span class="float-right">
+                      <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        CSV </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        EXCEL </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        PDF </a>
+                </span>
+    </div>
+        <!-- table to show data here -->
+        <div class="overflow-auto">
+            <table class="table table-striped table-bordered table-sm">
+                <tr>
+                    <th>SKU</th>
+                    <th>Product</th>
+                    <th>Business Location</th>
+                    <!-- <th>Lot Number</th> -->
+                    <!-- <th>Exp Date</th> -->
+                    <th>Current Stock</th>
+                    <th>Total Unit Sold</th>
+                    <th>Total Unit Adjusted</th>
+                </tr>
+                {% for adjust in stock_adjust %}
+                {% if adjust.prod_adjst %}
+                    <tr>
+                        <td>{{adjust.SKU}}</td>
+                        <td>{{adjust.product_name}}</td>
+                        <td>{{adjust.location}}</td>
+                        <!-- <td>0000 </td> -->
+                        <!-- <td>00/00/0000</td> -->
+                        <td>{{adjust.current_stock}}</td>
+                        <td>{{adjust.prod_sales}}</td>
+                        <td>{{adjust.prod_adjst|floatformat:1}}</td>
+                    </tr>
+                {% endif %}
+
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+{%endblock%}

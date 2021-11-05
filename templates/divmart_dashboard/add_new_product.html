@@ -1,0 +1,311 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<div class="container-fluid">
+    <h5>Add New Product</h5>
+    <form name="myForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="section card p-3" style="border-top:3px solid green">
+            <div class="form-group row ">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Product Name*</label>
+                    <input type="text" class="form-control" name="product_name" placeholder="Product Name">
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Units*</label>
+                    <div class="input-group mb-3">
+                        <select class="form-control" name="unit" >
+                            <option value="">Please Select</option>
+                            {% for u in unit %}
+                            <option value="{{ u.id }}">{{ u.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- <div class="input-group-append bg-white" data-toggle="modal" data-target="#exampleModals"
+                            style="cursor: pointer;">
+                            <span class="input-group-text" id="basic-addon2"><i class="fas fa-plus-circle text-primary"></i></span>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Brand*</label>
+                    <div class="input-group mb-3">
+                        <select class="form-control" name="brand">
+                            <option value="">Please Select</option>
+                            {% for b in brand %}
+                            <option value="{{ b.id }}">{{ b.brand_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <!-- <div class="input-group-append bg-white" data-toggle="modal" data-target="#exampleModal" style="cursor: pointer;">
+                            <span class="input-group-text" id="basic-addon2"><i class="fas fa-plus-circle text-primary"></i></span>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Category (optional)</label>
+                    <select class="form-control" name="category">
+                        <option value="">Please Select</option>
+                        {% for u in cat %}
+                        {% if u.status == 1 %}
+                        <option value="{{ u.id }}">{{ u.name }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Sub Category (optional)</label>
+                    <select class="form-control" name="sub_category">
+                        <option value="">Please Select</option>
+                        {% for u in sub_cat %}
+                        <option value="{{ u.id }}">{{ u.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>SKU*</label>
+                    <input type="text" class="form-control" name="SKU" placeholder="Product Name" >
+                </div>
+            </div>
+            <div class="form-group row ">
+                <!-- <div class="col-sm-4 col-md-4">
+                    <label>Barcode Type (optional)</label>
+                    <select class="mdb-select form-control select2" name="barcode_type" searchable="Search here..">
+                        <option value="">Please Select</option>
+                        <option selected value="EAN13">EAN13</option>
+                    </select>
+                </div> -->
+                <!-- <div class="col-sm-4 col-md-4 pt-4">
+                    <input type="checkbox"><label class="ml-1">Manage Stock</label> <br>
+                    <small>Enable stock management at product level</small>
+                </div> -->
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Alert Quantity (optional)</label>
+                    <input type="text" class="form-control" name="alert_quantity" placeholder="Alert Quantity">
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Business Location*</label>
+                    <select class="form-control" name="business_location" >
+                        <option value="">Please Select</option>
+                        {% for b in business_location %}
+                            <option value="{{ b.id }}">{{ b.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-4 col-md-4">
+                    <label>Product Description (optional)</label>
+                    <textarea class="form-control" name="Product_description" rows="1"></textarea>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Upload Image (optional)</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" readonly>
+                        <span class="input-group-btn">
+                            <span class="btn btn-primary btn-file" style="height:35px">
+                                <i class="fa fa-folder-open text-white" aria-hidden="true"></i>
+                                Browse… <input type="file" name="product_image" id="imgInp">
+                            </span>
+                            <!-- <span class="btn btn-primary btn-file">
+                            <i class="fa fa-trash text-white" aria-hidden="true"></i>
+
+                            Remove <input type="file" id="imgInp">
+                        </span> -->
+                        </span>
+                    </div>
+                    <!-- <div class="card ">
+                        <img id='img-upload'/>
+                    </div> -->
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Weight (optional)</label>
+                    <input type="text" class="form-control" name="weight" placeholder="Weight">
+                </div>
+            </div>
+        </div>
+        <!-- <div class="row card pl-3 ml-2 mr-2 pr-3 pt-3" style="border-top:2px solid green"> -->
+        <!-- <div class="form-group row">
+                <div class="col-lg-12 col-md-12">
+                    <input type="checkbox"><label class="ml-1"> Enable Product description, IMEI or Serial Number</label>
+                </div>
+            </div> -->
+        <!-- <div class="form-group row">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Weight</label>
+                    <input type="text" class="form-control" name="weight" placeholder="Weight">
+                </div>
+            </div> -->
+        <!-- <div class="form-group row">
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Custom Field1</label>
+                    <input type="text" name="custom_field1" class="form-control" placeholder="custom_field1">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Custom Field2</label>
+                    <input type="text" class="form-control" name="custom_field2" placeholder="custom_field2">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Custom Field3</label>
+                    <input type="text" class="form-control" name="custom_field3" placeholder="custom_field3">
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Custom Field4</label>
+                    <input type="text" class="form-control" name="custom_field4" placeholder="custom_field4">
+                </div>
+            </div> -->
+        <!-- </div> -->
+        <div class="section card p-3" style="border-top:3px solid green">
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>Applicable Tax*</label>
+                    <!-- <input type="number" name="applicable_tax" class="form-control"> -->
+                    <select id="tax" class="form-control" name="applicable_tax" onchange="pricecal()" >
+                        <option value="">Please select</option>
+                        {% for rate in rates %}
+                            <option value="{{rate.rate}}">{{rate.name}}-{{rate.rate}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <label>Selling Price Tax Type*</label>
+                    <select class="form-control" name="selling_price_tax_type" >
+                        <option value="">Please select</option>
+                        <option value="I">Inclusive</option>
+                        <option value="E">Exclusive</option>
+                    </select>
+                </div>
+                <!-- </div> -->
+                <!-- <div class="form-group row"> -->
+                <div class="col-lg-4 col-md-4">
+                    <label class="">Product Type*</label>
+                    <select class="form-control" name="product_type" >
+                        <option value="">Please select</option>
+                        <option value="S">single</option>
+                        <option value="V">variable</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="row pl-10 pr-10 overflow-auto">
+                <table class="table table-bordered table-sm">
+                    <thead class="bg-secondary text-center">
+                        <tr>
+                            <th scope="col">Default Purchase Price</th>
+                            <th scope="col">x Margin(%)</th>
+                            <th colspan="2" scope="col">Default Selling Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group row">
+                                    <!-- <div class="col-md-4 col-sm-4">
+                                        <label>Purchase Price</label>
+                                        <input type="text" id="prod_mrp"
+                                            name="prod_mrp" value="0" class="form-control" placeholder="Purchase Price" >
+                                    </div> -->
+                                    <div class="col-md-6 col-sm-6">
+                                        <label>Exc. tax</label>
+                                        <input type="text" onkeyup="pricecal()" id="base_price"
+                                            name="purchase_price_exc_tax" class="form-control" placeholder="Exc. tax">
+                                    </div>
+                                    <div class=" col-md-6 col-sm-6">
+                                        <label>Inc. tax</label>
+                                        <input type="text" id="inc" name="purchase_price_inc_tax" class="form-control"
+                                            placeholder="Inc. tax" readonly>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <label>Margin (%)</label>
+                                <input type="text" id="margin" name="margin" class="form-control" placeholder="margin %" onkeyup="pricecal()" value="25.00">
+                            </td>
+
+                            <td>
+                            <label>MRP</label>
+                            <input type="text" id="MRPvalue" name="sale_mrp" class="form-control" value='0' placeholder="MRP" >
+                            </td>
+                            <td>
+                                <label>Inc. tax</label>
+                                <input type="text" id="selling_price_exc_tax" name="selling_price_exc_tax"
+                                    class="form-control" placeholder="Inc. tax">
+                            </td>
+                        </tr>
+                        <!-- <input type="text" id="selling_price_exc_tax" name="selling_price_exc_tax"> -->
+                    </tbody>
+                </table>
+            </div>
+            <input type="submit" class="btn btn-primary mb-3 mt-3" value="SUBMIT">
+            <!-- <button type="button" class="btn btn-primary p-2 mb-4">Save & Add Opening Stock</button> -->
+        </div>
+    </form>
+
+</div>
+
+{% endblock %} {% block alljs %}
+
+<script>
+    function pricecal() {
+        let price = document.getElementById("base_price").value;
+        let tax = document.getElementById("tax").value;
+        let margin = document.getElementById("margin").value;
+
+        var cal_tax = parseFloat(price) * parseFloat(tax / 100)
+        var inc = parseFloat(price) + parseFloat(cal_tax)
+
+        var cal_margin = (parseFloat(price) * parseFloat(margin/100))
+        var selling_price = parseFloat(cal_margin) + parseFloat(price)
+
+        if (tax.value != '') {
+            if (price.length != '') {
+                document.getElementById("inc").value = inc.toFixed(2)
+                document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+            }
+            else {
+                document.getElementById("inc").value = price.toFixed(2)
+                document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+            }
+        }
+    }
+</script>
+
+<!-- <script>
+    $(document).ready(function () {
+        $('.select2').select2();
+    });
+</script> -->
+<script>
+    $(document).ready(function () {
+        $(document).on('change', '.btn-file :file', function () {
+            var input = $(this),
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [label]);
+        });
+
+        $('.btn-file :file').on('fileselect', function (event, label) {
+            var input = $(this).parents('.input-group').find(':text'),
+                log = label;
+
+            if (input.length) {
+                input.val(log);
+            } else {
+                if (log) alert(log);
+            }
+
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#img-upload').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
+    });
+</script>
+{%endblock%}

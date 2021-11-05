@@ -1,0 +1,199 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Purchase View</h5>
+    <!-- filter box -->
+    <div class="section card p-3" style="border-top: 3px solid green;">
+        <div class="row">
+            <div class="col-lg-12">
+            <div class="section">
+                    <div class="container-fluid">
+                     <div class="row">
+                          <div class="col-12"><p>Supplier Detail:<hr/></p></div>
+                      </div>
+                        <div class="row p-3 pt-0">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <div class="row">
+                                    <label>Supplier Name: <span id="ele1">{% if pur_info.supplier.business_name %}{{pur_info.supplier.business_name}}{% else %} NP {% endif %}</span></label>
+                                </div>
+                                <div class="row">
+                                    <label>City: <span id="ele2">{% if pur_info.supplier.city %}{{pur_info.supplier.city}}{% else %} NP {% endif %}</span></label>
+                                </div>
+                                
+                                <div class="row">
+                                    <label>Tax Number : <span id="ele4">{% if pur_info.supplier.tax_number %}{{pur_info.supplier.tax_number}}{% else %} NP {% endif %}</span></label>
+                                </div>
+                                <div class="row">
+                                    <label>Mobile : <span id="ele5">{% if pur_info.supplier.mobile %}{{pur_info.supplier.mobile}}{% else %} NP {% endif %}</span></label>
+                                </div>
+                                <div class="row">
+                                   <label> Email : <span id="ele6">{% if pur_info.supplier.email %}{{pur_info.supplier.email}}{% else %} NP {% endif %}</span></label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6 pd-10 float-right">
+                                <div class="row">
+                                    <label>Reference No : <span id="ele11">{% if pur_info.ref_no %}{{pur_info.ref_no}}{% else %} NP {% endif %}</span></label>
+                                </div>
+                                <div class="row">
+                                    <label>Date : <span id="ele12">{{pur_info.purchase_date|date:'d-M-Y'}}</span></label>
+                                </div>
+                                <!-- <div class="row">
+                                    <label>Purchase Status : <span id="ele13"></span></label>
+                                </div> -->
+                                <div class="row">
+                                    <label>Payment Status : <span id="ele14">{% if pur_info.payment_info.payment_status %}Paid{% else %}Unpaid{% endif %}</span></label>
+                                </div>
+                            </div>
+                           
+                        </div> <hr/>
+                        <div class="row">
+                            <p class="ml-3">Products:</p>
+                        </div>
+                        <div class="table-responsive overflow-auto">
+                            <table class="table" id="customer_detail_tablek">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>Prod.Name</th>
+                                        <th>Prod.Qty</th>
+                                        <th>UnitCost(Bef.Disc.)</th>
+                                        <th>Disc.(%)</th>
+                                        <th>UnitCost(Bef.Tax)</th>
+                                        <th>Subtotal(Bef.Tax)</th>
+                                        <th>Tax</th>
+                                        <th>UnitSellPrice</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for purchase in purchases %}
+                                    <tr>
+                                        <td>{{purchase.product_name.product_name}}</td>
+                                        <td>{{purchase.purchase_quantity}}</td>
+                                        <td>{{purchase.unit_cost_before_discounte}}</td>
+                                        <td>{{purchase.discount_percentage}}</td>
+                                        <td>{{purchase.unit_cost_before_tax}}</td>
+                                        <td>{{purchase.sub_total}}</td>
+                                        <td>{{purchase.product_tax}}</td>
+                                        <td>{{purchase.unit_selling_price}}</td>
+                                        <td>{{purchase.line_total}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="section">
+                                <hr>
+                                <p>Payments Info:</p>
+                                    <div class="row pl-3 overflow-auto pr-3">
+                                        <table class="table table-sm">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Date</th>
+                                                    <!-- <th>Reference No</th> -->
+                                                    <th>Amount</th>
+                                                    <th>Payment Mode</th>
+                                                    <th>Payment Note</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="san">
+                                                    <td>#</td>
+                                                    <td>{{pur_info.payment_info.created_on|date:'d-M-Y'}}</td>
+                                                    <!-- <td></td> -->
+                                                    <td>{{pur_info.payment_info.amount}}</td>
+                                                    <td>{{pur_info.payment_info.get_payment_method_display}}</td>
+                                                    <td>{{pur_info.payment_info.payment_notes}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="offset-md-6 offset-lg-6 col-md-6 col-lg-6">
+                                <div class="section">
+                                    <div class="row overflow-auto pl-3 pr-3">
+                                    
+                                        <table class="table table-sm">
+                                            <tbody>
+                                                <tr class="bg-light">
+                                                    <th>Total Amount :</th>
+                                                    <th></th>
+                                                    <td id="nm1">{{pur_info.grand_total}}</td>
+                                                </tr>
+                                                <tr class="bg-light">
+                                                    <th>Discount :</th>
+                                                    <th>(-)</th>
+                                                    <td id="nm2">{{pur_info.Discount_amount}}</td>
+                                                </tr>
+                                                <tr class="bg-light">
+                                                    <th>Purchase Tax :</th>
+                                                    <th>(+)</th>
+                                                    <td id="nm3">{{pur_info.purchase_tax_amount}}</td>
+                                                </tr>
+                                                <tr class="bg-light">
+                                                    <th>Additional Shipping Charges :</th>
+                                                    <th>(+)</th>
+                                                    <td id="nm4">{{pur_info.additional_ship_charges}}</td>
+                                                </tr>
+                                                <tr class="bg-light">
+                                                    <th>Purchase Total :</th>
+                                                    <th></th>
+                                                    <td id="nm5">{{pur_info.purchase_total}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="section">
+                                    <div class="row pl-3 overflow-autto pr-3">
+                                        <table class="table table-sm">
+                                            <tbody>
+                                                <label>Shipping Details -</label>
+                                                <tr class="bg-light">
+                                                    <td id="nm6">{{shipping_details}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <div class="section">
+                                    <div class="row pl-3 pr-3 overflow-auto">
+                                        <table class="table table-sm">
+                                            <tbody>
+                                                <label>Additional Note -</label>
+                                                <tr class="bg-light">
+                                                    <td id="nm7">{{Additional_notes}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 float-right">
+                                <a onclick="printDiv()"
+                                    class="float-right btn btn-primary text-white mb-3"><i
+                                        class="fa fa-print"></i>&nbsp; Print</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock%}

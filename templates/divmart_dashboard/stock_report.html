@@ -1,0 +1,101 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<div class="container-fluid">
+	<h5>Stock Report</h5>
+	<div class="section card p-3" style="border-top: 3px solid green;">
+		<div class="row">
+			<div class="col-lg-12 box-solid border_top">
+				<a data-toggle="collapse" href="#collapsebox" role="button" aria-expanded="true" aria-controls="collapsebox">
+					<i class="fa fa-filter"></i>Filters
+				</a>
+				<div class="collapse show" id="collapsebox">
+					<form action="" method="POST">
+						{% csrf_token %}
+						<div class="row">
+							<div class="col-lg-3">
+								<label>Product:</label>
+								<input type="text" name="product" class="form-control"
+									placeholder="Search Product Name">
+							</div>
+							<div class="col-lg-3 filterbox">
+								<label>Category:</label>
+								<select class="form-control" name="category">
+									<option>All</option>
+									{% for category in categories %}
+									<option value="{{category.name}}">{{category.name}}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<!-- <div class="col-lg-3 filterbox">
+								<span>Sub Category:</span>
+								<select class="form-control">
+									<option>All</option>
+								</select>
+							</div> -->
+							<div class="col-lg-3 filterbox">
+								<label>Brand:</label>
+								<select class="form-control" name="brand">
+									<option value="">Please select</option>
+									{% for brand in brands %}
+									<option value="{{brand.brand_name}}">{{brand.brand_name}}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="col-lg-3 pt-4 filterbox">
+								<input type="submit" class="btn btn-primary btn-block" value="FILTER">
+							</div> 
+						</div>
+						
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="section card p-3  overflow-auto" style="border-top: 3px solid green;">
+	<div class="section">
+                <span class="float-right">
+                      <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print"
+                            aria-hidden="true"></i>&nbsp;
+                        CSV </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print"
+                            aria-hidden="true"></i>&nbsp;
+                        EXCEL </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print"
+                            aria-hidden="true"></i>&nbsp;
+                        PDF </a>
+                </span>
+    </div>
+		<table class="table table-sm" id="stock_report">
+			<thead>
+				<tr>
+					<th>SKU</th>
+					<th>Product</th>
+					<th>Unit Price</th>
+					<th>Current Stock</th>
+					<th>Total Unit Sold</th>
+					<th>Total Unit Transfered</th>
+					<th>Total Unit Adjusted</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for stock in stocks %}
+				<tr>
+					<td>{{stock.SKU}}</td>
+					<td>{{stock.product_name}}</td>
+					<td>₹ {{stock.purchase_price}}</td>
+					<td>{{stock.current_stock}}</td>
+					<td>{{stock.prod_sales}}</td>
+					<td>{{stock.prod_trans}}</td>
+					<td>{{stock.prod_adjst}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		$('#stock_report').dataTable();
+	});
+</script>
+
+{%endblock%}

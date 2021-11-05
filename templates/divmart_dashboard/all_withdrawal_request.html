@@ -1,0 +1,82 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<div class="container-fluid">
+    <h5>Withdrawal Requests</h5>
+    <div class="section card p-3" style="border-top:3px solid green">
+        {% if messages %}
+            <ul class="messages list-unstyled">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }} p-2 font-weight-bold text-center" {% endif %}>
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="overflow-auto">
+            <table class="table  table-sm" id="usertable">
+                <thead>
+                    <tr>
+                        <th>S.no</th>
+                        <th>UserName</th>
+                        <!-- <th>Name</th> -->
+                        <th>Withdrawal Amount</th>
+                        <th>Payment Status</th>
+                        <th>Note</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for list in all_list %}
+                    <tr class="font-weight-bold">
+                        <td>{{forloop.counter}}</td>
+                        <td>{{list.member.fname}} {{list.member.lname}}</td>
+                        <td>&#8377; {{list.amount|floatformat:2}}</td>
+                        <td>
+                            <select name="payment_status" class="form-control font-weight-bold" id="payment_status_{{list.id}}"  onchange="payment_status_change({{list.id}})">
+                                <option value="Paid" class="font-weight-bold" {% if list.payment_status == 'Paid' %}selected{% endif %}>Paid</option>
+                                <option value="Pending" class="font-weight-bold" {% if list.payment_status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Rejected" class="font-weight-bold" {% if list.payment_status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </td>
+                        <td>{{list.user_note}}</td>
+                        <td>{{list.created|date:'d-m-Y H:i'}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{%endblock%} {% block alljs %}
+<script>
+    $(document).ready(function () {
+        $('#usertable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+<script>
+    function payment_status_change(id) {
+    var payment_status = $("#payment_status_" + id).val()
+    var action = confirm("Are you sure to change the status...?")
+    if (action == true) {
+        $.ajax({
+            type: "GET",
+            url: `{% url 'all_withdrawal_request' %}`,
+            data: {'id': id, 'payment_status': payment_status},
+            success: function (data) {
+                location.reload();
+            },
+            error: function (response) {
+                location.reload();
+            }
+        });
+    } else {
+        id.preventDefault();
+        location.reload();
+    }
+}
+</script>
+
+{%endblock%}

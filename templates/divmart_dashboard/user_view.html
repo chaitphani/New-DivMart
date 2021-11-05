@@ -1,0 +1,267 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+
+<div class="container-fluid">
+    <a onclick="window.history.back()" class="btn btn-primary btn-sm text-white"><i class="fa fa-arrow-left"></i>&nbsp; BACK</a>
+    <h4 class="text-center">User View</h4>
+    <div class="section card p-3 overflow-auto" style="border-top:3px solid green">
+        <table class="table table-sm">
+            <tbody>
+                <tr>
+                    <th>
+                        <h6>Email</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.email }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Username</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.username }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Role</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>{{ rol }}</td>
+                </tr>
+                <!-- <tr>
+
+                    <th>
+                        <h6>Sales Commission Percentage (%)</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.sales_commision_percentage|floatformat:2 }}%</h5>
+                    </td>
+
+                </tr> -->
+                <!-- <tr>
+
+                    <th>
+                        <h6>Allowed Contacts</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>All</h5>
+                    </td>
+
+                </tr> -->
+                <tr>
+                    <th colspan="12">
+                        <h6 class="text-success text-center pt-1"> More Information</h6>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Date of birth</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.birth_date }}</h5>
+                    </td>
+                </tr>
+                <!-- <tr>
+
+                    <th>
+                        <h6>Marital Status
+
+                        </h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.marital_status }}</h5>
+                    </td>
+
+                </tr> -->
+                <!-- 
+                <tr>
+
+                    <th>
+                        <h6>Blood Group
+
+                        </h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.blood_group }}</h5>
+                    </td>
+
+                </tr> -->
+                <tr>
+                    <th>
+                        <h6>Contact Number</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.mobile }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Guardian Name</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.guardian_name }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Guardian Contact Number</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.contact }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>ID Proof(Front)</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>front</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>ID Proof(Back)</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>back</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Permanent Address</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.permanent_address }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Current Address</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.current_address }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="12">
+                        <h6 class="text-success text-center pt-1">Bank Details</h6>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Account Holder's Name</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.account_holder_name }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Account Number</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.account_number }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Bank Name</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.bank_name }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Bank Identifier Code</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.bank_identifier_code }}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Branch</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.branch}}</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <h6>Branch Tax Payer ID</h6>
+                    </th>
+                    <td>
+                        <h6>:</h6>
+                    </td>
+                    <td>
+                        <h6>{{ usr.tax_payer_id }}</h5>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

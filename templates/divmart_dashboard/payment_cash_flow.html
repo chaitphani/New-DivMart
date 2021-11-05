@@ -1,0 +1,110 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<style>
+    .dropdown-item:focus,
+    .dropdown-item:hover {
+        text-decoration: none;
+        background-color: #ffc107;
+    }
+</style>
+<div class="container-fluid">
+    <h4>Cash Flow</h4>
+    <div class="section card p-3" id="accordionExample" style="border-top:3px solid green">
+        <div class="card-header bg-white" id="headingOne">
+            <i class="fas fa-filter accordion text-primary" id="accordionExample" data-toggle="collapse"
+                data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> <b
+                    class="text-primary">Filters</b> </i>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+                <div class="form-group row ">
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <label>Account</label>
+                        <select class="form-control" name="drole">
+                            <option>All</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-sm-4">
+                        <label>Date Range</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" name="date" placeholder="date range" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-sm-4">
+                        <label>Transaction Type</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-exchange"></i></span>
+                            </div>
+                            <select class="form-control">
+                                <option>all</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section card p-3 table-responsive overflow-auto" style="border-top: 3px solid green;">
+        <table id="list_product_table" class="table table-sm">
+            <thead>
+                <tr>
+                    <th class="th-sm">Date
+                    </th>
+                    <th class="th-sm">Account
+                    </th>
+                    <th class="th-sm">Description
+                    </th>
+                    <th class="th-sm">Account
+                    </th>
+                    <th class="th-sm">Credit
+                    </th>
+                    <th class="th-sm">Debit
+                    </th>
+                    <th class="th-sm">Balance
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>xxx</td>
+                    <td>xxx</td>
+                    <td>xxxx</td>
+                    <td>xxxx</td>
+                    <td>xxxx</td>
+                    <td>xxx</td>
+                    <td>xxxx</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{%endblock%}{% block alljs %}
+
+<script>
+    $(document).ready(function () {
+        $('#list_product_table').dataTable({
+
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            }
+        });
+    });
+</script>
+
+
+
+
+
+{%endblock%}

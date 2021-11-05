@@ -1,0 +1,67 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Drafts</h5>
+    <div class="section card p-3" style="border-top:2px solid green">
+        <div class="row">
+            <div class="col-lg-12">
+                <h6>Draft
+                    <span class="float-right">
+                        <a class="btn btn-primary btn-sm mb-2" href="{%url 'dashboard_pos'%}"> <i class="fa fa-plus-circle text-white"
+                                aria-hidden="true"></i>&nbsp;
+                            Add </a>
+                    </span>
+                </h6>
+            </div>
+        </div>
+        <div class="overflow-auto">
+        <table class="table  table-sm" id="usertable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Reference No</th>
+                    <th>Customer Name</th>
+                    <th>Location</th>
+                    <!-- <th>Action</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for draft in drafts %}
+                    <tr>
+                        <th>{{draft.sale_date|date:'d-m-Y H:i'}}</th>
+                        <td>{{draft.ref_no}}</td>
+                        <td>{{draft.customer}}</td>
+                        <td>{{draft.business_location}}</td>
+                        <!-- <td>
+                            <div class="btn-group">
+                                <a href="#" class="btn btn-success btn-sm ml-1" data-toggle="modal"
+                                    data-target=".invoice_mdl"><i class="fa fa-eye" aria-hidden="true"></i>
+                                </a>
+                                <button type="button" class="btn btn-primary btn-sm ml-1"><i class="fa fa-pencil"
+                                        aria-hidden="true"></i>
+                                </button>
+                                <a href="#" class="btn btn-success btn-sm ml-1"><i class="fa fa-print"
+                                        aria-hidden="true"></i>
+                                </a>
+                                <button type="button" class="btn btn-danger btn-sm ml-1"><i class="fa fa-trash"
+                                        aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </td> -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+
+{%endblock%} {% block alljs %}
+<script>
+    $(document).ready(function () {
+        $('#usertable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{%endblock%}

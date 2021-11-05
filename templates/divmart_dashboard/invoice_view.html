@@ -1,0 +1,250 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<style>
+    #invoice {
+        max-width: 350px
+    }
+
+    #invoice .border-top {
+        border-top: 1px dashed #ccc
+    }
+
+    #invoice .border-bottom {
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 3px
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-4">
+            <a onclick="window.history.back()" class="btn btn-primary btn-sm text-white"><i
+                    class="fa fa-arrow-left"></i>&nbsp; Back</a>
+        </div>
+        <div class="col-md-8 text-right">
+            <a href="{% url 'list_pos' %}" class="btn btn-secondary btn-sm text-white"><i class="fa fa-shopping-cart"
+                    aria-hidden="true"></i>&nbsp; POS List</a>
+            <!-- <h5 class="d-none"><span>{% if obj.status == 'D' %} Draft {% elif obj.status == 'Q' %} Quotation {% else %}
+                    Invoice {% endif %}</span>View - <span
+                    class="text-danger font-weight-bold">{{obj.invoice_no}}</span></h5> -->
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+        <span {% if message.tags %} class="{{ message.tags }} text-center" 
+        style="background-color:transparent" {% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            {{ message }}
+        </span>
+        {% endfor %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+</div>
+
+<div class="container-fluid" id="invoice">
+    <!-- header parts of invoice -->
+    <div class="section card p-3" style="border-top: 3px solid green;" id="DivIdToPrint">
+        <div class="text-center">
+            <h6>{{obj.business_location.name}}<br>
+                <small>
+                    {{obj.business_location.city}},
+                    {{obj.business_location.state}}
+                </small><br>
+                {% comment %} <small></small> {% endcomment %}
+            </h6>
+        </div>
+        <table class="p-0 border-top border-bottom">
+            <tr>
+                <td colspan="6" id="date">{{obj.payment_info.created_on|date:'d-m-Y H:i'}}</td>
+                <td colspan="6" id="time" class="text-right font-weight-bold">Invoice: #{{obj.invoice_no}}</td>
+            </tr>
+            <tr>
+                <td colspan="7" class="text-capitalize text-left">
+                    <b>Bill To:</b> {{obj.customer.first_name}}
+                </td>
+                <td colspan="5" class="text-right"><b>Bill By:</b> 
+                    {% if request.user %}{{request.user}}{% else %} admin {% endif %}
+                </td>
+            </tr>
+        </table>
+        <table class="table table-borderless table-sm mt-0 mb-0 pb-0 pt-0" id="myTable">
+            <th>Item Name</th>
+            <th>Qty</th>
+            <th>MRP</th>
+            <th>SP</th>
+            <th>Amt</th>
+            <!-- <th>DIff</th> -->
+            <tbody>
+                {% for items in items_sold %}
+                <tr>
+                    <td>{{forloop.counter}}. {{items.items_name}}</td>
+                    <td>{{items.quantity}}</td>
+                    <td>{{items.items_name.sale_mrp}}</td>
+                    <td>{{items.price}}</td>
+                    <td>{{items.sub_total}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="border-top border-bottom"><small class="font-weight-bold">Items/Qty: 16/25</small></div>
+        <div class="container">
+            <div class="row mb-2">
+            
+                <div class="col-7 p-0"><small>Total Amount:</small></div>
+                <div class="col-5 p-0 text-right" id="gross_amount"><small>{{obj.total_amount}}</small></div>
+
+                <div class="col-7 p-0"><small>Discount{% if obj.discount_type == 'P' %}(%){% else %}(flat){% endif %}:</small></div>
+                <div class="col-5 p-0 text-right" id="discount"><small>{% if obj.order_tax != '' %}{{obj.order_tax}}{% else %}{{obj.dicsount_amount}}{% endif %}</small></div>
+
+                <div class="col-7 p-0"><small><strong>Final Payable:</strong></small></div>
+                <div class="col-5 p-0 text-right"><small><strong>{{obj.total_payable}}</strong></small></div>
+            </div>
+        </div>
+        <div class="border-top border-bottom text-center"><small class="font-weight-bold">Total Savings: </div>
+        <div class="container">
+            <!-- <div class="row mb-2">
+                <div class="col-8 p-0">
+                    <b class="text-capitalize">
+                        {{obj.payment_info.get_payment_method_display}} Paid:
+                    </b>
+                    </div>
+                <div class="col-4 p-0 text-right" id="gross_amount"><b>{{obj.payment_info.amount}}</b></div>
+            </div> -->
+            <div class="text-center">
+                <small>* Tax not payable on reverse charge basis.</small><br>
+                <span>Thank You. Visit Again!<span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <a class="btn btn-primary float-right text-white" id="clickBtn" onclick=window.print();>
+            <i class="fa fa-print"></i>&nbsp; Print
+        </a>
+    </div>
+</div>
+
+<div class="container-fluid d-none">
+    <div class="section card p-3" style="border-top: 3px solid green">
+        <div class="row">
+            <div class="offset-6 col-md-6 col-lg-6">
+                <div class="section">
+                    <div class="row pl-3 pr-3 overflow-auto">
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr class="bg-light">
+                                    <th>Total :</th>
+                                    <th></th>
+                                    <td>{{obj.total_amount}}</td>
+                                </tr>
+                                <tr class="bg-light">
+                                    <th>MRP :</th>
+                                    <th></th>
+                                    <td>{{obj.total_amount}}</td>
+                                </tr>
+                                <tr class="bg-light">
+                                    <th>Discount :</th>
+                                    <th>(-)</th>
+                                    <td>{{obj.discount_amount}}</td>
+                                </tr>
+                                <tr class="bg-light">
+                                    <th>Order Tax :</th>
+                                    <th>+</th>
+                                    <td>{% if obj.order_tax %}{{obj.order_tax}}{% else %}0.00{% endif %}</td>
+                                </tr>
+                                <tr class="bg-light">
+                                    <th>Shipping :</th>
+                                    <th>(-)</th>
+                                    <td>{{obj.shipping_charges}}</td>
+                                </tr>
+                                <tr class="bg-light">
+                                    <th>Total Payble :</th>
+                                    <th>(-)</th>
+                                    <td>{{obj.total_payable}}</td>
+                                </tr>
+                                <tr class="bg-light">
+                                    <th>Total Paid :</th>
+                                    <th>(-)</th>
+                                    <td>
+                                        {% if obj.payment_info.amount %}{{obj.payment_info.amount}}
+                                        {% else %}0.00{% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="bg-light">
+                                    <th>Total Unpaid :</th>
+                                    <th>(-)</th>
+                                    <td>
+                                        {% if obj.payment_info.payment_due %}{{obj.payment_info.payment_due}}
+                                        {% else %}0.00{% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="section">
+                    <div class="row pl-3 pr-3">
+                        <table class="table table-sm">
+                            <tbody>
+                                <label>Sell Note</label>
+                                <tr class="bg-light">
+                                    <th>-</th>
+                                    <th></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="section">
+                    <div class="row pl-3 pr-3">
+                        <table class="table table-sm">
+                            <tbody>
+                                <label>Staff Note</label>
+                                <tr class="bg-light">
+                                    <th>-</th>
+                                    <th></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+
+<script>
+    function printDiv() {
+        var divToPrint = document.getElementById('DivIdToPrint');
+        var newWin = window.open('', 'Print-Window');
+        newWin.document.open();
+        newWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
+        newWin.document.close();
+        setTimeout(function () { newWin.close(); }, 10);
+    }
+</script>
+<!-- <script>
+    $('#clickBtn').click(function (e) {
+        e.preventDefault();
+        $('.btn-sm').css("display", "none");
+        $('#clickBtn').css("display", "none");
+        $('.text-center').css("display", "none");
+        window.print();
+    })
+    // location.reload();
+</script> -->
+
+{%endblock%}

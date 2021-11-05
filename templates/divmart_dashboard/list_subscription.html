@@ -1,0 +1,191 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+  <h5>List Subscriptions</h5>
+    <div class="section card p-3" style="border-top:2px solid green">
+    <div class="overflow-auto">
+        <table class="table  table-sm table-bordered" id="usertable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Subscription No.</th>
+                    <th>Customer Name</th>
+                    <th>Location</th>
+                    <th>Subscription Interval</th>
+                    <th>No. of Repetation</th>
+                    <th>Generated Invoices</th>
+                    <th>Last Generated</th>
+                    <th>Upcoming Invoice</th>
+                    <th>Action</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+
+
+                <tr>
+
+                    <td>xxxx</td>
+                    <td>xxxx</td>
+                    <td>xxxx</td>
+                    <td>xxxxxx</td>
+                    <td>xxxxxxx</td>
+                    <td>xxxxxx</td>
+                    <td>xxxxxxxx</td>
+                    <td>xxxxxx</td>
+                    <td>xxxxxxxx</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-success btn-sm ml-1" data-toggle="modal" data-target=".invoice_mdl"><i class="fa fa-eye" aria-hidden="true"></i>
+                            </a>
+                            <button type="button" class="btn btn-primary btn-sm ml-1"><i class="fa fa-pencil" aria-hidden="true"></i>
+                                </button>
+                            <a href="#" class="btn btn-success btn-sm ml-1"><i class="fa fa-print" aria-hidden="true"></i>
+                                </a>
+                            <button type="button" class="btn btn-danger btn-sm ml-1"><i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                        </div>
+                    </td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+    <!-- add discount modal start here -->
+    <div class="modal fade" id="add_discountmdl" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Discount</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body pl-4 pr-4">
+                    <div class="form-group row">
+                        <div class="col-lg-12 col-md-12">
+                            <label>Name</label>
+                            <input type="text" class="form-control" placeholder="name" name="name">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-6 col-md-6">
+                            <label>Brand</label>
+                            <select class="form-control">
+                                <option>Please Select</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <label>Category</label>
+                            <select class="form-control">
+                                <option>Please Select</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-6 col-md-6">
+                            <label>Location</label>
+                            <select class="form-control" name="location">
+                                <option>Please Select</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <label>Periority</label><span class="pl-1" data-toggle="tooltip" data-placement="top" title="Discount with higher priority will have higher weightage, however priority will not be considered for exact matches"><i class="fa fa-info-circle text-info" aria-hidden="true"></i>
+                            
+                            </span>
+
+                            <input type="text" class="form-control" name="periority" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-6 col-md-6">
+                            <label>Discount Type</label>
+                            <select class="form-control" name="discount_type">
+                                <option>Please Select</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <label>Discount Amount</label>
+
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-6 col-md-6">
+                            <label>Start At</label>
+                            <input type="text" class="form-control" name="daterange" value="01/01/2018 - 01/15/2018" />
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <label>End At</label>
+
+                            <input type="text" class="form-control" name="daterange" value="01/01/2018 - 01/15/2018" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-6 col-lg-6">
+                            <div class="custom-control custom-checkbox checkbox-xl">
+                                <input type="checkbox" class="custom-control-input" id="checkbox-3" checked="">
+                                <label class="custom-control-label" for="checkbox-3">Apply in selling price groups</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="custom-control custom-checkbox checkbox-xl">
+                                <input type="checkbox" class="custom-control-input" id="checkbox-3" checked="">
+                                <label class="custom-control-label" for="checkbox-3">Apply in customer groups</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-6 col-lg-6">
+                            <div class="custom-control custom-checkbox checkbox-xl">
+                                <input type="checkbox" class="custom-control-input" id="checkbox-3" checked="">
+                                <label class="custom-control-label" for="checkbox-3">Is active</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- add discount modal end here -->
+
+</div>
+
+
+
+{%endblock%} {% block alljs %}
+<script>
+    $(document).ready(function() {
+        $('#usertable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+<script>
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+    });
+</script>
+
+{%endblock%}

@@ -1,0 +1,77 @@
+<form name="myForm" method="POST" >
+    {% csrf_token %}
+        <label for="" class="col-sm-4 col-form-label lbl-fm">username</label>
+        <div class="col-sm-8 pd-r">
+            <input type="text" id="username" name="username" class="form-control" required>
+            <span style="color: red;">{{ error }}</span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="" class="col-sm-4 col-form-label lbl-fm">password</label>
+        <div class="col-sm-8 pd-r">
+            <input type="password" id="password" name="pwd1" class="form-control" required>
+            <span style="color: red;">{{ mismatch }}</span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="" class="col-sm-4 col-form-label lbl-fm">confirm password</label>
+        <div class="col-sm-8 pd-r">
+            <input type="password" id="password" name="pwd2" class="form-control" required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="" class="col-sm-4 col-form-label lbl-fm">First Name</label>
+        <div class="col-sm-8 pd-r">
+            <input type="text" id="fname" name="fname" class="form-control" required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="" class="col-sm-4 col-form-label lbl-fm">Last Name</label>
+        <div class="col-sm-8 pd-r">
+            <input type="text" id="lname" name="lname" class="form-control" required>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="" class="col-sm-4 col-form-label lbl-fm">Email id</label>
+        <div class="col-sm-8 pd-r">
+            <input type="email" id="email" name="email" class="form-control" required>
+            <span style="color: red;">{{ errore }}</span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="" class="col-sm-4 col-form-label lbl-fm">ph / mob no</label>
+        <div class="col-sm-8 pd-r">
+            <input type="tel" id="phone" name="phone" class="form-control" required>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="" class="col-sm-4 col-form-label lbl-fm">address</label>
+        <div class="col-sm-8 pd-r">
+            <input type="text" id="address" name="address" class="form-control" required>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="" class="col-sm-4 col-form-label lbl-fm">Id Proof Name</label>
+        <div class="col-sm-8 pd-r">
+            <input type="text" id="idname" name="idname" class="form-control" required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="" class="col-sm-4 col-form-label lbl-fm">Id Proof Number</label>
+        <div class="col-sm-8 pd-r">
+            <input type="text" id="idnumber" name="idnumber" class="form-control" required>
+        </div>
+    </div>
+
+<div class="row mb-2">
+<div class="col-sm-4 offset-sm-5">
+<button type="submit" class="btn btn-info nav-btn text-white">SIGN UP</button>
+</div>
+</div>
+</form>

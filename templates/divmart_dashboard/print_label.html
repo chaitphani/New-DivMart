@@ -1,0 +1,259 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<style>
+    .btn-style{margin-left: 75%;}
+</style>
+<script>
+    window.onload = function() {
+        var c = document.getElementById('prod_price_check')
+        c.onchange = function() {
+            if (c.checked == true) {document.getElementById('tax_type').style.display = 'inline';}
+            else {document.getElementById('tax_type').style.display = 'none';
+            }
+        }
+    }
+</script>
+<div class="container-fluid">
+    <h5>Print Label</h5>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="section card p-3" style="border-top:3px solid green" id="accordionExample">
+            <p>Add products to generate labels</p>
+            {% if messages %}
+                <ul class="messages list-unstyled">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }} text-center p-2 m-0 font-weight-bold" {% endif %}>
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <br>
+            <div class="col-lg-8 col-md-8 mx-auto">
+                <div class="form-group row">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="search-input form-control" id="p_name"
+                            placeholder="Enter products name to print labels">
+                    </div>
+                    <div class="suggestions">
+                    </div>
+                </div>
+                <table class="table mb-2" id="usertable">
+                    <thead>
+                        <tr>
+                            <th>S.no</th>
+                            <th>Products</th>
+                            <th>No. of Labels</th>
+                        </tr>
+                    </thead>
+                    <tbody id="purchase_cal"></tbody>
+                </table>
+                <hr>
+                <!-- <div class="row">
+                    <table class="table table-sm table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Products</th>
+                                <th scope="col">No. of Labels</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type="text" name="p_name" id="p_name" class="form-control" readonly/>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" id="no_of_labels" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> -->
+            </div>
+        </div>
+
+        <div class="section card accordion p-3" id="accordionExample" style="border-top:3px solid green">
+            <p>Information to display on labels</p>
+            <br>
+            <div class="form-group row pl-4">
+
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                   <div>
+                    <span><input class="form-check-input" type="checkbox" id="product_name_Check" name="product_name" value="" checked/></span>
+                    <h6 class="pt-2"><label class="form-check-label" for="product_name_Check">Product Name</label></h6>
+                   </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                   <div>
+                    <span><input class="form-check-input" type="checkbox" id="Business_name_Check" name="Business_name" value="" checked/></span>
+                    <h6 class="pt-2"><label class="form-check-label" for="Business_name_Check">Business Name</label></h6>
+                   </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                   <div>
+                    <span><input class="form-check-input" id="prod_price_check" type="checkbox" name="product_price" value="" checked/></span>
+                    <h6 class="pt-2"><label class="form-check-label" for="prod_price_check">Product Price</label></h6>
+                   </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3" id="tax_type">
+                    <label>Show Price:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-info"></i>
+                            </span>
+                        </div>
+                        <select class="form-control" name="tax_type">
+                            <option value="I">Inc. tax</option>
+                            <option value="E">Exc. tax</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+                <!-- <div class="form-group row"> -->
+                <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+                    <label>Barcode Setting</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-cog"></i>
+                            </span>
+                        </div>
+                        <select class="form-control">
+                            <option>30 Labels per sheet</option>
+                        </select>
+                    </div>
+                </div> -->
+                <!-- <button type="submit" class="btn btn-primary text-white w-25 text-uppercase p-2 ml-5">Preview</button> -->
+                <!-- </div> -->
+                <!-- <div class="form-group row">
+                <div class="col-lg-12 col-md-12">
+                    <!-- <a class="btn btn-primary fl-r text-white" style="float:right;width:">Preview</a>
+                </div>
+                </div> -->
+            <input type="submit" class="btn btn-primary text-white w-25 text-uppercase mb-3 btn-style" value="Preview">
+        </div>
+    </form>
+
+    {% if images %}
+        <section class="print-label">
+            <div class="row">
+                <h4 class="ml-4">Preview</h4>
+            </div>
+        <hr>
+           
+            <div class="row ml-0">
+                <div class="col-12"> 
+                <input type="button" class="btn btn-success btn-block" onclick="printDiv()" value="Print Labels">
+                </div>
+            </div>
+            <div class="row ml-1" id="contentPrint">
+                <div class="col-12 barcode overflow-auto">          
+                    {% for image in images %}
+                        <img src="{{ image }}" style="height: 125px;width: 185px;" class="mt-4"/>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+</div>
+<!-- xhr.send(); -->
+
+<!-- const xhr = new XMLHttpRequest();
+xhr.responseType = "json";
+xhr.open("GET", `/clientapp/check_bank_acc_no/${accno.value}`);
+xhr.onload = () => {
+    console.log(accno.value);
+    const accno_div = document.getElementById('accno-div');
+    err = xhr.response['erroracc'];
+    accno_div.innerHTML += `<span class="text-danger" style="font-size:11px;">${err}</span>`;
+}
+xhr.send(); -->
+
+<script>
+    var count = 0;
+    var sum = 0
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = "json";
+    xhr.open('GET', "{% url 'search_product_list' %}")
+    xhr.onload = () => {
+        const products = xhr.response['prod_list'];
+        const searchInput = document.querySelector('.search-input');
+        const suggestionsPanel = document.querySelector('.suggestions');
+
+        searchInput.addEventListener('keyup', function () {
+            const input = searchInput.value;
+            suggestionsPanel.innerHTML = '';
+            const suggestions = products.filter(function (product) {
+                return product.name.toLowerCase().startsWith(input);
+            });
+
+            suggestions.forEach(function (suggested) {
+                const div = document.createElement('div');
+                div.innerHTML = suggested.name;
+                div.style.cursor = "pointer";
+                div.style.marginLeft = '50px';
+                div.style.padding = '3px';
+
+                div.addEventListener('mouseenter', () => {
+                    div.style.color = "white";
+                    div.style.backgroundColor = "#87A8A4";
+                })
+                div.addEventListener('mouseleave', () => {
+                    div.style.color = "black";
+                    div.style.backgroundColor = "white";
+                })
+                
+                div.addEventListener('click', () => {
+                    const p_name = document.getElementById('p_name');
+                    p_name.value = div.innerText;
+                    searchInput.value = div.innerText;
+                    suggestionsPanel.innerHTML = "";
+                    const product = document.getElementById("p_name");
+
+                    const xhr = new XMLHttpRequest();
+                    xhr.responseType = "json";
+                    xhr.open('GET', `/dashboard/product_informtion_api/${product.value}`);
+                    xhr.onload = () => {
+                        count++;
+                        const prod_inf = xhr.response['prod_info'];
+                        const tbody = document.getElementById("purchase_cal")
+                        let HTML = `<tr>
+                        <th scope="row">${count}</th>
+                        <input type="hidden" name="count" value="${count}"/>
+                        <td><input type="text" class='form-control' name="nam${count}" id="nam${count}" value="${product.value}"/></td> 
+                        <td><input type="text" class='form-control' name="lab${count}" id="lab${count}" value="1"/></td> 
+                        </tr>`;
+                        tbody.innerHTML += HTML;
+                        searchInput.value = '';
+                    }
+                    xhr.send();
+                })
+                suggestionsPanel.appendChild(div);
+            });
+            if (input === '') {
+                suggestionsPanel.innerHTML = '';
+            }
+        });
+    }
+    xhr.send();
+</script>
+<script>
+    function printDiv() {
+        var divContents = document.getElementById("contentPrint").innerHTML;
+        var a = window.open('', '', 'height=500, width=500');
+        a.document.write('<html>');
+        a.document.write('<body><h1>Product Barcodes<br>');
+        a.document.write(divContents);
+        a.document.write('</body></html>');
+        a.document.close();
+        a.print();
+    }
+</script>
+{% endblock %}

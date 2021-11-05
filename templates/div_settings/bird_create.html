@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Add a new bird</h1>
+    <form id="form-container" method="POST">
+        {% csrf_token %}
+        {{bird_formset.management_form}}
+        {% for form in bird_formset %}
+        <!-- {{form.as_p}} -->
+        <div id="bird-form">
+            <label for="id_form-0-main_name">Main name:</label> 
+            <input type="text" name="form-0-main_name" maxlength="120" id="id_form-0-main_name"><br><br>
+            <label for="id_form-0-scientfic_name">Scientfic name:</label> 
+            <input type="text" name="form-0-scientfic_name" maxlength="120" id="id_form-0-scientfic_name">
+        </div><br>
+            <input type="hidden" name="form-0-id" id="id_form-0-id">
+        {% endfor %}
+        <button id="add-form" type="button" onclick="createNewElement()">Add Another Bird</button>
+        <!-- <button id="remove-form" type="button">Remove</button> -->
+        <button type="submit">Create Birds</button>
+    </form>
+
+    <!-- <script>
+        let birdForm = document.querySelectorAll(".bird-form")
+        let container = document.querySelector("#form-container")
+        let addButton = document.querySelector("#add-form")
+        let removeButton = document.querySelector("#remove-form")
+        let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+        let formNum = birdForm.length-1
+        
+        addButton.addEventListener('click', addForm)
+
+        function addForm(e) {
+            e.preventDefault()
+
+            let newForm = birdForm[0].cloneNode(true)
+            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+
+            formNum++
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
+            container.insertBefore(newForm, addButton)
+            totalForms.setAttribute('value', `${formNum+1}`)
+            removeButton.addEventListener('click', function(){
+                // form_great = Math.max(formNum)
+                // console.log('----form num in remove-----', form_great)
+                newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${newForm}-`)
+                // console.log('---new form-----', newForm)
+                newForm.remove();
+                // console.log('---')
+            })
+
+        }
+
+    </script> -->
+    <!-- <div id="dynamicCheck">
+        <input type="button" value="Create Element" onclick="createNewElement();"/>
+     </div>
+     
+     <div id="newElementId">New inputbox goes here:</div> -->
+    <script type="text/JavaScript">
+        function createNewElement() {
+            // First create a DIV element.
+            counter = 1
+            var txtNewInputBox = document.createElement('div');
+
+            // Then add the content (a new input box) of the element.
+            txtNewInputBox.innerHTML = "<label>Scientfic name: </label><input type='text' id='newInputBox' name='scientfic_name-{counter}'>";
+
+            // Finally put it where it is supposed to appear.
+            document.getElementById("bird-form").appendChild(txtNewInputBox);
+            counter++
+        }
+        </script>
+</body>
+</html>

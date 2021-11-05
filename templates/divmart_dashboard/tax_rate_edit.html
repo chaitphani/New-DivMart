@@ -1,0 +1,21 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container">
+    <h5>Update Tax Rates - <span class="text-danger">{{obj.name}}</span></h5>
+    <div class="section card p-5" style="border-top:3px solid green">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group row">
+                <label>Name*</label>
+                <input type="text" class="form-control" name="name" value="{{obj.name}}" required>
+            </div>
+            <div class="form-group row">
+                <label>Tax Rate(%)*</label>
+                <input type="text" class="form-control" name="rate" value="{{obj.rate}}" required>
+            </div>
+            <input type="submit" class="btn btn-primary w-100" value="UPDATE">
+        </form>
+    </div>
+</div>
+
+{%endblock%}

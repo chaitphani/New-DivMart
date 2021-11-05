@@ -1,0 +1,62 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Import Contact</h5>
+
+    <div class="section card p-3" style="border-top:3px solid green" id="accordionExample" style="border-top:2px solid green">
+        <div class="form-group">
+            <form method="POST"  enctype="multipart/form-data" >
+                {% csrf_token %}
+            <label for="exampleInputEmail1">Import Contact</label><br>
+            <input type="file" name="csv_file"/>
+            <input  type="submit" value="SUBMIT" class="btn btn-primary btn-sm text-white" />
+            <!-- <a class="btn btn-primary text-white">Submit</a> -->
+        </div>
+    </form>
+        <div class="row">
+            <a class="btn btn-success btn-sm text-white mb-2 ml-2"> <i class="fa fa-download" aria-hidden="true"></i> Download CSV file template</a>
+        </div>
+
+    </div>
+
+    <div class="section card p-3" style="border-top:3px solid green" id="accordionExample" style="border-top:2px solid green">
+        <h6>Instruction:</h6>
+        <p>Follow the instructions carefully before importing the file.</br>
+        <small>(The columns of the CSV file should be in the following order).
+        </small>
+        </p>
+        
+        <div class="overflow-auto">
+        <table class="table table-sm table-striped mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">Column Number</th>
+                    <th scope="col">Column Name</th>
+                    <th scope="col">Instruction</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Product Name (Required) </td>
+                    <td>Name of the product
+
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Brand</td>
+                    <td>Name of the Brand
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+{%endblock%}

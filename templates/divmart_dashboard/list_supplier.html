@@ -1,0 +1,291 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<div class="container">
+<h5>All Your Suppliers</h5>
+
+           {% if messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <ul class="messages list-unstyled">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }} text-center" {% endif %}>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                    {{ message }}
+                    </li>
+                    {% endfor %}
+            </ul>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            {% endif %}
+
+    <div class="section card p-3" style="border-top:3px solid green">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <h6>Suppliers
+                    <span class="float-right">
+                        <a class="btn btn-primary btn-sm text-white mb-2" data-toggle="modal"
+                            data-target=".bd-example-modal-lg">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add
+                        </a>
+                    </span>
+                </h6>
+            </div>
+            
+        </div>
+        <div class="table-responsive overflow-auto">
+            <table class="table table-bordered table-sm" id="role_table">
+                <thead>
+                    <tr>
+                        <th>Contact ID</th>
+                        <th>Business Name</th>
+                        <th>Business Location</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Total Purchase Due</th>
+                        <th>Total Purchase Return Due</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for val in supplier_user %}
+                        {% if val.is_deleted == 0 %}
+                            <tr>
+                                <td>{{ val.contact_id }}</td>
+                                <td>{{ val.business_name }}</td>
+                                <td>{{ val.business_location }}</td>
+                                <td>{{ val.first_name }}</td>
+                                <td>{{ val.mobile }}</td>
+                                <td>{{ val.total_purchase_due }}</td>
+                                <td>{{ val.total_purchase_return_due }}</td>
+                                <td>
+                                    <div class="btn-group dropleft">
+                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Action
+                                        </button>
+                                        <div class="dropdown-menu bg-primary">
+                                            <!-- <a class="dropdown-item" href="{%url 'supplier_detail' val.id %}"> <i
+                                                        class="fa fa-external-link" aria-hidden="true"></i>&nbsp; View</a> -->
+                                            <a class="dropdown-item" href="{%url 'supplier_edit' val.id %}"> <i
+                                                    class="fa fa-external-link" aria-hidden="true"></i> &nbsp;Edit</a>
+                                            <a class="dropdown-item" href="{% url 'supplier_delete' val.id %}"> <i
+                                                    class="fa fa-trash" aria-hidden="true"></i> &nbsp;Delete</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <h6 class="modal-title" id="exampleModalLabel"><i class="fa fa-plus-circle"></i>&nbsp;Add New Contact</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action='/api/v1/suppliers/' enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group row">
+                                <div class="col-md-6 col-lg-6">
+                                    <label>Contact Type:*</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                        </div>
+                                        <select class="form-control" name="Contact_type" required>
+                                            <option value="">Select Customer Type:</option>
+                                            <option value="S">Suppliers</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6">
+                                    <label>Business Owner Name:*</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                        </div>
+                                        <input type="text" Placeholder="Rakesh Jaiswal" class="form-control" name="first_name" required />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Business Name:*</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                                        </div>
+                                        <input type="text" placeholder="Rakesh & Brothers" class="form-control" name="business_name" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Contact ID:*</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-address-book-o"
+                                                    aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" placeholder="businessname@divmart" class="form-control" name="contact_id" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Tax Number:</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-info"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" name="tax_number" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Opening Balance:</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                        </div>
+                                        <input type="text" placeholder="0.00" class="form-control" name="opening_balance" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Pay Term:*</label>
+                                    <div class="input-group mb-3">
+                                            <!-- <span class="input-group-text"> -->
+                                            <input type="text" class="form-control" name="pay_term"
+                                                placeholder="Daily/Weekly/Monthly" required/>
+                                            <!-- </span> -->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Business Location*</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-map"></i></span>
+                                        </div>
+                                        <select class="form-control" name="business_location" required>
+                                            <option value="">Please select</option>
+                                            {% for location in locations %}
+                                                <option value="{{location.id}}">{{location.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3 col-lg-3">
+                                    <label>Email:*</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                                        </div>
+                                        <input type="email"  placeholder="example@mail.com" class="form-control" name="email" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <label>Mobile:*</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-mobile"
+                                                    aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text"  placeholder="0123456789" class="form-control" name="mobile" minlength="10"
+                                            maxlength="13" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <label>Alt Contact No:</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-mobile"></i></span>
+                                        </div>
+                                        <input type="number"  placeholder="9876543210" class="form-control" name="alternative_contact" minlength="10"
+                                            maxlength="13" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <label>Landline:</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" name="Landline" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="form-group row">
+                                <div class="col-md-3 col-lg-3">
+                                    <label>City*</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                        </div>
+                                        <input type="text" placeholder="Deoria" class="form-control" name="city" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <label>State:*</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-map-marker"
+                                                    aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" placeholder="Uttar-Pradesh" class="form-control" name="state" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <label>Country:*</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                                        </div>
+                                        <input type="globe" name="country" value="India" class="form-control" name="globe"
+                                            value="India" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3">
+                                    <label>Landmark:</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                        </div>
+                                        <input type="text" name="land_mark" class="form-control" name="landmark" />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <input type="hidden" name="user" value="{{ usr.id }}" /> -->
+                            <input type="submit" value="SUBMIT" class="btn btn-primary w-100 mt-3" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}{% block alljs %}
+
+<script>
+    $(document).ready(function () {
+        $('#role_table').DataTable();
+        // $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{% endblock %}

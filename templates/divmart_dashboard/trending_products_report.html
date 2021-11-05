@@ -1,0 +1,135 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<div class="container-fluid">
+    <h5>Trending Products</h5>
+    <!-- <div class="section card p-3" style="border-top: 3px solid green;">
+        <div class="row">
+            <div class="col-lg-12 box-solid">
+                <a data-toggle="collapse" href="#collapsebox" role="button" aria-expanded="true"
+                    aria-controls="collapsebox">
+                    <div><i class="fa fa-filter"></i>Filters</div>
+                </a>
+    
+                <div class="collapse show" id="collapsebox">
+    
+                    <div class="row">
+    
+    
+                        <div class="col-lg-3 filterbox">
+                            <span>Business Location:</span>
+                            <select class="form-control">
+                                <option>All Locations</option>
+                                <option>Div Mart (shop-1)</option>
+                                <option>Div Mart (shop-2)</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-lg-3 filterbox">
+                            <span>Category:</span>
+                            <select class="form-control">
+                                <option>All</option>
+                                <option>Gillete</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-lg-3 filterbox">
+                            <span>Sub Category:</span>
+                            <select class="form-control">
+                                <option>All</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-lg-3 filterbox">
+                            <span>Brand:</span>
+                            <select class="form-control">
+                                <option>All</option>
+                                <option>Gillete</option>
+                                <option>HCL</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-lg-3 filterbox">
+                            <span>Unit:</span>
+                            <select class="form-control">
+                                <option>All</option>
+                                <option>Pc(s)</option>
+                                <option>u</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-lg-3 filterbox">
+                            <span>Date Range:</span>
+                            <div id="reportrange" class="reportrange form-control">
+                                <i class="fa fa-calendar"></i>&nbsp;
+                                <span></span>
+                            </div>
+                        </div>
+    
+                        <div class="col-lg-3 filterbox">
+                            <span>Number of products:
+                                <a type="button" data-toggle="tooltip" data-placement="bottom" title=""
+                                    data-original-title="Number of top trending products to be compared in the chart below."></a>
+                                <i class="fa fa-info-circle text-info" aria-hidden="true"></i>
+                                </a>
+                            </span>
+                            <div><input class="form-control" type="text"></div>
+                        </div>
+    
+                        <!-- filter button 
+                        <div class="col-lg-12 text-right">
+                            <input type="button" value="Apply Filters" class="btn btn-primary btn-sm">
+                        </div>
+    
+                    </div>
+    
+                </div>
+    
+            </div>
+        </div>
+    </div> -->
+
+    <div class="section card p-3 overflow-auto" style="border-top: 3px solid green;">
+    <div class="section">
+                <span class="float-right">
+                      <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        CSV </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        EXCEL </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        PDF </a>
+                </span>
+    </div>
+        <table class="table table-sm" id="trending_prods">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Product</th>
+                    <!-- <th>Lot Number</th> -->
+                    <!-- <th>Exp Date</th> -->
+                    <th>Current Stock</th>
+                    <th>Total Unit Sold</th>
+                    <th>Total Unit Adjusted</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prod in prods %}
+                <tr>
+                    <td>{{prod.SKU}}</td>
+                    <td>{{prod.product_name}}</td>
+                    <!-- <td>0000 </td> -->
+                    <!-- <td>00/00/0000</td> -->
+                    <td>{{prod.current_stock}}</td>
+                    <td>{{prod.prod_sales}}</td>
+                    <td>{{prod.prod_adjst}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#trending_prods').dataTable();
+    });
+</script>
+{%endblock%}

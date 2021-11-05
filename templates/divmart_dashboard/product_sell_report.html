@@ -1,0 +1,208 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<style>
+	.tab button {
+		/* background-color: inherit; */
+		float: left;
+		border: none;
+		outline: none;
+		cursor: pointer;
+		transition: 0.3s;
+	}
+
+	.tab_desc {
+		/* display: none; */
+		padding: 6px 12px;
+		border: 1px solid #ccc;
+	}
+
+	#Grouped {
+		display: none;
+	}
+</style>
+<div class="container-fluid">
+	<h5>Product Sell Report</h5>
+	<!-- filter box -->
+	<div class="section card p-3" style="border-top: 3px solid green;">
+		<div class="row">
+			<div class="col-lg-12 box-solid">
+				<a data-toggle="collapse" href="#collapsebox" role="button" aria-expanded="true"
+					aria-controls="collapsebox">
+					<div><i class="fa fa-filter"></i>Filters</div>
+				</a>
+				<div class="collapse show" id="collapsebox">
+					<form action="" method="POST">
+						{% csrf_token %}
+						<div class="row">
+							<!-- <div class="col-lg-3 filterbox">
+								<label>Search Product:</label>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+									</div>
+									<input type="text" class="form-control" name="product" placeholder="Search Product Name">
+								</div>
+							</div> -->
+							<div class="col-lg-3 filterbox">
+								<label>Customer:</label>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="basic-addon1"><i
+												class="fa fa-user"></i></span>
+									</div>
+									<select class="form-control" name="customer">
+										<option value="">Please Select</option>
+										{% for customer in customers %}
+										<option value="{{customer.first_name}}">{{customer.first_name}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-3 filterbox">
+								<label>Business Location:</label>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="basic-addon1"><i
+												class="fa fa-map-marker"></i></span>
+									</div>
+									<select class="form-control" name="location">
+										<option value="">Please Select</option>
+										{% for location in locations %}
+										<option value="{{location.name}}">{{location.name}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<!-- <div class="col-lg-3 filterbox pt-4"> -->
+							<!-- </div>  -->
+						</div>
+						<input type="submit" class="btn btn-primary btn-block w-25 float-right" value="FILTER">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- shows Detailed table here -->
+	<div class="section card p-3" style="border-top: 3px solid green;">
+		<div class="col-12 mb-3 pl-0">
+			<div class="btn-group" role="group" aria-label="Basic example">
+				<button type="button" class="tab_cls btn btn-primary btn-sm rounded"
+					onclick="collapseDetail(event, 'Detailed')">Detailed</button>
+				<button type="button" class="tab_cls btn btn-primary btn-sm rounded ml-3"
+					onclick="collapseDetail(event, 'Grouped')">Grouped</button>
+			</div>
+		</div>
+		<div id="Detailed" class="tab_desc overflow-auto">
+			<div class="section">
+				<span class="float-right">
+					<a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print"
+							aria-hidden="true"></i>&nbsp;
+						CSV </a>
+					<a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print"
+							aria-hidden="true"></i>&nbsp;
+						EXCEL </a>
+					<a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print"
+							aria-hidden="true"></i>&nbsp;
+						PDF </a>
+				</span>
+			</div>
+			<table class="table table-sm prod_sell_report">
+				<thead>
+					<tr>
+						<th>Product</th>
+						<th>Customer Name</th>
+						<th>Invoice No.</th>
+						<th>Date</th>
+						<th>Quantity</th>
+						<th>Unit Price</th>
+						<th>Discount</th>
+						<!-- <th>Tax</th>
+						<th>Price inc. Tax</th> -->
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for sell in prod_sell %}
+					<tr>
+						<td>{{sell.items_name.product_name}}</td>
+						<td>{{sell.sell.customer.first_name}}</td>
+						<td>{{sell.sell.ref_no}}</td>
+						<td>{{sell.sell.sale_date|date:'d-m-Y'}}</td>
+						<td>{{sell.quantity}}</td>
+						<td>₹ {{sell.price}}</td>
+						<td>₹ {{sell.sell.discount_amount}}</td>
+						<!-- <td>₹ {{sell.sell.order_tax}}</td>
+						<td>₹ 44.00</td> -->
+						<td>₹ {{sell.sub_total}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+				<!-- footer row -->
+				<!-- <tr>
+						<th colspan="4" class="text-center">Total</td>
+						<th class="text-center">21.00 Pc(s)</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th class="text-center">₹ 0.00</th>
+					</tr> -->
+			</table>
+		</div>
+
+		<div id="Grouped" class="tab_desc overflow-auto">
+			<table class="table prod_sell_report">
+				<thead>
+					<tr>
+						<th>Product</th>
+						<th>Date</th>
+						<th>Current stock</th>
+						<th>Total unit sold</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for sell in prod_sell %}
+					<tr>
+						<td>{{sell.items_name.product_name}}</td>
+						<td>{{sell.sell.sale_date|date:'d-m-Y'}}</td>
+						<td>{{sell.items_name.current_stock}}</td>
+						<td>{{sell.quantity}}</td>
+						<td>{{sell.sub_total}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+				<!-- footer row -->
+				<!-- <tr>
+						<th colspan="3" class="text-center">Total</td>
+						<th class="text-center">21.00 Pc(s)</th>
+						<th class="text-center">₹ 0.00</th>
+					</tr>-->
+			</table>
+		</div>
+	</div>
+</div>
+<!-- for tabular data -->
+
+<script>
+	function collapseDetail(evt, grp_name) {
+		var i, tab_desc, tab_cls;
+		tab_desc = document.getElementsByClassName("tab_desc");
+		for (i = 0; i < tab_desc.length; i++) {
+			tab_desc[i].style.display = "none";
+		}
+		tab_cls = document.getElementsByClassName("tab_cls");
+		for (i = 0; i < tab_cls.length; i++) {
+			tab_cls[i].className = tab_cls[i].className.replace("active", "");
+		}
+		document.getElementById(grp_name).style.display = "block";
+		evt.currentTarget.className += " active";
+	}
+</script>
+<script>
+	$(document).ready(function () {
+		$('.prod_sell_report').dataTable();
+	});
+</script>
+{%endblock%}

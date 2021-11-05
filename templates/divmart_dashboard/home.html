@@ -1,0 +1,499 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load humanize %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12"><h5>Welcome Div Mart,</h5></div>
+        {% if request.user.is_superuser %}
+        <div class="col-12 text-right">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="submit" class="btn btn-primary btn-sm border border-right" name="today" value="today">Today</button>
+                    <button type="submit" class="btn btn-primary btn-sm border border-right" name="week" value="week">This Week</button>
+                    <button type="submit" class="btn btn-primary btn-sm border border-right" name="month" value="month">This Month</button>
+                    <button type="submit" class="btn btn-info btn-sm border border-right" name="year" value="year">This Year</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box" style="border-top: 3px solid green;">
+                <span class="info-box-icon bg-info elevation-1"><i class="fa fa-money"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Purchase</span>
+                    <span class="info-box-number">
+                        {% if purchase %}{{purchase|floatformat:2|intcomma}}{% else %}0.00{% endif %}
+                    </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3" style="border-top: 3px solid green;">
+                <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                    <i class="fa fa-exclamation"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Sales</span>
+                    <span class="info-box-number">
+                        {% if sales %}{{sales|floatformat:2|intcomma}}{% else %}0.00{% endif %}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix hidden-md-up"></div>
+
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3" style="border-top: 3px solid green;">
+                <span class="info-box-icon bg-success elevation-1"><i class="fa fa-usd" aria-hidden="true"></i>
+                    <i class="fa fa-exclamation"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Purchase Due</span>
+                    <span class="info-box-number">
+                        {% if purchase_due %}{{purchase_due|floatformat:2|intcomma}}{% else %}0.00{% endif %}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3" style="border-top: 3px solid green;">
+                <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-file-text-o"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Sales Due</span>
+                    <span class="info-box-number">
+                        {% if sales_due %}{{sales_due|floatformat:2|intcomma}}{% else %}0.00{% endif %}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div> 
+{% if request.user.is_superuser %}
+<div class="container">
+        
+    <!--last 30 days report -->
+        <div class="col-12 card p-0 d-none" style="border-top: 3px solid green;">
+            <div class="card-header">
+                    <h5 class="card-title">
+                    <i class="fa fa-exclamation-triangle text-warning"></i>
+                    &nbsp;Last 30 Days Report&nbsp;
+                    <i class="fa fa-info-circle text-info" tabindex="0" data-trigger="focus" data-placement="bottom" data-toggle="popover" title="total sales within 30 days" data-content="Based on invoice pay term. Showing Sales to be done within 30 days or less."></i></h5>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                                <i class="fas fa-wrench"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                <a href="#" class="dropdown-item">Action</a>
+                                <a href="#" class="dropdown-item">Another action</a>
+                                <a href="#" class="dropdown-item">Something else here</a>
+                                <a class="dropdown-divider"></a>
+                                <a href="#" class="dropdown-item">Separated link</a>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button> 
+                    </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row overlow-auto">
+                        <table class="table">
+                            <tr>
+                            <th>head1</th>
+                            <th>head1</th>
+                            <th>head1</th>
+                            <th>head1</th>
+                            <th>head1</th>
+                            </tr>
+                            <tr>
+                            <td>data1</td>
+                            <td>data1</td>
+                            <td>data1</td>
+                            <td>data1</td>
+                            <td>data1</td>
+                            </tr>
+                        </table>
+                </div>
+            </div>
+        </div>
+
+    <!--sales current financial year -->
+        <div class="col-12 card p-0 d-none" style="border-top: 3px solid green;">
+            <div class="card-header">
+                    <h5 class="card-title"><i class="fa fa-exclamation-triangle text-warning"></i>&nbsp;Sales Current Financial Year&nbsp;
+                    <i class="fa fa-info-circle text-info" data-placement="bottom" tabindex="0" data-trigger="focus" data-toggle="popover" title="total sales in financial year" data-content="Based on invoice pay term. Showing Sales to be done within this financial years or less."></i></h5>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                                <i class="fas fa-wrench"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                <a href="#" class="dropdown-item">Action</a>
+                                <a href="#" class="dropdown-item">Another action</a>
+                                <a href="#" class="dropdown-item">Something else here</a>
+                                <a class="dropdown-divider"></a>
+                                <a href="#" class="dropdown-item">Separated link</a>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button> 
+                    </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row oveflow-auto">
+                        <table class="table">
+                            <tr>
+                            <th>head1</th>
+                            <th>head1</th>
+                            <th>head1</th>
+                            <th>head1</th>
+                            <th>head1</th>
+                            </tr>
+                            <tr>
+                            <td>data1</td>
+                            <td>data1</td>
+                            <td>data1</td>
+                            <td>data1</td>
+                            <td>data1</td>
+                            </tr>
+                        </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="container d-none">
+        <div class="row">
+        <!--sales payment due -->
+                <div class="col-md-6 card p-0" style="border-top: 3px solid green;">
+                    <div class="card-header">
+                            <h5 class="card-title"><i class="fa fa-exclamation-triangle text-warning"></i>&nbsp;Sales Payment Due&nbsp;
+                            <i class="fa fa-info-circle text-info" tabindex="0" data-trigger="focus" data-placement="bottom" data-toggle="popover" title="Pending payment for sales" data-content="Based on invoice pay term. Showing payment to be received within 7 days or less."></i></h5>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fas fa-wrench"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <a href="#" class="dropdown-item">Action</a>
+                                        <a href="#" class="dropdown-item">Another action</a>
+                                        <a href="#" class="dropdown-item">Something else here</a>
+                                        <a class="dropdown-divider"></a>
+                                        <a href="#" class="dropdown-item">Separated link</a>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button> 
+                            </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row overflow-auto">
+                                <table class="table">
+                                    <tr>
+                                    <th>head1</th>
+                                    <th>head1</th>
+                                    <th>head1</th>
+                                    <th>head1</th>
+                                    <th>head1</th>
+                                    </tr>
+                                    <tr>
+                                    <td>data1</td>
+                                    <td>data1</td>
+                                    <td>data1</td>
+                                    <td>data1</td>
+                                    <td>data1</td>
+                                    </tr>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+
+       
+        <!--purchase payment due -->
+                <div class="col-md-6 card p-0" style="border-top: 3px solid green;">
+                    <div class="card-header">
+                            <h5 class="card-title"><i class="fa fa-exclamation-triangle text-warning"></i>&nbsp;Purchase payment Due&nbsp;
+                            <i class="fa fa-info-circle text-info" tabindex="0" data-trigger="focus" data-placement="bottom" data-toggle="popover" title="Pending payment for purchases" data-content="Based on supplier's pay term. Showing payments to be paid in 7 days or less."></i></h5>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fas fa-wrench"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <a href="#" class="dropdown-item">Action</a>
+                                        <a href="#" class="dropdown-item">Another action</a>
+                                        <a href="#" class="dropdown-item">Something else here</a>
+                                        <a class="dropdown-divider"></a>
+                                        <a href="#" class="dropdown-item">Separated link</a>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button> 
+                            </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row overflow-auto">
+                                <table class="table">
+                                    <tr>
+                                    <th>head1</th>
+                                    <th>head1</th>
+                                    <th>head1</th>
+                                    <th>head1</th>
+                                    <th>head1</th>
+                                    </tr>
+                                    <tr>
+                                    <td>data1</td>
+                                    <td>data1</td>
+                                    <td>data1</td>
+                                    <td>data1</td>
+                                    <td>data1</td>
+                                    </tr>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </div>
+
+        <!--product Stock List-->
+        <div class="col-12 card p-0 d-none" style="border-top: 3px solid green;">
+            <div class="card-header">
+                            <h5 class="card-title"><i class="fa fa-exclamation-triangle text-warning"></i>&nbsp;Product Stock List&nbsp;
+                            <i class="fa fa-info-circle text-info" tabindex="0" data-placement="bottom" data-trigger="focus" data-toggle="popover" title="Product with low stock" data-content="Based on product alert quantity, set in add product screen. Purchase this prodcut before stock ends."></i></h5>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fas fa-wrench"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <a href="#" class="dropdown-item">Action</a>
+                                        <a href="#" class="dropdown-item">Another action</a>
+                                        <a href="#" class="dropdown-item">Something else here</a>
+                                        <a class="dropdown-divider"></a>
+                                        <a href="#" class="dropdown-item">Separated link</a>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button> 
+                            </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row overflow-auto">
+                                <table id="stocklisttable" class="table table-sm">
+                                    <tr>
+                                    <th>SNo.</th>
+                                    <th>SKU No.</th>
+                                    <th>Category</th>
+                                    <th>Sub Category</th>
+                                    <th>Product</th>
+                                    <th>Current Stock</th>
+                                    <th>Location</th>
+                                    </tr>
+                                    <tr>
+                                    <td>1</td>
+                                    <td>P-01</td>
+                                    <td>Grocery</td>
+                                    <td>Spices</td>
+                                    <td>Jeera</td>
+                                    <td>5</td>
+                                    <td>DIVM-01</td>
+                                    </tr>
+                                    <tr>
+                                    <td>1</td>
+                                    <td>P-01</td>
+                                    <td>Grocery</td>
+                                    <td>Spices</td>
+                                    <td>Jeera</td>
+                                    <td>5</td>
+                                    <td>DIVM-01</td>
+                                    </tr>
+                                    <tr>
+                                    <td>1</td>
+                                    <td>P-01</td>
+                                    <td>Grocery</td>
+                                    <td>Spices</td>
+                                    <td>Jeera</td>
+                                    <td>5</td>
+                                    <td>DIVM-01</td>
+                                    </tr>
+                                </table>
+                        </div>
+                    </div>
+            </div>
+
+            <div class="col-12 card p-0" style="border-top: 3px solid green;display:none">
+            <div class="card-header">
+                            <h5 class="card-title">Monthly Recap Report</h5>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fas fa-wrench"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <a href="#" class="dropdown-item">Action</a>
+                                        <a href="#" class="dropdown-item">Another action</a>
+                                        <a href="#" class="dropdown-item">Something else here</a>
+                                        <a class="dropdown-divider"></a>
+                                        <a href="#" class="dropdown-item">Separated link</a>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button> 
+                            </div>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <p class="text-center">
+                                        <strong>Sales: 1 Jan, 2014 - 30 Jul, 2014</strong>
+                                    </p>
+
+                                    <div class="chart">
+                                        <canvas id="salesChart" height="180" style="height: 180px;"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="text-center">
+                                        <strong>Goal Completion</strong>
+                                    </p>
+                                    <div class="progress-group">
+                                        Add Products to Cart
+                                        <span class="float-right"><b>160</b>/200</span>
+                                        <div class="progress progress-sm">
+                                            <div class="progress-bar bg-primary" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="progress-group">
+                                        Complete Purchase
+                                        <span class="float-right"><b>310</b>/400</span>
+                                        <div class="progress progress-sm">
+                                            <div class="progress-bar bg-danger" style="width: 75%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="progress-group">
+                                        <span class="progress-text">Visit Premium Page</span>
+                                        <span class="float-right"><b>480</b>/800</span>
+                                        <div class="progress progress-sm">
+                                            <div class="progress-bar bg-success" style="width: 60%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="progress-group">
+                                        Send Inquiries
+                                        <span class="float-right"><b>250</b>/500</span>
+                                        <div class="progress progress-sm">
+                                            <div class="progress-bar bg-warning" style="width: 50%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-sm-3 col-6">
+                                    <div class="description-block border-right">
+                                        <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 0%</span>
+                                        <h5 class="description-header">₹ {% if revenue_total %}{{revenue_total|floatformat|intcomma}}{% else %}0.00{% endif %}</h5>
+                                        <span class="description-text">TOTAL REVENUE</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <div class="description-block border-right">
+                                        <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i>
+                                            0%</span>
+                                        <h5 class="description-header">₹ {% if cost_total %}{{cost_total|floatformat:2|intcomma}}{% else %}0.00{% endif %}</h5>
+                                        <span class="description-text">TOTAL COST</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <div class="description-block border-right">
+                                        <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 0%</span>
+                                        <h5 class="description-header">₹0.00</h5>
+                                        <span class="description-text">TOTAL PROFIT</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <div class="description-block">
+                                        <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i>
+                                            0%</span>
+                                        <h5 class="description-header">₹0.00</h5>
+                                        <span class="description-text">GOAL COMPLETIONS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+</div>
+{% endif %}
+{% endblock %}
+{% block alljs %}
+        <script>
+            $(function () {
+            $('[data-toggle="popover"]').popover()
+            })
+
+            $('.popover-dismiss').popover({
+            trigger: 'focus'
+            })
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                $('#stocklisttable').DataTable();
+                $('.dataTables_length').addClass('bs-select');
+            });
+        </script>
+{% endblock %}

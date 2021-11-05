@@ -1,0 +1,66 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Expenses</h5>
+    <form method="POST" action="/api/v1/expenses/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="section card p-3" style="border-top:3px solid green">
+            <div class="form-group row pl-3 pr-2 pt-3">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Business Location:*</label>
+                    <select class="form-control" name="business_location" required>
+                        <option value="">Please select</option>
+                        {% for bus in business %}
+                        <option value="{{bus.id}}">{{bus.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Expense Category:*</label>
+                    <select class="form-control" name="expense_category">
+                        <option value="">Please select</option>
+                        {% for val in expense_categories %}
+                        <option value="{{ val.id }}">{{ val.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Reference No:*</label>
+                    <input type="text" class="form-control" name="ref_no" required />
+                </div>
+            </div>
+            <div class="form-group row pl-3 pr-2 ">
+                <div class="col-md-4 col-lg-4 col-sm-4">
+                    <label>Date:*</label>
+                    <div class="input-group mb-3">
+                        <input type="date" class="form-control" name="expenses_date" placeholder="date range"
+                            required />
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-sm-4">
+                    <label>Total Amount:*</label>
+                    <input type="text" class="form-control" name="total_amount" required />
+                </div>
+                <div class="col-md-4 col-lg-4 col-sm-4">
+                    <label>Expense For:</label>
+                    <input type="text" class="form-control" name="expense_for" />
+                </div>
+            </div>
+            <div class="form-group row pl-3 pr-2">
+                <div class="col-md-4 col-lg-4 col-sm-4">
+                    <label>Attach Document:</label>
+                    <div class="input-group">
+                        <input type="file" name="expanses_image" />
+                    </div>
+                </div>
+                <div class="col-md-8 col-lg-8 col-sm-8">
+                    <label>Expense Note:</label>
+                    <textarea class="form-control" name="expense_note" rows="2"></textarea>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary  mb-3 mt-3">
+        </div>
+    </form>
+</div>
+
+{%endblock%}

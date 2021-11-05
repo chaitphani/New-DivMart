@@ -1,0 +1,252 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<!-- <title>Simple Barcode Scanner</title> -->
+
+<!-- <div id="last-barcode"></div> -->
+<div class="container-fluid">
+    <!-- header parts of invoice -->
+    <div class="section card p-3" style="border-top: 3px solid green;">
+        <div class="text-center">
+            <h3>DIV MART</h3>
+            <span>store address</span><br>
+            <span>+91234567890</span>
+        </div>
+        <table class="mb-3 p-0">
+            <tr class="border-top">
+                <td id="date"></td>
+                <td id="time" class="text-right font-weight-bold"></td>
+            </tr>
+            <tr>
+                <th colspan="12" class="text-capitalize text-right">cashier name: 
+                    {% if request.user %}{{request.user}}{% else %} admin {% endif %}</td>
+            </tr>
+        </table>
+        <hr class="mb-2 p-0">
+        <!-- <INPUT type="button" value="Delete Row" onclick="deleteRow('dataTable')" /> -->
+        <div class="overflow-auto">
+        <table class="table table-sm table-borderless mt-0" id="myTable">
+            <input class="form-control search-input" type="hidden" name="search" id="p_name" placeholder="Product id..." />
+            <th>S.no</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>MRP</th>
+            <th>Unit price</th>
+            <th>Sub Total</th>
+            <th>Saved</th>
+            <tbody id="sales_cal"></tbody>
+        </table>
+    </div>
+       <div class="overflow-auto">
+        <table class="mb-2">
+            <!-- Subtotal amount -->
+            <tr class="border-top">
+                <td colspan="6">Gross Amount:</td>
+                <td colspan="6" class="text-right" id="gross_amount">0.00</td>
+            </tr>
+            <tr>
+                <td colspan="6">Savings:</td>
+                <td colspan="6" class="text-right" id="savings">0.00</td>
+            </tr>
+            <tr>
+                <td colspan="6">Discount:</td>
+                <td colspan="6" class="text-right">0.00</td>
+            </tr>
+        </table>
+        </div>
+
+        <div class="overflow-auto">
+        <table>
+            <!-- total savings -->
+            <tr class="border-top">
+                <td colspan="6">
+                    <h4>Total Savings:</h2>
+                </td>
+                <td colspan="6" class="text-right" id="total_save"></td>
+            </tr>
+        </table>
+        </div>
+
+        <div class="overflow-auto">
+        <table>
+            <!-- Cash Paid -->
+            <tr class="border-top">
+                <td colspan="6">
+                    <h4>Cash Paid:</h2>
+                </td>
+                <td colspan="6" class="text-right" id="total_paid">0.00</td>
+            </tr>
+        
+            <!-- footer greetings -->
+            <tr>
+                <td colspan="12">* Tax not payable on reverse charge basis.</td><br>
+            </tr>
+            <tr>
+                <td colspan="12" class="text-center">Thank You. Visit Again! </td>
+            </tr>
+        </table>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    var date = new Date;
+    formatted_date = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+    formatted_hours = date.getHours() + ':' + date.getMinutes();
+    document.getElementById('date').innerText = formatted_date;
+    document.getElementById('time').innerHTML = formatted_hours;
+</script>
+
+<script>
+    var count = 0
+    var bar_code = '';
+    var interval;
+    document.addEventListener('keydown', function (e) {
+        if (interval)
+            clearInterval(interval);
+        if (e.code == 'Enter') {
+            if (bar_code)
+                handleBarcode(bar_code);
+            bar_code = '';
+            return;
+        }
+        if (e.key != 'Shift')
+            bar_code += e.key;
+        interval = setInterval(() => bar_code = '', 20);
+    });
+
+    function handleBarcode(scanned_barcode) {
+        document.querySelector('#p_name').value = scanned_barcode;
+        const product = document.getElementById("p_name");
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = "json";
+
+        xhr.open('GET', `/api/v1/barcode_api/${product.value}`);
+        xhr.onload = () => {
+            count++;
+            const prod_inf = xhr.response;
+            console.log('----', prod_inf)
+            const prod_mrp = parseFloat(prod_inf.product_mrp).toFixed(2);
+            const prod_usp = parseFloat(prod_inf.unit_price).toFixed(2);
+            const prod_sub = (prod_usp * parseFloat(1)).toFixed(2);
+            const tbody = document.getElementById("sales_cal")
+            const diff_mrp_prp = (prod_mrp - prod_usp);
+
+            let HTML = `<tr>
+                <th scope="row">${count}</th>
+                <td>${prod_inf.product_name}</td>
+                <td><input type='text' class='form-control val w-25' id='qan${count}' value='1' onkeyup="sub_tot_cal(${count}); cal(); calFunc()"></td>
+                <td id='mrp${count}'>${prod_mrp}</td>
+                <td id='usp${count}'>${prod_usp}</td>
+                <td id='sub${count}' class='q-p'>${prod_sub}</td>
+                <td id='diff${count}' class='diff'>${diff_mrp_prp}</td>
+            </tr>`;
+
+            tbody.innerHTML += HTML;
+            cal();
+            calFunc();
+        }
+        xhr.send();
+    }
+</script>
+
+<script>
+    function sub_tot_cal(arg) {
+        var sub_total = document.getElementById(`sub${arg}`);
+        var quantity = document.getElementById(`qan${arg}`);
+        var price = document.getElementById(`usp${arg}`);
+        var mrprice = document.getElementById(`mrp${arg}`);
+        var diffPrice = document.getElementById(`diff${arg}`);
+
+        var quan_float = parseFloat(quantity.value);
+        var price_float = parseFloat(price.innerText);
+        var mrp_float = parseFloat(mrprice.innerText);
+
+        if (quantity.value.length != '') {
+            sub_total.innerHTML = (quan_float * price_float).toFixed(2);
+            diffPrice.innerHTML = (((mrp_float - price_float))*quan_float).toFixed(2);
+        }
+        else {
+            sub_total.innerHTML = (0).toFixed(2);
+        }
+        calFunc();
+    }
+</script>
+
+<script>
+    function cal() {
+        var line_t = document.querySelectorAll('.q-p');
+        var net_amt = document.getElementById("gross_amount");
+        var payable = document.getElementById("total_paid");
+
+        var sum = 0.00;
+
+        line_t.forEach(vp => {
+            sum = sum + parseFloat(vp.innerHTML);
+            net_amt.innerHTML = parseFloat(sum).toFixed(2);
+            payable.innerHTML = net_amt.innerHTML;
+        });
+    };
+</script>
+<script>
+        function calFunc() {
+        var diff_val = document.querySelectorAll('.diff');
+        var savings = document.getElementById('savings');
+
+        var val = 0.00;
+
+        diff_val.forEach(vp => {
+            val = val + parseFloat(vp.innerHTML);
+            savings.innerHTML = parseFloat(val).toFixed(2);
+        });
+    };
+</script>
+
+<!-- <script>
+    $('.row').each(function() {
+        console.log('-----')
+
+        var thisId = $(this).find('.id').text();
+        console.log('-----this id ------', thisId)
+
+        var sumVal = parseFloat($(this).find('.val').val());
+        console.log('----sumval----', sumVal)
+
+        var $rowsToGroup = $(this).nextAll('tr').filter(function() {
+            return $(this).find('.id').text() === thisId;
+        });
+
+        $rowsToGroup.each(function() {
+            sumVal += parseFloat($(this).find('.val').val());
+            $(this).remove();
+        });
+
+        $(this).find('.val').val(sumVal);
+    });
+</script> -->
+<!-- <script>
+    		function deleteRow(tableID) {
+			try {
+			var table = document.getElementById('tableID');
+			var rowCount = table.rows.length;
+
+			for(var i=0; i<rowCount; i++) {
+				var row = table.rows[i];
+				var chkbox = row.cells[0].childNodes[0];
+				if(null != chkbox && true == chkbox.checked) {
+					if(rowCount <= 1) {
+						alert("Cannot delete all the rows.");
+						break;
+					}
+					table.deleteRow(i);
+					rowCount--;
+					i--;
+				}
+
+
+			}
+			}catch(e) {
+				alert(e);
+			}
+		}
+</script> -->
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container">
+    <h5>Scanned products</h5>
+    <div class="section card p-3 overflow-auto" style="border-top:3px solid green">
+        <table class="table table-sm" id="usertable">
+            <thead>
+                <th>Product</th>
+                <th>Cost</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{prod_obj.product_name.product_name}}</td>
+                    <td>{{prod_obj.product_name.selling_price}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{%endblock%} {% block alljs %}
+<script>
+    $(document).ready(function () {
+        $('#usertable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+{%endblock%}

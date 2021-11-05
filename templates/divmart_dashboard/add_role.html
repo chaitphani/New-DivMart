@@ -1,0 +1,119 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load customtags %} {% load static %} {% block home%}
+
+<style>
+    label:not(.form-check-label):not(.custom-file-label) {
+        font-weight: normal;
+    }
+</style>
+
+<div class="container-fluid">
+
+    {% if r %}
+    <h5>Change <span class="text-danger text-capitalize font-weight-bold">{{r.title}}</span> Permissions</h5>
+    {% else %}
+    <h6>Assign Roles</h6>
+    {% endif %}
+    <div class="section card p-3" style="border-top:3px solid green">
+        <form method="POST">
+            {% csrf_token %}
+            {% if r %}
+                <label>Role Name*</label>
+                <input type=text class="form-control" value="{{ r.title }}" name="role" id="role" placeholder="Role Name" required/>
+                <p class="mt-2 p-0 m-0 mb-2">Permissions:*</p>
+                {% if final_list.id == r.id %}
+                    <div class="checkboxes">
+                        <label><input type="checkbox" id="ckbCheckAll1"><span>&nbsp; <strong>Select All</strong></span></label>
+                    </div>
+                    <style>
+                        .checkboxes label {
+                        display: inline-block;
+                        padding-right: 10px;
+                        white-space: nowrap;
+                        }
+                        .checkboxes input {
+                        vertical-align: middle;
+                        }
+                        .checkboxes label span {
+                        vertical-align: middle;
+                        }
+                    </style>
+                    {% for k,v in resp.items %}
+                        <div class="ml-5">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 font-weight-bold text-uppercase" style="text-decoration: underline;">
+                                    {{k}}
+                                </div>
+                            </div>
+                            {% for p in v %}
+                                <div class="col-lg-6 col-md-6 ml-5 mt-2">
+                                    <input type="checkbox" name="{{ p.permit }}#{{k}}" class="checkBoxClass1 mr-3" {% if p.status %}checked {% endif %}>
+                                    <label class="ml-2 mb-2 font-weight-bold text-capitalize"> {{ p.permit }} </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+
+                <label>Role Name*</label>
+                <input type=text class="form-control" name="role" id="role" placeholder="Role Name" required/>
+                <p class="mt-2 mb-2 m-0 p-0">Permissions:*</p> 
+
+                <form>
+                <div class="checkboxes">
+                    <label><input type="checkbox" id="ckbCheckAll2"><span>&nbsp;<strong>Select All</strong></span></label>
+                 </div>
+                </form>
+                <!--inline checkbox-->
+                <style>
+                    .checkboxes label {
+                    display: inline-block;
+                    padding-right: 10px;
+                    white-space: nowrap;
+                    }
+                    .checkboxes input {
+                    vertical-align: middle;
+                    }
+                    .checkboxes label span {
+                    vertical-align: middle;
+                    }
+                </style>
+
+                {% for k,v in per_obj.items %}
+                    <div class="ml-5">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 font-weight-bold text-uppercase">
+                                {{k}}
+                            </div>
+                        </div>
+                        {% for p in v %}
+                        <div class="col-lg-6 col-md-6 ml-5 mt-2">
+                            <input type="checkbox" name="{{ p }}#{{ k }}" class="checkBoxClass2 mr-3">
+                            <label class="ml-2 mb-2 font-weight-bold text-capitalize">{{ p }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- <button type="submit" class="btn btn-info nav-btn text-white f-25 nav-btn" style="padding-top:2px">SAVE</button> -->
+            <input type="submit" class="btn btn-primary w-100 mb-3 mt-4" value="Assign Role">
+        </form>
+    </div>
+</div>
+<!-- <script>
+    $('#select_all').click(function() {
+    $('#id_permissions_provided option').prop('selected', true);
+});
+</script> -->
+<script>
+    $(document).ready(function () {
+        $("#ckbCheckAll1").click(function () {
+            $(".checkBoxClass1").prop('checked', $(this).prop('checked'));
+        });
+        $("#ckbCheckAll2").click(function () {
+            $(".checkBoxClass2").prop('checked', $(this).prop('checked'));
+        });
+    });
+</script>
+{%endblock%}

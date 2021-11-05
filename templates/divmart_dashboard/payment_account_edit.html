@@ -1,0 +1,36 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container">
+    <h5 class="mb-4 text-capitalize">Update Payment Account - <span class="text-danger">{{obj.name}}</span></h5>
+    <div class="section card p-3" style="border-top: 3px solid green;">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col-md-6 col-lg-6">
+                    <label>Name:*</label>
+                    <input type="text" class="form-control" name="name" value="{{obj.name}}" />
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <label>Account Number:*</label>
+                    <input type="number" class="form-control" name="account_number" value="{{obj.account_number}}" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6 col-lg-6">
+                    <label>Opening Balance:</label>
+                    <input type="number" class="form-control mb-1" name="openning_balance" value="{{obj.openning_balance}}" />
+                    <small>Note: Please mention '0' if no balance</small>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <label>Note:</label>
+                    <textarea class="form-control" rows="2" name="note">{{obj.note}}</textarea>
+                </div>
+            </div>
+            <div class="col-12 text-right"><input type="submit" class="btn btn-outline-success w-25 mb-4 mt-3" value="UPDATE"></div>
+        </form>
+    </div>
+</div>
+
+{%endblock%}{% block alljs %}
+
+{%endblock%}

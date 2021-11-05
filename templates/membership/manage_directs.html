@@ -1,0 +1,64 @@
+{% extends 'membership/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Manage Directs</h5>
+    <div class="section card p-3" id="accordionExample" style="border-top:3px solid #00c0ef">
+        <div class="card-header bg-white" id="headingOne">
+            <i class="fas fa-filter accordion text-primary" id="accordionExample" data-toggle="collapse"
+                data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><b
+                    class="text-primary">Filters</b></i>
+        </div>
+
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <div class="col-sm-3 col-md-3 col-lg-3">
+                            <label>Status</label>
+                            <select class="form-control" name="status">
+                                <option value="">Please select</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-primary btn-block w-25 float-right">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="secttion card p-3" style="border-top:3px solid #00c0ef">
+        <table class="table  table-sm" id="mdtable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile Number</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in resp_data %}
+                <tr>
+                    <td>{{data.self_ref_id}}</td>
+                    <td>{{data.fname}} {{data.lname}}</td>
+                    <td>{{data.email}}</td>
+                    <td>{{data.contact}}</td>
+                    <td>{% if data.status == 1 %}Active{% else %}Inactive{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#mdtable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{%endblock%}

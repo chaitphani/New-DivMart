@@ -1,0 +1,83 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+   
+    <h5>Customers & Suppliers Report</h5>
+ 
+    <div class="section card p-3 overflow-auto" style="border-top: 3px solid green;">
+            <div class="row">
+                <!-- filter button to show entries -->
+                  <div class="col-lg-4 col-md-4 subtitle">
+                      Show  
+                          <select>
+                            <option>25</option>
+                            <option>50</option>
+                            <option>100</option>
+                            <option>200</option>
+                            <option>500</option>
+                            <option>1000</option>
+                            <option>All</option>
+                          </select> 
+                          entries
+                  </div>
+
+                  <!-- filter data by searching and hitting button -->
+                  <div class="col-lg-8 col-md-8 text-right subtitle">
+                        <div class="dropdown dropleft fa-pull-right">
+                          <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-list"></i>Action
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#"><i class="far fa-copy"></i> Copy</a>
+                            <a class="dropdown-item" href="#"><i class="fa fa-file-csv"></i> Export to CSV</a>
+                            <a class="dropdown-item" href="#"><i class="far fa-file-excel"></i> Export to Excel</a>
+                            <a class="dropdown-item" href="#"><i class="fa fa-print"></i> Print</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-columns"></i> Column visibility</a>
+                            <a class="dropdown-item" href="#"><i class="fa fa-file-pdf-o"></i> Export to PDF</a>
+                          </div>
+                        </div>
+                      <div class="fa-pull-right">Search <input type="text" style="height:32px;"> </div>
+                      
+                  </div>
+
+                  </div>
+
+              <div style="padding:3px"></div>
+
+              <!-- table to show data here -->
+              <div class="overflow-auto">
+              <table class="table table-striped table-bordered table-sm">
+                  <tr>
+                      <th>Contact</th>
+                      <th>Total Purchase</th>
+                      <th>Total Purchase Return</th>
+                      <th>Total Sale</th>
+                      <th>Total Sell Return</th>
+                      <th>Opening Balance Due</th>
+                      <th>Due <a href="#" ></a></th>
+                  </tr>
+                  <tr>
+                      <td>xyz Person</td>
+                      <td>₹ 0.00</td>
+                      <td>₹ 0.00</td>
+                      <td>₹ 0.00</td>
+                      <td>₹ 0.00</td>
+                      <td>₹ 0.00</td>
+                      <td>₹ 0.00</td>
+                  </tr>
+                  <tr class="footertotal">
+                      <th>Total:</th>
+                      <th>₹ 0.00</th>
+                      <th>₹ 0.00</th>
+                      <th>₹ 0.00</th>
+                      <th>₹ 0.00</th>
+                      <th>₹ 0.00</th>
+                      <th>₹ 0.00</th>
+                      
+                  </tr>
+              </table>
+            </div>
+    </div>
+</div>
+
+{%endblock%}

@@ -1,0 +1,119 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<style>
+    .dropdown-item:focus,
+    .dropdown-item:hover {
+        text-decoration: none;
+        background-color: #ffc107;
+    }
+</style>
+<div class="container-fluid">
+    <h4>Payment Account Report</h4>
+    <div class="section card p-3" id="accordionExample" style="border-top:3px solid green">
+        <div class="card-header bg-white" id="headingOne">
+            <i class="fas fa-filter accordion text-primary" id="accordionExample" data-toggle="collapse"
+                data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <b class="text-primary">Filters</b>
+            </i>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-sm-4 col-md-4 col-lg-4">
+                        <label>Account</label>
+                        <select class="form-control" name="account">
+                            <option value="">Please select</option>
+                            {% for account in accounts %}
+                                <option value="{{account.id}}">{{account.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-sm-4">
+                        <label>Date Range</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                            <input type="date" class="form-control" name="date" placeholder="date range" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section card p-3 overflow-auto table-responsive" style="border-top: 3px solid green;">
+        <table id="list_product_table" class="table table-sm">
+            <thead>
+                <tr>
+                    <th class="th-sm">Date</th>
+                    <th class="th-sm">Payment Ref No.</th>
+                    <!-- <th class="th-sm">Invoice No./Ref.No.</th> -->
+                    <th class="th-sm">Payment Type</th>
+                    <th class="th-sm">Account</th>
+                    <th class="th-sm">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                <tr>
+                    <td>{{sale.sale_date|date:'m/d/Y'}}</td>
+                    <td>{{sale.ref_no}}</td>
+                    <!-- <td>xxxx</td> -->
+                    <td>Sell</td>
+                    <td></td>
+                    <td><a class="btn btn-primary btn-sm text-white" data-toggle="modal"
+                            data-target="#exampleModal">Link Account</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog w-100" role="document">
+            <div class="modal-content p-3">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title" id="exampleModalLabel">Link Account - Payment Ref No:- xxxxxx</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <label>Account:</label>
+                        <select class="form-control">
+                            <option value="">Please select</option>
+                            {% for account in accounts %}
+                                <option value="{{account.id}}">{{account.name}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" class="btn btn-primary mt-3 mb-3 w-100" value="Save">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}{% block alljs %}
+
+<script>
+    $(document).ready(function () {
+        $('#list_product_table').dataTable({
+
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            }
+        });
+    });
+</script>
+
+{%endblock%}

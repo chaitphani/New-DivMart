@@ -1,0 +1,1124 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<div class="container-fluid">
+    <h5>Update Sales - <span class="text-danger">{{per_info.ref_no}}</span></h5>
+    <form method="POST" id="submtFrom">
+        {% csrf_token %}
+      
+        <div class="section card p-3" style="border-top:3px solid green">
+            <!-- <div class="form-group row">
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="input-group mb-3">
+                    <div class="input-group-append bg-white" data-toggle="modal" data-target="#exampleModal"
+                        style="cursor: pointer;">
+                        <span class="input-group-text" id="basic-addon2"><i class="fa fa-money"></i></span>
+                    </div>
+                    <select class="form-control" name="product_name">
+                        <option>Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4 offset-md-4 offset-lg-4 pt-2">
+                <a data-toggle="modal" data-target=".subscribemdl" style="cursor: pointer;"> 
+                    <input type="checkbox" /><label class="ml-3">Subscribe</label>
+                    <i class="fa fa-external-link ml-2 text-primary"></i>
+                </a>
+            </div>
+        </div> -->
+            <div class="form-group row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                <label>Business Location</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append bg-white" data-toggle="modal" data-target="#exampleModal"
+                            style="cursor: pointer;">
+                            <span class="input-group-text" id="basic-addon2"><i class="fa fa-map-marker"
+                                    aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <select class="form-control" name="business_location" id="business" required onchange="selectSome()">
+                            <option value="">Please select</option>
+                            {% for location in locations %}
+                                <option value="{{location.id}}" {% if location.id == per_info.business_location.id %}selected{% endif %}>{{location.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Customers:*</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append bg-white">
+                            <span class="input-group-text" id="basic-addon2"><i class="fa fa-user"></i></span>
+                        </div>
+                        <select class="form-control" name="customer" required>
+                            <option value="">Please select</option>
+                            <!-- <option value="0">Walk In Customer</option> -->
+                            {% for customer in users %}
+                                {% if per_info.customer.id == customer.id %}
+                                    <option value="{{customer.id}}" selected>{{customer.first_name}}</option>
+                                {% else %}
+                                    <option value="{{customer.id}}">{{customer.first_name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <!-- <div class="input-group-append bg-white" data-toggle="modal" data-target="#customermdl"
+                        style="cursor: pointer;">
+                        <span class="input-group-text" id="basic-addon2"><i class="fas fa-plus-circle text-primary"></i></span>
+                    </div> -->
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Pay Term*</label>
+                    <div class="input-group mb-3 row">
+                        <select class="form-control ml-2 col-md-6 col-lg-6" name="pay_term_period" id="pay_duration" onchange="payFunction()">
+                            <option value="">--Please Select--</option>
+                            <option value="M">Months</option>
+                            <option value="D">Days</option>
+                        </select>
+                        <div class="input-group-append bg-white">
+                            <input type="text" class="form-control pay_term" placeholder="pay term" id="pay_term"
+                                name="pay_term" minlength="1" maxlength="2" value="{{per_info.pay_term}}" required readonly/>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Sales Date:*</label>
+                    <small><strong> {{per_info.sale_date|date:'d-m-Y H:i'}}</strong></small>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append bg-white" data-toggle="modal" data-target="#exampleModals"
+                            style="cursor: pointer;">
+                            <span class="input-group-text" id="basic-addon2"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        <input type="datetime-local" class="form-control" name="sale_date" id="date"/>
+                    </div>
+                </div> -->
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <label>Status*</label>
+                    <select class="form-control" name="status" required id="status">
+                        <option value="">Please Select</option>
+                        <option value="F" {% if per_info.status == 'F' %}selected {% endif %}>Final</option>
+                        <option value="D" {% if per_info.status == 'D' %}selected {% endif %}>Draft</option>
+                        <option value="Q" {% if per_info.status == 'Q' %}selected {% endif %}>Quotation</option>
+                    </select>
+                </div>
+            </div>
+            <!-- <div class="form-group row ">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-append bg-white">
+                        <span class="input-group-text" id="basic-addon2"><i class="fa fa-table"></i></span>
+                    </div>
+                    <select class="form-control">
+                        <option>Select Table</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-append bg-white">
+                        <span class="input-group-text" id="basic-addon2"><i class="fa fa-user-secret"></i></span>
+                    </div>
+                    <select class="form-control">
+                        <option>Select Service Staff</option>
+                    </select>
+                </div>
+            </div>
+        </div> -->
+        </div>
+        <div class="section card p-3" style="border-top:3px solid green">
+            <div class="row">
+                <div class="col-lg-9 col-md-9 offset-lg-1 offset-md-1">
+                    <div class="input-group mb-3">
+                        <!-- <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-barcode"></i>
+                            </span>
+                        </div> -->
+                        <!-- <input class="form-control search-input" name="search" id="p_name" placeholder="Product name..."/> -->
+                        <!-- <div class="input-group-prepend" data-toggle="modal" data-target="#add_new_product_mdl">
+                        <span class="input-group-text" id="basic-addon1">
+                            <i class="fas fa-plus-circle text-primary"></i>
+                        </span>
+                    </div> -->
+                    </div>
+                    <div class="suggestions"></div>
+                </div>
+            </div>
+            <div class="row p-2 overflow-auto">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>S.no</th>
+                            <th scope="col">Product </th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price inc. tax</th>
+                            <th scope="col">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales_cal">
+                        {% for val in sale_obj %}
+                        <tr>
+                            <th scope="row" value="{{ forloop.counter }}">{{ forloop.counter }}</th>
+
+                            <input type="hidden" name="count" value="{{ forloop.counter }}">
+                            <input type="hidden" name="sobjid{{ forloop.counter }}" value={{val.id}}>
+
+                            <td>
+                                <input type="text" name="nam{{ forloop.counter }}" class="form-control" 
+                                    id="nam{{ forloop.counter }}" value="{{ val.items_name }}" readonly />
+                            </td>
+                            <td>
+                                <input type="text" name="qan{{ forloop.counter }}" class="form-control"
+                                    id="qan{{ forloop.counter }}" onkeyup="cal(); sub_tot_cal({{ forloop.counter }});" value="{{ val.quantity }}"/></td>
+                            <td>
+                                <input type="text" name="usp{{ forloop.counter }}" class="form-control"
+                                    id="usp{{ forloop.counter }}" value="{{ val.price }}" readonly />
+                            </td>
+                            <td>
+                                <input type="text" name="sub{{ forloop.counter }}" class="q-p form-control"
+                                    id="sub{{ forloop.counter }}" value="{{ val.sub_total }}" readonly/>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-9 col-lg-9"></div>
+                <div class="col-md-3 col-lg-3 float-right">
+                    <label for="">Total Amount</label>
+                    <input type="text" id="total_amount" class="form-control" name="total_amount" value="{{per_info.total_amount}}" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="section card p-3" style="border-top:3px solid green">
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>Discount Type:*</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append bg-white" style="cursor: pointer;">
+                            <span class="input-group-text" id="basic-addon2">
+                                <i class="fa fa-info" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <select class="form-control" name="discount_type" id="discount_type" onchange="discAmount()">
+                            <option value="">Please select</option>
+                            <option value="F" {% if per_info.discount_type == 'F' %}selected {% endif %}>Fixed</option>
+                            <option value="P" {% if per_info.discount_type == 'P' %}selected {% endif %}>Percentage</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <label>Discount Amount.*</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append bg-white" style="cursor: pointer;">
+                            <span class="input-group-text" id="basic-addon2">
+                                <i class="fa fa-info" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="0.0" name="discount_amount"
+                            id="discount_amount" value="{% if per_info.discount_amount %}{{per_info.discount_amount}}{% else %}0.0{% endif %}" onkeyup="discAmount();" readonly />
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2">
+                    <label>Total Discount(-):</label>
+                    <input type="text" id="provided_discount" readonly class="form-control">
+                    <!-- <span style="font-weight: normal;" id="provided_discount"></span> -->
+                </div>
+            </div>
+            <!-- <div class="form-group row">
+            <div class="col-lg-4 col-md-4">
+                <label>Order Tax:*</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-append bg-white" style="cursor: pointer;">
+                        <span class="input-group-text" id="basic-addon2"><i class="fa fa-info" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <select class="form-control" name="order_tax">
+                        <option>None</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 offset-lg-4 offset-md-4">
+                <label>Discount Amount(+):<span style="font-weight:normal">0.00</span></label>
+            </div>
+        </div> -->
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>Shipping Details</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append bg-white" style="cursor: pointer;">
+                            <span class="input-group-text" id="basic-addon2">
+                                <i class="fa fa-info" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input type="text" placeholder="Shipping Details" class="form-control" id="shipp_detail"
+                            name="shipping_details" onkeyup="shippAmount()" value="{{per_info.shipping_details}}">
+                    </div>
+                        <span>Note: provide atleast 10 characters.</span>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <label>Shipping Charges</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append bg-white" style="cursor: pointer;">
+                            <span class="input-group-text" id="basic-addon2">
+                                <i class="fa fa-info" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input type="text" placeholder="0.00" class="form-control pay_term" id="shipping_charges"
+                            name="shipping_charges" onkeyup="shippAmount()" 
+                            value="{% if per_info.shipping_charges %}{{per_info.shipping_charges}}{% else %}0.0{% endif %}" readonly />
+                    </div>
+                </div>
+                <!-- <div class="col-lg-3 col-md-3 float-right">
+                    <label>Total charges(-):</label>
+                    <input type="text" name="" id="total_charges" class="form-control float-right" readonly>
+                        <!-- <span style="font-weight: normal;" id="total_payable after_disc"></span>
+                </div> -->
+                <div class="col-lg-2 col-md-2">
+                    <label>Total Payable:</label>
+                    <input type="text" name="total_payable" id="total_payable" class="form-control float-right" value="{{per_info.total_payable}}" readonly>
+                    <!-- <span style="font-weight: normal;" id="total_payable after_disc"></span> -->
+                </div>
+            </div>
+            <!-- <div class="form-group row">
+            </div> -->
+            <div class="form-group row">
+                <div class="col-lg-12 col-md-12">
+                    <label>Sell Note</label>
+                    <textarea rows="2" class="form-control" id="" name='sell_notes'>{{per_info.sell_notes}}</textarea>
+                </div>
+            </div>
+            <!-- <input type="submit" class="btn btn-primary mb-3 mt-3" value="SAVE"> -->
+        </div>
+        {% if payments_obj != '' %}
+        <div class="section card p-3" style="border-top:3px solid green">
+            <h6 class="font-weight-normal">Add Payment</h6>
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <label>Amount.*</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-money"></i>
+                            </span>
+                        </div>
+                        <input type="hidden" name="payid" value="{{payments_obj.id}}">
+                        <input type="number" step="any" name="amount" class="form-control" value="{{payments_obj.amount}}" required />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <label>Payment Method.*</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-money"></i>
+                            </span>
+                        </div>
+                        <select class="form-control" name="payment_method" required>
+                            <option value="">Please select</option>
+                            <option value="0" {% if payments_obj.payment_method == 0 %}selected{% endif %}>Cash</option>
+                            <option value="1" {% if payments_obj.payment_method == 1 %}selected{% endif %}>Card</option>
+                            <option value="2" {% if payments_obj.payment_method == 2 %}selected{% endif %}>Cheque</option>
+                            <option value="3" {% if payments_obj.payment_method == 3 %}selected{% endif %}>Bank Transfer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <label>Payment Account*</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-money"></i>
+                            </span>
+                        </div>
+                        <select class="form-control" name="payment_account" required>
+                            <option value="">Please select</option>
+                            {% for account in accounts %}
+                                <option value="{{account.id}}" {% if payments_obj.payment_account.id == account.id %} selected {% endif %}>{{account.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4">
+                    <label>Payment Due*</label>
+                    <input type="number" name="payment_due" class="form-control" value="{% if payments_obj.payment_due %}{{payments_obj.payment_due}}{% else %}0{% endif %}" required />
+                    <small>Note: Please enter '0' if no due amount.</small>
+                </div>
+                <div class="col-lg-8 col-md-8">
+                    <label>Payment Note</label>
+                    <textarea class="form-control" name="payment_notes" rows="1">{{payments_obj.payment_notes}}</textarea>
+                </div>
+            </div>
+            <hr>
+        </div>
+        {% endif %}
+        <input type="submit" class="btn btn-primary w-100 mb-3 mt-3" value="Update Sale">
+    </form>
+</div>
+
+<!-- add description modal start here -->
+<div class="modal fade" id="add_description" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">CHOCO CHIPS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-md-12 col-lg-12">
+                        <label>Description</label>
+                        <textarea class="form-control" rows="4"></textarea>
+                        <small>Add product IMEI, Serial number or other informations here.
+
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- add description modal end here -->
+
+<!-- edit product Unit Price and Tax start here -->
+<div class="modal fade" id="edit_product_unit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">CHOCO CHIPS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Unit Price</label>
+                    <input type="text" class="form-control" placeholder="0.00">
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6 col-lg-6">
+                        <label>Discount Type</label>
+                        <select class="form-control">
+                            <option>xxxxxx</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-lg-6">
+                        <label>Discount Amount</label>
+                        <input type="text" class="form-control" />
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label>Tax</label>
+                    <select class="form-control">
+                        <option>none</option>
+                    </select>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- edit product Unit Price and Tax end here -->
+
+<!-- subscribe modal start modal-here -->
+<div class="modal fade subscribemdl" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Subscribe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <label>Subscription Interval</label>
+
+                        <div class="input-group mb-3">
+
+                            <div class="input-group-append bg-white">
+                                <input type="text" class="form-control" />
+                            </div>
+                            <select class="form-control" name="product_name">
+                                <option>Days</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6">
+                        <label>No. of Repetitions</label>
+
+                        <input type="text" class="form-control" />
+                        <small>If blank invoice will be generated infinite times</small>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- subscribe modal end here -->
+
+<!-- add customer modal start here -->
+<div class="modal fade" id="customermdl" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add a new contact</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group row">
+                        <div class="col-md-6 col-lg-6">
+                            <label>Contact Type</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div>
+                                <select class="form-control" name="contact_type">
+                                    <option>xxx</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <label>Name</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="name" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-4 col-lg-4">
+                            <label>Credit Limit</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-money"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="credit_limit"
+                                    placeholder="Keep blank for no limit" />
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Contact ID</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-address-book-o"
+                                            aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" name="contact_id" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Tax Number</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-info"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="tax_number" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <div class="col-md-6 col-lg-6">
+                            <label>Opening Balance</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="name" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <label>Pay Term</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <!-- <span class="input-group-text"> -->
+                                    <input type="text" class="form-control" placeholder="pay term" />
+                                    <!-- </span> -->
+                                </div>
+                                <select class="form-control" name="contact_type">
+                                    <option>xxx</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-12 col-md-12">
+                            <label>Customer Group</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-users"></i></span>
+                                </div>
+                                <select class="form-control">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group row">
+                        <div class="col-md-3 col-lg-3">
+                            <label>Email</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
+                                </div>
+                                <input type="email" class="form-control" name="email" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <label>Mobile</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-mobile" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                <input type="number" class="form-control" name="mobile" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <label>Alt Contact No.</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-mobile"></i></span>
+                                </div>
+                                <input type="number" class="form-control" name="alt_contact_no" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <label>Landline</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="landline" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-lg-3">
+                            <label>City</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="city" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <label>State</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" name="state" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <label>Country</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                                </div>
+                                <input type="globe" class="form-control" name="globe" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <label>Landmark</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                </div>
+                                <input type="text" class="form-control" name="landmark" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-lg-3">
+                            <label>Custom Field 1</label>
+
+                            <input type="text" class="form-control" name="custom_field_one" />
+
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <label>Custom Field 2</label>
+
+                            <input type="text" class="form-control" name="custom_field_two" />
+
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <label>Custom Field 3</label>
+
+
+                            <input type="text" class="form-control" name="custom_field_three" />
+
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <label>Custom Field 4</label>
+
+                            <input type="text" class="form-control" name="custom_field_four" />
+
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <div class="col-md-12 col-lg-12">
+                            <a class="btn btn-primary text-white float-right">Save</a>
+
+                            <a class="btn btn-danger text-white mr-3  float-right">Close</a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- add customer modal end here -->
+
+<!-- add new product modal start here  -->
+<div class="modal fade" id="add_new_product_mdl" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add new product
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group row">
+                    <div class="col-md-4 col-lg-4">
+                        <label>Product Name.*</label>
+                        <input type="text" class="form-control" name="product_name" placeholder="product name">
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <label>Brand:</label>
+                        <select class="form-control" name="brand">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <label>Unit.*</label>
+                        <select class="form-control" name="unit">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-4 col-lg-4">
+                        <label>Category:</label>
+                        <input type="text" class="form-control" name="product_name" placeholder="category">
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <label>SKU:</label>
+                        <input type="text" class="form-control" name="sku" placeholder="SKU">
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <label>Barcode Type:</label>
+                        <select class="form-control" name="unit">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-4 col-lg-4">
+                        <input type="checkbox"><label class="ml-2">Manage Stock</label><br><small>Enable stock
+                            management at product level
+
+                        </small>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <label>Alert Quantity:*</label>
+                        <input type="text" class="form-control" name="alert_quantity" placeholder="alert quantity" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-8 col-lg-8">
+                        <label>Product Description:</label>
+                        <textarea name="product_description" rows="4" class="form-control"></textarea>
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-4 col-lg-4">
+                        <label>Applicable Tax:</label>
+                        <input type="tex" class="form-control" name="applicable_tax" placeholder="applicable tax" />
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <label>
+                            Selling Price Tax Type:*</label>
+                        <input type="tex" class="form-control" name="applicable_tax"
+                            placeholder="selling price tax type" />
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <input type="checkbox"><b> Enable Product description, IMEI or Serial Number</b>
+                    </div>
+                </div>
+
+                <div class="row overflow-auto">
+                    <table class="table table-bordered table-sm">
+                        <thead class="bg-success">
+                            <tr>
+                                <th>
+                                    Default Purchase Price</th>
+                                <th scope="col">x Margin(%) </th>
+                                <th scope="col">Default Selling Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label>Exc tax</label>
+                                    <input type="text" class="form-control" placeholder="Exc tax">
+
+                                    <label>Inc tax</label>
+                                    <input type="text" class="form-control" placeholder="Inc tax">
+
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control mt-2" placeholder="0" />
+                                </td>
+                                <td>
+                                    <label>Exc tax</label>
+                                    <input type="text" class="form-control" placeholder="0" />
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-lg-flex d-md-flex">
+                    <h6>Add Opening Stock</h6>
+                </div>
+                <div class="overflow-auto">
+                <table class="table table-sm">
+                    <thead class="bg-success">
+                        <tr>
+                            <th>Location</th>
+                            <th scope="col">Quantity </th>
+                            <th scope="col">Unit Cost(Before Tax)</th>
+                            <th scope="col">SubTotal(Before Tax)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Div Mart(SHOP-1)</td>
+                            <td><input type="text" class="form-control" placeholder="0"></td>
+                            <td><input type="text" class="form-control" placeholder="0"></td>
+                            <td>0</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- add new product modal end here  -->
+
+<script>
+
+    function selectSome() {
+        business = document.getElementById('business');
+        product = document.getElementById('p_name');
+
+        if (business.value != '') {
+            product.readonly = false;
+        } else {
+            product.readonly = true;
+        }
+    }
+
+</script>
+<script>
+    var tbody = $("#sales_cal");
+    $('#submtFrom').submit(function (e) {
+        if (tbody.children().length == 0) {
+            var action = alert('--select product to proceed--');
+            if (action == true) {
+                e.preventDefault();
+            } else
+                e.preventDefault();
+        }
+        else { location.replace('/dashboard/sale_list') }
+    })
+</script>
+<script>
+
+    count = 0
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = "json";
+    xhr.open('GET', "{% url 'search_product_list' %}")
+    xhr.onload = () => {
+        const products = xhr.response['prod_list'];
+        const searchInput = document.querySelector('.search-input');
+        const suggestionsPanel = document.querySelector('.suggestions');
+
+        searchInput.addEventListener('keyup', function () {
+            const input = searchInput.value;
+            suggestionsPanel.innerHTML = '';
+            const suggestions = products.filter(function (product) {
+                return product.name.toLowerCase().startsWith(input);
+            });
+
+            suggestions.forEach(function (suggested) {
+                const div = document.createElement('div');
+                div.innerHTML = suggested.name;
+                div.style.cursor = "pointer";
+                div.style.marginLeft = '50px';
+                div.style.padding = '3px';
+
+                div.addEventListener('mouseenter', () => {
+                    div.style.color = "white";
+                    div.style.backgroundColor = "#87A8A4";
+                })
+                div.addEventListener('mouseleave', () => {
+                    div.style.color = "black";
+                    div.style.backgroundColor = "white";
+                })
+
+                div.addEventListener('click', () => {
+                    const p_name = document.getElementById('p_name');
+
+                    p_name.value = div.innerText;
+                    searchInput.value = div.innerText;
+                    suggestionsPanel.innerHTML = "";
+                    const product = document.getElementById("p_name");
+                    const xhr = new XMLHttpRequest();
+                    xhr.responseType = "json";
+
+                    xhr.open('GET', `/dashboard/product_informtion_api/${product.value}`);
+                    xhr.onload = () => {
+                        count++;
+                        const prod_inf = xhr.response['prod_info'];
+                        const tbody = document.getElementById("sales_cal")
+                        let HTML = `<tr>
+                        <th scope="row">${count}</th>
+                        <input type="hidden" name="count" value="${count}"/>
+                        <input type="hidden" name="pobjid{{ forloop.counter }}" value={{val.id}}>
+                        <td><input type="text" class='form-control' name="nam${count}" id="nam${count}" value="${product.value}" readonly required/></td> 
+                        <td><input type="text" class='form-control qunatity' name="qan${count}" id="qan${count}" onkeyup="sub_tot_cal(${count}); cal();" value='1'/></td>
+                        <td><input type="text" class='form-control' name="usp${count}" id="usp${count}" value="${prod_inf.selling_price}" readonly/></td>
+                        <td><input type="text" class='q-p form-control sub-total' name="sub${count}" id="sub${count}" value='${prod_inf.selling_price * 1}' readonly/></td>
+                        </tr>`;
+                        tbody.innerHTML += HTML;
+                        searchInput.value = '';
+                        cal();
+                    }
+                    xhr.send();
+                })
+                suggestionsPanel.appendChild(div);
+            });
+            if (input === '') {
+                suggestionsPanel.innerHTML = '';
+            }
+        });
+    }
+    xhr.send();
+    // <td><input type="text" class='form-control' name="nc${count}" id="nc${count}" value="${net_cost}" readonly/></td>
+</script>
+<script>
+    function sub_tot_cal(arg) {
+        var sub_total = document.getElementById(`sub${arg}`);
+        var qunatity = document.getElementById(`qan${arg}`);
+        var price = document.getElementById(`usp${arg}`);
+
+        if (qunatity.value.length != '') {
+            val = parseFloat(qunatity.value) * parseFloat(price.value);
+            sub_total.value = val.toFixed(2);
+        }
+        else {
+            sub_total.value = 0;
+            qunatity.value = 0
+        }
+    }
+</script>
+<script>
+    function cal() {
+        var line_t = document.querySelectorAll('.q-p');
+        var net_amt = document.getElementById("total_amount");
+        var payable = document.getElementById("total_payable");
+        var sum = 0
+
+        line_t.forEach(vp => {
+            sum = sum + parseFloat(vp.value)
+            net_amt.value = sum.toFixed(2);
+            payable.value = net_amt.value;
+        })
+    };
+</script>
+
+<script>
+    function discAmount() {
+        var disc_type = document.getElementById('discount_type');
+        var tot_amount = document.getElementById('total_amount');
+        var disc_amount = document.getElementById('discount_amount');
+        var disc_provided = document.getElementById('provided_discount');
+        var total_payable = document.getElementById('total_payable');
+
+        if (disc_type.value != '') {
+            if (tot_amount.value != '') {
+                document.getElementById('discount_amount').required = true;
+                document.getElementById('discount_amount').readonly = false;
+
+                if (tot_amount.value.length != '') {
+                    if (disc_type.value == 'P') {
+                        disc_provided.value = (tot_amount.value * disc_amount.value) / 100
+                        total_payable.value = tot_amount.value - disc_provided.value
+
+                    } else if (disc_type.value == 'F') {
+                        disc_provided.value = disc_amount.value
+                        total_payable.value = tot_amount.value - disc_provided.value
+
+                    } else {
+                        disc_provided.value = 0
+                        total_payable.value = tot_amount.value - disc_provided.value
+                    }
+                }
+            } else {
+                alert('Please select product...')
+                disc_type.value = '';
+            }
+        } else {
+            document.getElementById('discount_amount').required = false;
+            disc_amount.value = 0;
+            disc_provided.value = 0;
+            document.getElementById('discount_amount').readonly = true;
+        }
+    }
+</script>
+
+<script>
+    function shippAmount() {
+        var ship_charge = document.getElementById('shipping_charges');
+        // var total_charges = document.getElementById('total_charges');
+        var payable = document.getElementById('total_payable');
+        var ship_details = document.getElementById('shipp_detail');
+        var payable_1st = payable.value;
+
+        if (ship_details.value.length >= 10) {
+            ship_charge.readonly = false;
+            ship_charge.required = true;
+
+            document.getElementById("shipping_charges").onkeyup = function () {
+                if (ship_charge.value != '') {
+                    var inp = parseInt(ship_charge.value);
+                    // total_charges.value = inp
+                    payable.value = parseFloat(payable_1st) + parseFloat(ship_charge.value)
+                }
+                else if (ship_charge.value == '') {
+                    // ship_charge.value = 0
+                    payable.value = payable_1st
+                }
+            }
+        }
+        else {
+            ship_charge.readonly = true;
+            ship_charge.required = false;
+        }
+    }
+</script>
+
+<script>
+    function payFunction() {
+        var duration = document.getElementById('pay_duration');
+        var input = document.getElementById("pay_term");
+
+        if (duration.value != '') {
+            document.getElementById("pay_term").readonly = false;
+            if (duration.value == 'M') {
+                document.getElementById("pay_term").placeholder = '1-12';
+                document.getElementById("pay_term").onkeyup = function () {
+                    var inp = parseInt(input.value);
+                    if (inp < 1 || inp > 12 || inp == 0) {
+                        alert('Value should be between 1-12 for this selection...');
+                        input.value = '';
+                    }
+                    else {input.value = inp;}
+                }
+            }
+            else if (duration.value == 'D') {
+                document.getElementById("pay_term").placeholder = '1-31';
+                document.getElementById("pay_term").onkeyup = function () {
+                    var inp = parseInt(input.value);
+                    if (inp < 1 || inp > 31 || inp == 0) {
+                        alert('Value should be between 1-31 for this selection...');
+                        input.value = '';
+                    }
+                    else { input.value = inp; }
+                }
+            }
+        }
+        else {
+            document.getElementById("pay_term").readonly = true;
+        }
+    }
+</script>
+<!-- 
+<script>
+    $('.qunatity').keyup(function () { 
+        if (this.value != this.value.replace(/[^0-9\.]/g, '')) { 
+            this.value = this.value.replace(/[^0-9\.]/g, ''); 
+		}
+	});
+</script> -->
+{%endblock%}

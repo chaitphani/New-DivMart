@@ -1,0 +1,356 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<style>
+    #categories, #brands, #locations, #invoice, #customer{display: none;}
+</style>
+
+<div class="container-fluid">
+    <!-- filter buttons -->
+    <div class="row">
+        <div class="col-lg-9 text-left">
+            <h4>Profit / Loss Report</h4>
+        </div>
+        <!-- <div class="col-lg-3 pull-right">
+            <select name="" id="" class="form-control mb-2">
+                {% for location in locations %}
+                <option value="{{location.id}}">{{location.name}}</option>
+                {% endfor %}
+            </select>
+        </div> -->
+    </div>
+    <!-- overall calculated price -->
+    <div class="section card p-3 text" style="border-top: 3px solid green;">
+        <div class="row">
+            <!-- table to show purchase sales report data -->
+            <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 overflow-auto">
+                <table class="table table-sm">
+                    <tbody>
+                        <tr>
+                            <th>Opening Stock:</th>
+                            <td>
+                                <span class="opening_stock">₹ {% if opening_stock %}{{opening_stock}}{%else %}0.00{%endif %}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Purchase:</th>
+                            <td>
+                                <span class="total_sell">₹ {% if purchase_total %}{{purchase_total}}{% else %}0.00{% endif %}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Stock Adjustment:</th>
+                            <td>
+                                <span class="total_recovered">₹ {% if total_stock_adjustment %}{{total_stock_adjustment}}{% else %}0.00{% endif %}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Expense:
+                                <a type="button" data-toggle="tooltip" data-placement="bottom"
+                                    title="Total unpaid amount for purchases">
+                                    <i class="fa fa-info-circle text-info"></i>
+                                </a>
+                            </th>
+                            <td>
+                                <span class="total_purchase_return">₹ 0.00</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Shipping Charges:</th>
+                            <td>
+                                <span class="total_recovered">₹ {% if total_purchase_shipping %}{{total_purchase_shipping|floatformat:2}}{% else %}0.00{% endif %}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Sell Discount:</th>
+                            <td>
+                                <span class="total_recovered">₹
+                                    {% if total_selling_discount %}{{total_selling_discount|floatformat:2}}{% else %}0.00{% endif %}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Sell Return:</th>
+                            <td>
+                                <span class="total_recovered">₹ {% if total_sale_return %}{{total_sale_return|floatformat:2}} {% else %}0.00{% endif %}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- table for sales report data -->
+            <div class="col-lg-6 col-md-6 col-xs-6 overflow-auto col-sm-6 border-left">
+                <table class="table table-sm">
+                    <tbody>
+                        <tr>
+                            <th>Total Sales:</th>
+                            <td>
+                                <span class="total_sell">₹ {% if sale_total %}{{sale_total|floatformat:2}}{% else %}0.00{% endif %}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Stock Recovered:</th>
+                            <td>
+                                <span class="total_recovered">₹ 0.00</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Purchase Return:
+                                <a type="button" data-toggle="tooltip" data-placement="bottom"
+                                    title="Total amount to be received from sales">
+                                    <i class="fa fa-info-circle text-info"></i>
+                                </a>
+                            </th>
+                            <td>
+                                <span class="total_purchase_return">₹ {% if purchase_total_return %}{{purchase_total_return|floatformat:2}}{% else %}0.00{% endif %}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Purchase Discount:</th>
+                            <td>
+                                <span class="total_recovered">₹ {% if purchase_total_discount %}{{purchase_total_discount|floatformat:2}}{% else %}0.00{% endif %}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"> &nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"> &nbsp;</td>
+                        </tr>
+                        <tr>
+                            <th>Closing Stock:</th>
+                            <td>
+                                <span class="closing_stock">₹ {% if closing_stock_total %}{{closing_stock_total|floatformat:2}}{%else %}0.00{% endif %}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- total purchase section -->
+    <div class="section card w-75 text-center" style="border-top: 3px solid green;">
+        <div class="row p-4">
+            <div class="col-md-6 col-sm-6">
+                <h5>Gross Profit: <span>₹ {% if gross_profit_total %}{{gross_profit_total|floatformat:2}}{% else %}0.00{% endif %}</span></h5>
+                <small>(Total sell price - Total purchase price)</small>
+            </div>
+            <div class="col-md-6 col-sm-6 border-left">
+                <h5>Net Profit: <span>₹ {% if net_profit %}{{net_profit|floatformat:2}}{% else %}0.00{% endif %}</span></h5>
+                <small>
+                    (Closing Stock + Total Sales + Total Stock Recovered + Total Purchase Return + Total
+                    Purchase discount)
+                    <br> -
+                    (Opening Stock + Total Purchase + Total Expense + Total Shipping Charges + Total Sell
+                    Discount)
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="section card p-3 w-75" style="border-top: 3px solid green;">
+        <div class="mb-3 text-center">
+            <button class="tab_cls btn btn-info" onclick="opentabs(event, 'products')">
+                <i class="fa fa-cubes"></i> Profit by products
+            </button>
+            <button class="tab_cls btn btn-info" onclick="opentabs(event, 'categories')">
+                <i class="fa fa-tags"></i> Profit by categories
+            </button>
+            <button class="tab_cls btn btn-info" onclick="opentabs(event, 'brands')">
+                <i class="fa fa-diamond"></i> Profit by brands
+            </button>
+            <button class="tab_cls btn btn-info" onclick="opentabs(event, 'locations')">
+                <i class="fa fa-map-marker"></i> Profit by locations
+            </button>
+            <button class="tab_cls btn btn-info" onclick="opentabs(event, 'invoice')">
+                <i class="fa fa-file-text-o"></i> Profit by invoice
+            </button>
+            <!-- <button class="tab_cls" onclick="opentabs(event, 'date')"><i class="far fa-calendar-alt"></i> Profit by
+                date</button>   
+            <button class="tab_cls btn btn-info" onclick="opentabs(event, 'customer')">
+                <i class="fa fa-user"></i> Profit by customer
+            </button>
+        </div>
+        <div class="container">
+            <table class="table tab_desc" id="products">
+                <thead class="border bg-secondary">
+                    <th class="w-100">Product</th>
+                    <th class="w-100">Gross Profit</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>50 50 Jeera 38g (8901063017412)</td>
+                        <td>₹ 3.40</td>
+                    </tr>
+                    <tr>
+                        <td>50 50 Jeera 38g (8901063017412)</td>
+                        <td>₹ 3.40</td>
+                    </tr>
+                    <tr>
+                        <th>Total:</th>
+                        <th>₹ 1100.40</th>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table tab_desc" id="categories">
+                <thead class="border bg-secondary">
+                    <th class="w-100">Category</th>
+                    <th class="w-100">Gross Profit</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>50 50 Jeera 38g (8901063017412)</td>
+                        <td>₹ 3.40</td>
+                    </tr>
+                    <tr>
+                        <td>50 50 Jeera 38g (8901063017412)</td>
+                        <td>₹ 3.40</td>
+                    </tr>
+                    <tr>
+                        <th>Total:</th>
+                        <th>₹ 1100.40</th>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table tab_desc" id="brands">
+                <thead class="border bg-secondary">
+                    <tr>
+                        <th class="w-100">Brand</th>
+                        <th class="w-100">Gross Profit</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>50 50 Jeera 38g (8901063017412)</td>
+                    <td>₹ 3.40</td>
+                </tr>
+                <tr>
+                    <td>50 50 Jeera 38g (8901063017412)</td>
+                    <td>₹ 3.40</td>
+                </tr>
+                <tr>
+                    <th>Total:</th>
+                    <th>₹ 1100.40</th>
+                </tr>
+            </table>
+            <table class="table tab_desc" id="locations">
+                <thead class="border bg-secondary">
+                    <tr>
+                        <th class="w-100">Location</th>
+                        <th class="w-100">Gross Profit</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>50 50 Jeera 38g (8901063017412)</td>
+                    <td>₹ 3.40</td>
+                </tr>
+                <tr>
+                    <td>50 50 Jeera 38g (8901063017412)</td>
+                    <td>₹ 3.40</td>
+                </tr>
+
+                <tr>
+                    <th>Total:</th>
+                    <th>₹ 1100.40</th>
+                </tr>
+            </table>
+            <table class="table tab_desc" id="invoice">
+                <thead class="border bg-secondary">
+                    <tr>
+                        <th class="w-100">Invoice No.</th>
+                        <th class="w-100">Gross Profit</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>50 50 Jeera 38g (8901063017412)</td>
+                    <td>₹ 3.40</td>
+                </tr>
+                <tr>
+                    <td>50 50 Jeera 38g (8901063017412)</td>
+                    <td>₹ 3.40</td>
+                </tr>
+
+                <tr>
+                    <th>Total:</th>
+                    <th>₹ 1100.40</th>
+                </tr>
+            </table>
+
+           
+            <table class="table table-striped table-bordered table-sm tabcontent tab_desc" id="date">
+                <tr role="row">
+                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" style="width: 100%;">Date</th>
+                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100%;">Gross Profit</th>
+                </tr>
+                <tr>
+                    <td class="subtitle">50 50 Jeera 38g (8901063017412)</td>
+                    <td class="subtitle">₹ 3.40</td>
+                </tr>
+                <tr>
+                    <td class="subtitle">50 50 Jeera 38g (8901063017412)</td>
+                    <td class="subtitle">₹ 3.40</td>
+                </tr>
+
+                <tr>
+                    <th>Total:</th>
+                    <th>₹ 1100.40</th>
+                </tr>
+            </table> 
+            <table class="table tab_desc" id="customer">
+                <thead class="border bg-secondary">
+                    <tr>
+                        <th class="w-100">Product Customer</th>
+                        <th class="w-100">Gross Profit</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>50 50 Jeera 38g (8901063017412)</td>
+                    <td>₹ 3.40</td>
+                </tr>
+                <tr>
+                    <td>50 50 Jeera 38g (8901063017412)</td>
+                    <td>₹ 3.40</td>
+                </tr>
+
+                <tr>
+                    <th>Total:</th>
+                    <th>₹ 1100.40</th>
+                </tr>
+            </table>
+            <!-- table to show categories data here 
+            <!-- <table class="table table-striped table-bordered table-sm tabcontent tab_desc" id="day">
+                <tr role="row">
+                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" style="width: 100%;">Days</th>
+                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" style="width: 100%;">Gross Profit</th>
+                </tr>
+                <tr>
+                    <td class="subtitle">50 50 Jeera 38g (8901063017412)</td>
+                    <td class="subtitle">₹ 3.40</td>
+                </tr>
+                <tr>
+                    <td class="subtitle">50 50 Jeera 38g (8901063017412)</td>
+                    <td class="subtitle">₹ 3.40</td>
+                </tr>
+                <tr>
+                    <th>Total:</th>
+                    <th>₹ 1100.40</th>
+                </tr>
+            </table>
+        </div>
+        <!-- inside table to show gross profit in respect with their sold products 
+    </div> -->
+</div>
+<script>
+    function opentabs(evt, grp_name) {
+        var i, tab_desc, tab_cls;
+        tab_desc = document.getElementsByClassName("tab_desc");
+        for (i = 0; i < tab_desc.length; i++) {
+            tab_desc[i].style.display = "none";
+        }
+        tab_cls = document.getElementsByClassName("tab_cls");
+        for (i = 0; i < tab_cls.length; i++) {
+            tab_cls[i].className = tab_cls[i].className.replace("active", "");
+        }
+        document.getElementById(grp_name).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+{% endblock %}

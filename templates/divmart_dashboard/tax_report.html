@@ -1,0 +1,102 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<div class="container-fluid">
+   
+    <div class="row">
+    <!-- heading title -->
+    <div class="col-lg-12">
+    <h4>Tax Report <small>Tax details for the selected date range</small></h4>
+    </div>
+    </div>
+
+
+<!-- filter buttons -->
+<div class="row">
+    <div class="offset-lg-8 offset-md-8 col-lg-4 col-md-4 col-xs-6 col-sm-6">
+            <span class="dropdown">
+                <button class="btn btn-sm bg-div-blue dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-map-marker"></i> All locations
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Div Mart (Shop-1)</a>
+                <a class="dropdown-item" href="#">Div Mart (Shop-2)</a>
+                <a class="dropdown-item" href="#">Div Mart (Shop-3)</a>
+                </div>
+            </span>
+            <span id="reportrange" class="btn btn-primary btn-sm reportrange">
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    <span>By Date</span>
+                    <i class="fa fa-caret-down"></i>
+            </span>
+    </div>
+</div>
+
+<br>
+
+<!-- input tax -->
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+        <div class="box-solid">
+            <h4 class="box-title">Input Tax</span><a href="#" data-toggle="tooltip" data-placement="bottom" title="Total tax collected for sales within the selected time period."> <i class="fa fa-info-circle"></i></a></h4><br><br>
+            <div class="row">
+                <div class="col-sm-6 col-md-6 col-xs-6 col-lg-6">Total</div>
+            <div class="col-sm-6 col-md-6 col-xs-6 col-lg-6">₹ 0.00</div>
+            </div><br>
+
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+        <div class="box-solid">
+            <h4 class="box-title">Output Tax</span> <a href="#" data-toggle="tooltip" data-placement="bottom" title="Total tax paid towards Purchase for the selected time period."><i class="fa fa-info-circle"></i></a></h4><br><br>
+            <div class="row">
+                <div class="col-sm-6 col-md-6 col-xs-6 col-lg-6">Total</div>
+            <div class="col-sm-6 col-md-6 col-xs-6 col-lg-6">₹ 0.00</div>
+            </div><br>
+        </div>
+    </div>
+</div>
+<br>
+
+<!-- output tax -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box-solid">
+            <h4 class="box-title">Overall Input/Output Tax</span> <a href="#" data-toggle="tooltip" data-placement="bottom" title="Difference between total tax collected and total tax paid within the selected time period."> <i class="fa fa-info-circle"></i></a></h4><br><br>
+            <div class="row">
+                <div class="col-sm-6 col-md-6 col-xs-6 col-lg-6">Output Tax - Input Tax: ₹ 0.00</div>
+            </div><br>
+        </div>
+    </div>
+</div>
+
+<!--print button --><br>
+<div class="row">
+    <div class="col-lg-12 text-right">
+        <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print</a>
+    </div>
+</div>
+    <br><br>
+    </div>
+</div>
+
+
+
+
+
+<style>
+    .bg-div-blue{background-color:#007bff;color:white;}
+    .box-solid{padding:10px;background-color:white;border-radius:5px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);}
+    .box-solid th{font-weight:500;}
+    .box-header{padding: 10px 10px 10px 0px;}
+    .box-title{display: inline-block;
+        font-size: 18px;
+        margin: 0;
+        color:rgb(95, 94, 94);
+        font-weight: 500;
+        font-weight: lighter;
+        line-height: 1;}
+        small{font-size:14px;}
+        .box-solid h5{color: gray;}
+        .amounttitle{color:darkgreen;}
+    </style>
+{%endblock%}

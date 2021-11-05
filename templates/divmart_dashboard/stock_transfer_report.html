@@ -1,0 +1,168 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+{% load crispy_forms_tags %}
+
+<style>
+    #toggle-table {
+        display: none
+    }
+</style>
+<div class="container-fluid">
+    <h5>Stock Transfer Report</h5>
+
+<div class="section card p-3" id="accordionExample" style="border-top:3px solid green">
+    <div class="card-header bg-white" id="headingOne">
+        <i class="fas fa-filter accordion text-primary" id="accordionExample" data-toggle="collapse"
+            data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><b
+                class="text-primary">Filters</b></i>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+        <div class="card-body">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <div class="col-sm-6 col-md-3 col-lg-3">
+                        <label>Business Location</label>
+                        <select class="form-control" name="business_location">
+                            <option value="">Please select</option>
+                            {% for location in locations %}
+                                <option value="{{location.name}}">{{location.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3">
+                        <label>Date</label>
+                        <input type="datetime-local" class="form-control" name="date">
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 pt-4">
+                    <input type="submit" class="btn btn-block btn-primary">
+                    </div>
+                </div>
+
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="section card p-3" style="border-top:3px solid green">
+    <!-- <div class="row">
+        <div class="col-lg-12">
+            <p class="font-weight-bold">All Stock Transfer
+                <span class="float-right">
+                      <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print"
+                            aria-hidden="true"></i>&nbsp;
+                        CSV </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print"
+                            aria-hidden="true"></i>&nbsp;
+                        EXCEL </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print"
+                            aria-hidden="true"></i>&nbsp;
+                        PDF </a>
+                </span>
+            </p>
+        </div>
+    </div> -->
+    {% if messages %}
+    <ul class="messages list-unstyled">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }} text-center font-weight-bold p-2" {% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            {{ message }}
+            </li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="overflow-auto">
+    <table class="table table-striped table-sm" id="stock_transfer_table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Refrence No</th>
+                <th>Location(From)</th>
+                <th>Location(To)</th>
+                <th>Shipping Charges</th>
+                <th>Total Amount</th>
+                <th>Additional Notes</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for list in transfer_list %}
+            <tr class="text-center">
+                <td>{{list.date|date:'d-m-Y H:i'}}</td>
+                <td id="ref_no">{{list.ref_no}}</td>
+                <td>{{list.location_from}}</td>
+                <td>{{list.location_to}}</td>
+                <td>{{list.shipping_charges}}</td>
+                <td>{{list.total_amount}}</td>
+                <td>{{list.notes}}</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            Action
+                        </button>
+                        <div class="dropdown-menu bg-primary">
+                            <!-- <button class="btn btn-outline-secondary btn-sm mr-2" id="visible_btn"><i class="fa fa-eye"
+                                        aria-hidden="true"></i></button> -->
+                            <a href="{% url 'edit-stock-trasfer' list.id %}" class="dropdown-item">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; Edit
+                            </a>
+                            <a href="{% url 'delete-stock-trasfer' list.id %}" class="dropdown-item del_alert">
+                                <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete
+                            </a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+                     <!-- <script>
+                    $(document).ready(function () {
+                        $("#visible_btn").click(function () {
+                            $("#toggle-table").toggle();
+                        });
+                    });
+                </script> -->
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <!-- <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel">Add New Business Location</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <th>Product</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div> -->
+</div>
+</div>
+{% endblock %} {% block alljs %}
+
+<script>
+    $(document).ready(function () {
+        $('#stock_transfer_table').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+
+    $('.del_alert').click(function (e) {
+        var action = confirm("are you sure to remove...?")
+        if (action == false) {
+            e.preventDefault();
+        } else { location.reload(); }
+    })
+</script>
+
+{%endblock%}

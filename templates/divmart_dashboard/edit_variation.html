@@ -1,0 +1,24 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <div class="card p-5">
+        <h4>Update units - <span class="text-danger">{{obj.variation_name}}</span></h4>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group row">
+                <label>Name:*</label>
+                <input type="text" class="form-control" name="variation_name" value="{{obj.variation_name}}">
+            </div>
+            <div class="form-group row">
+                <label>Value:*</label>
+                <input type="text" class="form-control" name="variation_values" value="{{obj.variation_values}}">
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+
+{%endblock%} {% block alljs %}
+
+
+{%endblock%}

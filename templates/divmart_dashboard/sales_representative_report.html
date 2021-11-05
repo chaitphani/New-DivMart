@@ -1,0 +1,207 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+
+	<!-- heading title -->
+	<h5>Sales Representative Report</h5>
+
+	<!-- filter box -->
+	<div class="section card p-3 overflow-auto" style="border-top: 3px solid green;">
+		<div class="col-lg-12 box-solid">
+			<a data-toggle="collapse" href="#collapsebox" role="button" aria-expanded="true"
+				aria-controls="collapsebox">
+				<div><i class="fa fa-filter"></i>Filters</div>
+			</a>
+			<div class="collapse show" id="collapsebox">
+				<form action="" method="post">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-lg-3 filterbox">
+							<label>Cashier</label>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
+								</div>
+								<select class="form-control" name="cashier">
+									<option value="">Please select</option>
+									{% for cash in cashier %}
+									<option value="{{cash.username}}">{{cash.username}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 filterbox">
+							<label>Business Location</label>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1"><i
+											class="fa fa-map-marker"></i></span>
+								</div>
+								<select class="form-control" name="location">
+									<option value="">Please Select</option>
+									{% for location in locations %}
+									<option value="{{location.name}}">{{location.name}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 filterbox">
+							<label>Date Range</label>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">
+									<i class="fa fa-calendar"></i></span>
+								</div>
+								<input type="datetime-local" name="date_range" class="form-control">
+							</div>
+						</div>
+
+						<div class="col-lg-3 pt-4 filterbox">
+							<input type="submit" value="FILTER" class="btn btn-primary btn-block">
+						</div>
+					</div>
+					
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- <div class="container-fluid">
+	<div class="section card p-3 overflow-auto" style="border-top: 3px solid green;">
+		<div class="col-lg-12">
+			<p class="box-title">Summary</p>
+		</div>
+		<div class="col-lg-12">
+			<label>Total Sale - </label><span>Total Sales Return: ₹ 1,084,721.61 - ₹ 12,673.00 = ₹
+				1,072,048.61</span><br>
+			<label>Total Expense - </label><span>₹ 0.00</span>
+		</div>
+	</div>
+</div> -->
+
+<div class="container-fluid">
+	<div class="section card p-3 overflow-auto" style="border-top: 3px solid green;">
+	<div class="section">
+                <span class="float-right">
+                      <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        CSV </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        EXCEL </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        PDF </a>
+                </span>
+    </div>
+		<table class="table table-striped table-bordered table-sm" id="salesaddedreport">
+			<tr>
+				<th>Date</th>
+				<th>Invoice no.</th>
+				<th>Customer name</th>
+				<th>Location</th>
+				<th>Payment status</th>
+				<th>Total amount</th>
+				<th>Total paid</th>
+				<th>Total remaining</th>
+			</tr>
+			{% for sales in sales_list %}
+			<tr>
+				<td>{{sales.sale_date|date:'d-m-Y'}}</td>
+				<td>{{sales.invoice_no}}</td>
+				<td>{{sales.customer}}</td>
+				<td>{{sales.business_location}}</td>
+				<td>{{sales.payment_info.payment_status}}</td>
+				<td>₹ {{sales.total_amount}}</td>
+				<td>₹ {{sales.payment_info.amount}}</td>
+				<td>Sell Due: ₹ {{sales.payment_info.payment_due}}</td>
+			</tr>
+			{% endfor %}
+			<tr>
+				<th colspan="5" class="text-center">Total</td>
+				<th>₹ {{total_amount|floatformat:2}}</th>
+				<th>₹ {{total_paid|floatformat:2}}</th>
+				<th>Sell Due - ₹ {{total_due|floatformat:2}}</th>
+			</tr>
+		</table>
+
+		<!-- Sales with commission table goes here -->
+		<!-- <div id="saleswithcommission" class="tabcontent overflow-auto mt-3">
+			<table class="table table-striped table-bordered table-sm" id="salewithcommisiontreport">
+				<tr>
+					<th>Date</th>
+					<th>Invoice no.</th>
+					<th>Customer name</th>
+					<th>Location</th>
+					<th>Payment status</th>
+					<th>Total amount</th>
+					<th>Total paid</th>
+					<th>Total remaining</th>
+				</tr>
+				<tr>
+					<td>01/25/2021 02:01 PM</td>
+					<td>0103</td>
+					<td>Walk-In Customer</td>
+					<td>Div Mart</td>
+					<td><input type="button" value="Paid" class="btn btn-success btn-sm"></td>
+					<td>₹ 109.00</td>
+					<td>₹ 10.00</td>
+					<td>Sell Due: ₹ 109.00</td>
+				</tr>
+				<tr>
+					<th colspan="4" class="text-center">Total</td>
+					<th>Paid - 25</th>
+					<th>₹ 5,514.00</th>
+					<th>₹ 4,451.00</th>
+					<th>Sell Due - ₹ 1,063.00<br>
+						Sell Return Due - ₹ 0.00</th>
+				</tr>
+			</table>
+		</div> -->
+
+		<!-- Expenses table goes here -->
+		<!-- <div id="expenses" class="tabcontent overflow-auto mt-3">
+			<table class="table table-striped table-bordered table-sm" id="expensesreport">
+				<tr>
+					<th>Date</th>
+					<th>Refrence no.</th>
+					<th>Expense category</th>
+					<th>Location</th>
+					<th>Payment status</th>
+					<th>Total amount</th>
+					<th>Expense for</th>
+					<th>Expense note</th>
+				</tr>
+				<tr>
+					<td>01/25/2021 02:01 PM</td>
+					<td>0103</td>
+					<td>Walk-In Customer</td>
+					<td>Div Mart</td>
+					<td><input type="button" value="Paid" class="btn btn-success btn-sm"></td>
+					<td>₹ 109.00</td>
+					<td>₹ 10.00</td>
+					<td>Sell Due: ₹ 109.00</td>
+				</tr>
+				<tr>
+					<th colspan="4" class="text-center">Total</td>
+					<th></th>
+					<th>₹ 0.00</th>
+					<th colspan="2" class="text-center"></th>
+				</tr>
+			</table>
+		</div> -->
+
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		$('#salesaddedreport').dataTable();
+	});
+
+	$(document).ready(function () {
+		$('#salewithcommisiontreport').dataTable();
+	});
+
+	$(document).ready(function () {
+		$('#expensesreport').dataTable();
+	});
+</script>
+{%endblock%}

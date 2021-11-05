@@ -1,0 +1,281 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<style>
+    #hide_btn {
+        display: none;
+    }
+</style>
+<div class="container-fluid">
+    <h5>Add Stock Transfers</h5>
+    {% if messages %}
+    <ul class="messages list-unstyled">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }} text-center font-weight-bold p-2" {% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            {{ message }}
+            </li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- {{form.as_p}} -->
+        <!-- <input type="submit" value="Save" class="btn btn-primary float-right text-white" id="sub_btn"> -->
+
+        <div class="section card p-3" style="border-top: 3px solid green;">
+            <div class="form-group row pl-3 pr-2 pt-3">
+                <div class="col-md-3 col-lg-3 col-sm-3">
+                    <label>Date Range:*</label>
+                    <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id=""><i class="fa fa-calendar" aria-hidden="true"></i></span>
+                </div>
+                <input type="textbox" class="form-control" name="date" placeholder="date range" id="current_date" required />
+                </div>
+                </div>
+
+
+                
+
+                <!-- <div class="col-sm-3 col-md-3 col-lg-3">
+                    <label>Reference No:</label>
+                    <input type="text" class="form-control" name="ref_no">
+                </div> -->
+                <div class="col-md-3 col-lg-3 col-sm-3">
+                    <label>Location From:*</label>
+                    <select class="form-control" name="location_from" id="location_from"
+                        onchange="checkDropdownSelection()" required='required'>
+                        <option value="">Please Select</option>
+                        {% for location in locations %}
+                        <option value="{{location.id}}">{{location.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-3">
+                    <label>Location(To):*</label>
+                    <select class="form-control" name="location_to" id="location_to" onchange="checkDropdownSelection()"
+                        required='required'>
+                        <option value="">Please Select</option>
+                        {% for location in locations %}
+                        <option value="{{location.id}}">{{location.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="section card p-3" style="border-top: 3px solid green;">
+            <div class="row">
+                <div class="col-lg-9 col-md-9 offset-lg-2 offset-md-2">
+                <label>Search product to transfer stock</label>
+                   
+
+                    <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    </div>
+                    <input type="textbox" class="form-control  search-input" name="search" placeholder="Enter Producrt name / SKU / Scan bar code" id="p_name" />
+                    </div>
+
+                    <div class="suggestions" style="font-size:14px;border:1px solid #ccc"></div>
+                </div>
+            </div>
+            <div class="row pl-3 pr-3 pt-3 overflow-auto table-responsive">
+                <table class="table table-bordered table-sm mb-2" id="usertable">
+                    <thead>
+                        <tr>
+                            <th>S.no</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales_cal"></tbody>
+                </table>
+            </div>
+            <div class="row mb-3 mt-2">
+                <div class="col-md-9 col-lg-9"></div>
+                <div class="col-md-3 col-lg-3 float-right">
+                    <label for="">Amount before charges</label><input type="text" id="before_charges" class="form-control" value="0" readonly>
+                </div>
+            </div>
+            <hr>
+        </div>
+        <div class="section card p-3" style="border-top: 3px solid green;">
+            <div class="form-group row">
+                <div class="col-sm-4 col-md-2 col-lg-2">
+                    <label>Shipping Charges:</label>
+                    <input type="text" class="form-control" id="shipping_charges" name="shipping_charges" value="0" onkeyup="shipCharges()">
+                </div>
+                <div class="col-sm-4 col-md-2 col-lg-2">
+                    <label for="">Total Amount</label><input type="text" id="total_amount" class="form-control" name="total_amount" readonly>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <label>Additional Notes</label>
+                    <textarea class="form-control" name="notes" rows="2"></textarea>
+                </div>
+            </div>
+            <input type="submit" value="Save" class="btn btn-primary mb-3 mt-3" id="sub_btn">
+            <small id="hide_btn" class="float-right">Please make locations different to get the button visible</small>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"> {% endcomment %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
+<script>
+    $(function () {
+        $("#current_date").datetimepicker({
+            format: 'YYYY-MM-DD HH:mm'
+        });
+    });
+</script>
+
+<script>
+    function checkDropdownSelection() {
+        var from = document.getElementById('location_from').value
+        var to = document.getElementById('location_to').value
+
+        if (from == to) {
+            alert("Both the locations shouldn't match")
+            document.getElementById('sub_btn').style.display = 'none';
+            document.getElementById('hide_btn').style.display = 'block';
+        } else {
+            document.getElementById('sub_btn').style.display = 'block';
+            document.getElementById('hide_btn').style.display = 'none';
+        }
+    }
+</script>
+
+<script>
+
+    count = 0
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = "json";
+    xhr.open('GET', "{% url 'search_product_list' %}")
+    xhr.onload = () => {
+        const products = xhr.response['prod_list'];
+        const searchInput = document.querySelector('.search-input');
+        const suggestionsPanel = document.querySelector('.suggestions');
+
+        searchInput.addEventListener('keyup', function () {
+            const input = searchInput.value;
+            suggestionsPanel.innerHTML = '';
+            const suggestions = products.filter(function (product) {
+                return product.name.toLowerCase().startsWith(input);
+            });
+
+            suggestions.forEach(function (suggested) {
+                const div = document.createElement('div');
+                div.innerHTML = suggested.name;
+                div.style.cursor = "pointer";
+                // div.style.marginLeft = '50px';
+                div.style.padding = '3px';
+
+                div.addEventListener('mouseenter', () => {
+                    div.style.color = "white";
+                    div.style.backgroundColor = "#87A8A4";
+                })
+                div.addEventListener('mouseleave', () => {
+                    div.style.color = "black";
+                    div.style.backgroundColor = "white";
+                })
+
+                div.addEventListener('click', () => {
+                    const p_name = document.getElementById('p_name');
+
+                    p_name.value = div.innerText;
+                    searchInput.value = div.innerText;
+                    suggestionsPanel.innerHTML = "";
+                    const product = document.getElementById("p_name");
+                    const xhr = new XMLHttpRequest();
+                    xhr.responseType = "json";
+
+                    xhr.open('GET', `/dashboard/product_informtion_api/${product.value}`);
+                    xhr.onload = () => {
+                        count++;
+                        const prod_inf = xhr.response['prod_info'];
+                        const tbody = document.getElementById("sales_cal")
+                        let HTML = `<tr>
+                        <th scope="row">${count}</th>
+                        <input type="hidden" name="count" value="${count}"/>
+                        <td><input type="text" class='form-control' name="nam${count}" id="nam${count}" value="${product.value}" readonly required/></td> 
+                        <td><input type="text" class='form-control qunatity' name="qan${count}" id="qan${count}" onkeyup="sub_tot_cal(${count}); cal();" value='1'/></td>
+                        <td><input type="text" class='form-control' name="usp${count}" id="usp${count}" value="${prod_inf.selling_price}" readonly/></td>
+                        <td><input type="text" class='q-p form-control' name="sub${count}" id="sub${count}" value='${prod_inf.selling_price * 1}' readonly/></td>
+                        </tr>`;
+                        tbody.innerHTML += HTML;
+                        searchInput.value = '';
+                        cal();
+                    }
+                    xhr.send();
+                })
+                suggestionsPanel.appendChild(div);
+            });
+            if (input === '') {
+                suggestionsPanel.innerHTML = '';
+            }
+        });
+    }
+    xhr.send();
+    
+    // <td><input type="text" class='form-control' name="nc${count}" id="nc${count}" value="${net_cost}" readonly/></td>
+</script>
+
+<script>
+    function sub_tot_cal(arg) {
+        var sub_total = document.getElementById(`sub${arg}`);
+        var qunatity = document.getElementById(`qan${arg}`);
+        var price = document.getElementById(`usp${arg}`);
+
+        if (qunatity.value.length != '') {
+            val = parseFloat(qunatity.value) * parseFloat(price.value);
+            sub_total.value = val.toFixed(2);
+        }
+        else {
+            sub_total.value = 0;
+        }
+    }
+</script>
+
+
+<script>
+    function cal() {
+        var line_t = document.querySelectorAll(`.q-p`);
+        var payable = document.getElementById("before_charges");
+        var net_amt = document.getElementById("total_amount");
+        var sum = 0
+
+        line_t.forEach(vp => {
+            sum = sum + parseFloat(vp.value)
+            net_amt.value = sum.toFixed(2);
+            payable.value = net_amt.value;
+        })
+    };
+</script>
+
+<script>
+    function shipCharges(){
+        var before_charges = document.getElementById('before_charges');
+        var ship_charges = document.getElementById('shipping_charges');
+        var total_amount = document.getElementById('total_amount');
+
+        if (before_charges.value.length != ''){
+            if (ship_charges.value.length != ''){
+                total_amount.value = before_charges.value - ship_charges.value
+            }
+            else{
+                total_amount.value = before_charges.value
+            }
+        }
+    }
+</script>
+
+{% endblock %}

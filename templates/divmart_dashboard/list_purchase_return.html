@@ -1,0 +1,112 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Purchase Return</h5>
+</div>
+
+<div class="section card p-3" id="accordionExample" style="border-top:3px solid green">
+    <div class="card-header bg-white" id="headingOne">
+        <i class="fas fa-filter accordion text-primary" id="accordionExample" data-toggle="collapse"
+            data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><b
+                class="text-primary">Filters</b></i>
+    </div>
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+        <div class="card-body">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <div class="col-sm-6 col-md-4 col-lg-4">
+                        <label>Business Location</label>
+                        <select class="form-control" name="business_location">
+                            <option value="">Please select</option>
+                            {% for location in locations %}
+                                <option value="{{location.name}}">{{location.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-8 pt-4">
+                      <input type="submit" class="btn btn-primary w-25 float-right">
+                    </div>
+                </div>
+               
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="section card p-3" style="border-top:3px solid green">
+    <div class="row">
+        <div class="col-lg-12">
+            <h6>All Purchase Returns
+                <!-- <span class="float-right">
+                    <a class="btn btn-primary mb-2" href="{%url 'add_purchase_return'%}"> 
+                        <i  class="fa fa-plus text-white" aria-hidden="true"></i>&nbsp;
+                        Add </a>
+                </span> -->
+            </h6>
+        </div>
+    </div>
+
+    <div class="overflow-auto">
+    <table class="table table-bordered table-sm mb-2" id="usertable">
+        <thead>
+            <tr>
+                <th>Date </th>
+                <th>Reference No</th>
+                <th>Parent Purchase</th>
+                <th>Location</th>
+                <th>Supplier</th>
+                <!-- <th>Payment Status</th> -->
+                <th>Grand Total</th>
+                <th>Payment Due</th>
+                <!-- <th>Action</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for return in returns %}
+            <tr>
+                <th>{{return.purchase_date}}</th>
+                <td>{{ return.ref_no }}</td>
+                <td>{{return.business_location.name}}</td>
+                <td>{{return.supplier.business_name}}</td>
+                <!-- <td></td> -->
+                <td>{{return.purchase_total}}</td>
+                <td>{{return.payment_info.payment_due}}</td>
+                <!-- <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-pencil"
+                                aria-hidden="true"></i>&nbsp;Edit
+                        </button>
+                        <a href="#" class="btn btn-success btn-sm ml-1"><i class="fa fa-eye"
+                                aria-hidden="true"></i>&nbsp;View
+                        </a>
+                        <button type="button" class="btn btn-danger btn-sm ml-1"><i class="fa fa-trash"
+                                aria-hidden="true"></i>&nbsp;Delete
+                        </button>
+                    </div>
+                </td> -->
+            </tr>
+            {% endfor %}
+            <!-- <tr class="bg-light">
+                <td colspan="5">
+                    <h4 class="text-center">Total</h4>
+                </td>
+                <td></td>
+                <td>0.00 rs</td>
+                <td>0.00 rs</td>
+                <td></td>
+            </tr> -->
+        </tbody>
+    </table>
+    </div>
+</div>
+
+{% endblock %} {% block alljs %}
+<script>
+    $(document).ready(function () {
+        $('#usertable').DataTable();
+
+    });
+</script>
+
+{%endblock%}

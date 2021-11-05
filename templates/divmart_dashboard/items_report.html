@@ -1,0 +1,132 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+	<h5>Items Report</h5>
+	<!-- filter box -->
+	<div class="section card p-3" style="border-top: 3px solid green;">
+		<div class="row">
+			<div class="col-lg-12 box-solid">
+				<a data-toggle="collapse" href="#collapsebox" role="button" aria-expanded="true"
+					aria-controls="collapsebox">
+					<div><i class="fa fa-filter"></i>Filters</div>
+				</a>
+				<div class="collapse show" id="collapsebox">
+					<div class="row">
+						<div class="col-lg-3 filterbox">
+							<label>Supplier:</label>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
+								</div>
+								<select class="form-control" name="supplier">
+									<option value="">Please select</option>
+									{% for user in supplier_users %}
+										<option value="{{user.business_name}}">{{user.business_name}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 filterbox">
+							<label>Purchase Date:</label>
+							<div id="reportrange" class="reportrange form-control">
+								<i class="fa fa-calendar"></i>&nbsp;
+								<span></span>
+							</div>
+						</div>
+						<div class="col-lg-3 filterbox">
+							<label>Customer:</label>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
+								</div>
+								<select class="form-control" name='customer'>
+									<option value="">Please select</option>
+									{% for user in customer_user %}
+										<option value="{{user.first_name}}">{{user.first_name}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 filterbox">
+							<label>Sell Date:</label>
+							<div id="reportrange" class="reportrange form-control">
+								<i class="fa fa-calendar"></i>&nbsp;
+								<span></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- table to show data here -->
+	<div class="section card p-3 overflow-auto" style="border-top: 3px solid green;">
+	<div class="section">
+                <span class="float-right">
+                      <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        CSV </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        EXCEL </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        PDF </a>
+                </span>
+    </div>
+		<table class="table table-sm" id="item_report">
+			<thead>
+				<tr>
+					<th>Product</th>
+					<th>Purchase Date</th>
+					<th>Purchase Quantity</th>
+					<th>Supplier</th>
+					<th>Purchase Price</th>
+					<th>Sell Date</th>
+					<th>Sale Quantity</th>
+					<th>Customer</th>
+					<!-- <th>Quantity</th> -->
+					<th>Selling Price</th>
+					<th>Subtotal</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for prod in products %}
+				<tr>
+					<td>{{prod.product_name}}</td>
+					<td>{{prod.purchase_date}}</td>
+					<td>{{prod.purchase_quantity}}</td>
+					<td>{{prod.supplier}}</td>
+					<td>{{prod.purchase_price}}</td>
+					<td>{{prod.sale_date}}</td>
+					<td>{{prod.sale_quantity}}</td>
+					<td>{{prod.customer}}</td>
+					<td>{{prod.sale_price}}</td>
+					<td>{{prod.subtotal}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			<!-- <tbody>
+				{% for item1, item2 in clubbed_pur_sale %}
+				<tr>
+					<td>{{item1.product_name.product_name}}</td>
+					<td>{{item1.purchase_details.purchase_date|date:'d-m-Y'}}</td>
+					<td>{{item1.purchase_quantity}}</td>
+					<td>{{item1.purchase_details.supplier.business_name}}</td>
+					<td>₹ {{item1.unit_cost_before_tax}}</td>
+					<td>{{item2.sell.sale_date|date:'d-m-Y'}}</td>
+					<td>{{item2.quantity}}</td>
+					<td>{{item2.sell.customer.first_name}}</td>
+					<!-- <td>₹ 4.46</td> 
+					<td>₹ {{item2.price}}</td>
+					<td>₹ {{item2.sub_total}}</td>
+				</tr>
+				{% endfor %}
+			</tbody> -->
+	
+		</table>
+	</div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#item_report').dataTable();
+    });
+</script>
+{% endblock %}

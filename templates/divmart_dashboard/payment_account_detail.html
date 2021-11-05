@@ -1,0 +1,204 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5 >Payment Accounts</h5>
+    <div class="section card p-3" style="border-top:3px solid green">
+        <span class="float-right">
+            <a class="btn btn-primary btn-sm mb-2" href="#" data-toggle="modal" data-target=".bd-example-modal-lg"> <i
+                    class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp; Add </a>
+        </span>
+        <div class="table-responsive overflow-auto">
+            <table class="table table-bordered table-sm" id="role_table">
+                <thead>
+                    <th>Name</th>
+                    <th>Account Number</th>
+                    <th>Balance</th>
+                    <th>Notes</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                    {% for list in payment_account_list %}
+                    <tr>
+                        <td>{{list.name}}</td>
+                        <td>{{list.account_number}}</td>
+                        <td>{{list.openning_balance}}</td>
+                        <td>{{list.note}}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Action
+                                </button>
+                                <div class="dropdown-menu bg-primary">
+                                    <!-- <a href="{%url 'payment_account_book'%}" type="button"
+                                                    class="btn btn-warning text-white btn-sm ml-1"> <i class="fa fa-book"
+                                                        aria-hidden="true"></i>&nbsp;&nbsp; Account Book</a>
+                                                <button type="button" class="btn btn-success btn-sm ml-1"> <i
+                                                        class="fa fa-exchange"></i>&nbsp;&nbsp;Fund Transfer</button>
+                                                <button type="button" class="btn btn-primary btn-sm ml-1" data-toggle="modal"
+                                                    data-target=".deposit-mdl"> <i class="fa fa-money"></i>
+                                                    &nbsp;&nbsp;Deposit</button> -->
+                                    <a href="{% url 'payment_account_edit' list.id %}" class="dropdown-item">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; Edit
+                                    </a>
+                                    <a href="{% url 'payment_account_remove' list.id %}" class="dropdown-item del_btn">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header bg-primary p-4">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Account</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <div class="col-md-12 col-lg-12">
+                                <label>Name:*</label>
+                                <input type="text" class="form-control" name="name" required />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12 col-lg-12">
+                                <label>Account Number:*</label>
+                                <input type="number" class="form-control" name="account_number" required />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12 col-lg-12">
+                                <label>Opening Balance:</label>
+                                <input type="number" class="form-control" name="openning_balance" value="0" />
+                                <small>Note: Please mention '0' if no balance</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12 col-lg-12">
+                                <label>Note:</label>
+                                <textarea class="form-control" rows="2" name="note"></textarea>
+                            </div>
+                        </div>
+                        <input type="submit" class="btn btn-primary w-100 mb-4 mt-3" value="SAVE">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade deposit-mdl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Deposit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row pl-3">
+                        <b>Selected Account : </b>
+                        <p class="pl-2">xxxxx</p>
+                    </div>
+
+                    <form>
+                        <div class="form-group row">
+
+                            <div class="col-md-12 col-lg-12">
+                                <label>Amount</label>
+
+                                <input type="number" class="form-control" name="amount" placeholder="amount" />
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+
+                            <div class="col-md-12 col-lg-12">
+                                <label>Deposit From</label>
+                                <select class="form-control" name="deposit_from">
+                                    <option></option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
+
+                            <div class="col-md-12 col-lg-12">
+                                <label>Date</label>
+                                <div class="input-group">
+
+                                    <input type="text" class="form-control" name="Date" />
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12">
+                                <label>Note</label>
+                                <textarea class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group row">
+                            <div class="col-lg-12 col-md-12">
+                                <a class="btn btn-primary float-right text-white">Save</a>
+                                <a class="btn btn-danger float-right mr-2 text-white" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                    <span aria-hidden="true">Close</a>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{%endblock%}{% block alljs %}
+
+<script>
+    $(document).ready(function () {
+        $('#role_table').DataTable();
+        // $('.dataTables_length').addClass('bs-select');
+    });
+
+    $('.del_btn').click(function (e) {
+        var action = confirm('Are you sure to remove...?');
+        if (action == false) {
+            e.preventDefault();
+        } else { location.reload(); }
+    })
+</script>
+
+{%endblock%}

@@ -1,0 +1,56 @@
+{% extends 'membership/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5>Manage Direct Transaction</h5>
+
+    <div class="section card p-3" style="border-top:3px solid #00c0ef">
+        <h6 class="text-dark">My Direct Transaction</h6>
+        <br>
+        <table class="table table-sm" id="mdtable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Level</th>
+                    <th>Amount</th>
+                    <th>Created on</th>
+                </tr>
+            </thead>
+            {% for data in resp_data %}
+            <tr>
+                <tbody>
+                    <td>{{data.fname}} {{data.lname}}</td>
+                    <td>{{data.email}}</td>
+                    <td>{{data.level}}</td>
+                    <td>{{data.commission}}</td>
+                    <td>{{data.created|date:'d-M-Y'}}</td>
+                </tbody>
+            </tr>
+            {% endfor %}
+            <!-- <tbody>
+                <td>vishal</td>
+                <td>vishal yadav</td>
+                <td>2</td>
+                <td>500</td>
+                <td>date</td>
+            </tbody>
+                        <tbody>
+                <td>sudhakar</td>
+                <td>sudhakra yadav</td>
+                <td>3</td>
+                <td>300</td>
+                <td>date</td>
+            </tbody> -->
+        </table>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#mdtable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{%endblock%}

@@ -1,0 +1,36 @@
+{% extends 'membership/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+
+<div class="container">
+    <h5>Manage Point Transaction</h5>
+    <div class="section card p-5" style="border-top:3px solid #4cc0dd">
+        {% if messages %}
+        <ul class="messages list-unstyled">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }} p-2 font-weight-bold text-center" {% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+                </li>
+                {% endfor %}
+        </ul>
+        {% endif %}
+        <!-- <h5 class="text-dark">My Point Transaction </h5> -->
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col-lg-6 col-md-6">
+                    <label>Withdrawal Amount:*</label>
+                    <input type="text" class="form-control" name="amount" value="{% if memo_obj.commission %} {{memo_obj.commission}} {% else %} 0 {% endif %}" placeholder="Withdrawal Amount"/>
+                    <small class="text-danger text-capitalize font-weight-bold">NOTE: Requesting amount should be &#8377;100/- or higher</small>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <label>Note:*</label>
+                    <textarea class="form-control" rows="2" name="user_note" placeholder="Member Note"></textarea>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-info text-white w-100" value="Request">
+        </form>
+    </div>
+</div>
+
+{%endblock%}

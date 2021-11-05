@@ -1,0 +1,844 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid">
+    <h5 class="ml-1 mb-3">Update Purchase - <span class="text-danger">{{per_info.ref_no}}</span></h5>
+    <form name="myForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="section card p-3" style="border-top:3px solid green">
+            <div class="form-group row">
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                    <label>Supplier.*</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-user"></i>
+                            </span>
+                        </div>
+                        <!-- <p>{{users}}</p> -->
+                        <select class="form-control" name="supplier" required>
+                            <option value="">Please select</option>
+                            {% for user in users %}
+                                {% if user.id == sup_obj.id %}
+                                    <option value="{{user.id}}" selected>{{user.first_name}}</option>
+                                {% else %}
+                                    <option value="{{user.id}}">{{user.first_name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <div class="input-group-prepend" data-toggle="modal" data-target="#myModal" style="cursor: pointer;">
+                            <!-- <span class="input-group-text" id="basic-addon1">
+                            <i class="fas fa-plus-circle text-primary"></i>
+                        </span> -->
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="purid" value={{per_info.id}}>
+                <div class=" col-lg-3 col-md-3 col-sm-3 ">
+                    <label>Purchase Date.*</label>
+                    <span class="ml-2">
+                        <small><strong>{{per_info.purchase_date|date:'d-m-Y H:i'}}</strong></small>
+                    </span>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend ">
+                            <span class="input-group-text " id="basic-addon1 ">
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input type="date" value="{{ per_info.purchase_date }}" class="form-control" name="purchase_date" required/>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                    <label>Business Location.*</label>
+                    <select class="form-control" name="business_location" required>
+                        <option value="">Please select</option>
+                        {% for location in locations %}
+                            {% if per_info.business_location.name == location.name %}
+                                <option value="{{location.id}}" selected>{{location.name}}</option>
+                            {% else %}
+                                <option value="{{location.id}}">{{location.name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <label>Attach Document:
+                    </label>
+                    <div class="input-group mb-3">
+                        <input type="file" value="{{ per_info.documents }}" name="documents" class="form-control"
+                            aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <!-- <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2"><i class="fa fa-folder-open" aria-hidden="true"></i>
+                        Browse</span>
+                    </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add a new contact</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <label>Name</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                        <i class="fa fa-user"></i>
+                                    </span>
+                                    </div>
+                                    <input class="form-control" name="name" placeholder="name" />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <label>Business Name</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                        <i class="fa fa-briefcase"></i>
+                                    </span>
+                                    </div>
+                                    <input class="form-control" name="business_name" placeholder="business name" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <label>Contact ID</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="fa fa-address-card" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" name="contact_id" placeholder="contact id" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <label>Tax Number</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="fa fa-info" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" name="tax_number" placeholder="tax number" />
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <label>Opening Balance</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                        <i class="fa fa-money"></i>
+                                    </span>
+                                    </div>
+                                    <input class="form-control" name="opening_balance" placeholder="0" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <label>Pay Term</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <input type="text" class="form-control" placeholder="Pay term">
+
+                                    </div>
+                                    <select class="form-control">
+                                    <option>please select</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="form-group row">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <label>Email</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" name="email" placeholder="email" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <label>Mobile</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="fa fa-mobile" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" name="mobile" placeholder="mobile" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <label>Secondary Number</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="fa fa-phone" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" name="alternate_contact_number" placeholder="secondary number" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <label>Contact ID</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="fa fa-phone" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" name="landline" placeholder="landline" />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <label>City</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" name="city" placeholder="city" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <label>State</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" name="state" placeholder="state" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <label>Country</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="fa fa-globe" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" name="country" placeholder="country" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <label>Landmark</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
+                                    <input class="form-control" name="landmark" placeholder="landmark" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Save</button>
+
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+        <div class="section card p-3" style="border-top:3px solid green">
+            <div class="row">
+                <div class="col-lg-8 col-md-9 offset-lg-1 offset-md-1">
+                    <!-- <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                        <input class="search-input form-control" id="p_name" name="search"
+                            placeholder="Enter Producrt name / SKU / Scan bar code" />
+                    </div> -->
+                    <div class="suggestions">
+                    </div>
+                </div>
+                <!-- <div class="col-md-2 col-lg-2 pt-2">
+                    <a href="#" data-toggle="modal" data-target="#exampleModal"> <i class="fa fa-plus"
+                            aria-hidden="true"></i> Add New Product</a>
+                </div> -->
+            </div>
+            <div class="overflow-auto">
+            <table class="table table-bordered table-sm mb-2 table-responsive" id="usertable">
+                <thead>
+                    <tr>
+                        <th>S.N.</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Unit Cost (Before Discount)</th>
+                        <th>Discount (%)</th>
+                        <th>Unit Cost (bfr. tax)</th>
+                        <th>Subtotal (bfr. tax)</th>
+                        <th>Product Tax</th>
+                        <th>Net Cost</th>
+                        <th>Line Total</th>
+                        <th>Profit Margin (%)</th>
+                        <th>Unit Selling Price</th>
+                    </tr>
+                </thead>
+                <tbody id="purchase_cal">
+                    {% for val in purchase_obj %}
+                    <tr>
+                        <th scope="row" value="{{ forloop.counter }}">{{ forloop.counter }}</th>
+                        <input type="hidden" name="count" value="{{ forloop.counter }}">
+                        <input type="hidden" name="pobjid{{ forloop.counter }}" value={{val.id}}>
+                        <td><input type="text" name="nam{{ forloop.counter }}" class="form-control"
+                                id="nam{{ forloop.counter }}" value="{{ val.product_name.product_name }}" readonly />
+                        </td>
+                        <td><input type="text" name="qan{{ forloop.counter }}" class="form-control"
+                                id="qan{{ forloop.counter }}" value="{{ val.purchase_quantity }}"
+                                onkeyup="calcul({{ forloop.counter }});" /></td>
+                        <td><input type="text" name="pp{{ forloop.counter }}" class="form-control"
+                                id="pp{{ forloop.counter }}" value="{{ val.unit_cost_before_discount }}" readonly />
+                        </td>
+                        <td><input type="text" name="dis{{ forloop.counter }}" class="form-control"
+                                id="dis{{ forloop.counter }}" value="{{ val.discount_percentage }}"
+                                onkeyup="caldis({{ forloop.counter }})" ; />
+                        </td>
+                        <td><input type="text" name="ucbt{{ forloop.counter }}" class="form-control"
+                                id="ucbt{{ forloop.counter }}" value="{{ val.unit_cost_before_tax }}" readonly /></td>
+                        <td><input type="text" name="st{{ forloop.counter }}" class="form-control"
+                                id="st{{ forloop.counter }}" value="{{ val.sub_total }}" readonly /></td>
+                        <td><input type="text" name="tax{{ forloop.counter }}" class="form-control"
+                                id="tax{{ forloop.counter }}" value="{{ val.product_tax }}"
+                                onkeyup="caltax({{ forloop.counter }})" /></td>
+                        <td><input type="text" name="nc{{ forloop.counter }}" class="form-control"
+                                id="nc{{ forloop.counter }}" value="{{ val.net_costs }}" readonly /></td>
+                        <td><input type="text" class="line-t form-control" name="lt{{ forloop.counter }}"
+                                id="lt{{ forloop.counter }}" onkeyup="cal()" value="{{ val.line_total }}" /></td>
+                        <td><input type="text" name="margin{{ forloop.counter }}" class="form-control"
+                                id="margin{{ forloop.counter }}" value="{{ val.profit_margin }}"
+                                onkeyup="calmar({{ forloop.counter }})" /></td>
+                        <td><input type="text" name="usp{{ forloop.counter }}" class="form-control"
+                                id="usp{{ forloop.counter }}" value="{{ val.unit_selling_price }}" /></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <label class="float-right">
+                        Net Total Amount:
+                        <input type="text" value="{{ per_info.grand_total }}" class="form-control" id="net_total_amt"
+                            name="net_total_amt" readonly>
+                    </label>
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add new product
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group row">
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Product Name</label>
+                                    <input type="text" class="form-control" name="product_name"
+                                        placeholder="product name">
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Brand</label>
+                                    <select class="form-control" name="brand">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Unit</label>
+                                    <select class="form-control" name="unit">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Category</label>
+                                    <input type="text" class="form-control" name="product_name" placeholder="category">
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>SKU</label>
+                                    <input type="text" class="form-control" name="sku" placeholder="SKU">
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Barcode Type</label>
+                                    <select class="form-control" name="unit">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-4 col-lg-4">
+                                    <input type="checkbox"><label class="ml-2">Manage Stock</label><br><small>Enable
+                                        stock management at product level
+
+                                    </small>
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Alert Quantity</label>
+                                    <input type="text" class="form-control" name="alert_quantity"
+                                        placeholder="alert quantity" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-8 col-lg-8">
+                                    <label>Product Description</label>
+                                    <textarea name="product_description" rows="4" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4 col-lg-4">
+                                    <label>Applicable Tax</label>
+                                    <input type="tex" class="form-control" name="applicable_tax"
+                                        placeholder="applicable tax" />
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <label>
+                                        Selling Price Tax Type</label>
+                                    <input type="tex" class="form-control" name="applicable_tax"
+                                        placeholder="selling price tax type" />
+                                </div>
+                                <div class="col-md-4 col-lg-4">
+                                    <input type="checkbox"><b> Enable Product description, IMEI or Serial Number</b>
+                                </div>
+                            </div>
+
+                            <div class="row overflow-auto">
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>
+                                                Default Purchase Price</th>
+                                            <th scope="col">x Margin(%) </th>
+                                            <th scope="col">Default Selling Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label>Exc tax</label>
+                                                <input type="text" class="form-control" placeholder="Exc tax">
+
+                                                <label>Inc tax</label>
+                                                <input type="text" class="form-control" placeholder="Inc tax">
+
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control mt-2" placeholder="0" />
+                                            </td>
+                                            <td>
+                                                <label>Exc tax</label>
+                                                <input type="text" class="form-control" placeholder="0" />
+
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="section card p-3" style="border-top:3px solid green">
+            <div class="form-group row">
+                <div class="col-md-3 col-lg-3">
+                    <label>Discount Type</label>
+                    <select class="form-control" name="discount_type">
+                        <option>Percentage</option>
+                    </select>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <label>Discount Amount</label>
+                    <input type="text" value="{{ per_info.discount}}" id="dis_amt" value="0" name="discount"
+                        oninput="myfun()" class="form-control" placeholder="0" />
+                </div>
+                <div class="col-md-3 col-lg-3 offset-lg-2 offset-md-2">
+                    <b>Total Discount:</b>
+                    <input type="text" value="{{ per_info.Discount_amount}}" name="discount_amount" id="plce_dis_amt"
+                        class="form-control" readonly />
+                </div>
+            </div>
+            <hr>
+            <div class="form-group row">
+                <div class="col-md-3 col-lg-3">
+                    <label>Purchase Tax</label>
+                    <select class="form-control" id="pur_tax" onchange="purchase_fun()" name="purchase_tax_sel">
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                        <option value="6">6%</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3 col-lg-3 offset-lg-5 offset-md-5">
+                    <b>Tax Amount:</b>
+                    <input type="text" id="pur_tax_amount" value="{{ per_info.purchase_tax_amount}}" name="purchase_tax"
+                        class="form-control" readonly />
+                </div>
+            </div>
+            <hr>
+            <div class="form-group row">
+                <div class="col-md-3 col-lg-3">
+                    <label>Shipping Details</label>
+                    <input type="text" value="{{ per_info.shipping_details}}" name="shipping" class="form-control" />
+                </div>
+
+                <div class="col-md-4 col-lg-4 offset-lg-5 offset-md-5">
+                    <b>(-)Additional Shipping charges:</b>
+                    <input type="text" value="{{ per_info.additional_ship_charges }}" value="0.00" oninput="purtotal()"
+                        id="add_shipping_chages" name="add_ship_chrages" class="form-control" readonly />
+                </div>
+            </div>
+            <hr>
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4 offset-md-8 offset-lg-8">
+                    <b>Purchase Total:</b>
+                    <input type="text" value="{{ per_info.purchase_total }}" id="pur_total" name="purchase_total"
+                        class="form-control" />
+                </div>
+            </div>
+            <hr>
+            <div class="form-group row">
+                <div class="col-lg-12 col-md-12">
+                    <label>Additional Notes</label>
+                    <textarea rows="2" value="{{ per_info.Additional_notes }}" name="additional_notes"
+                        class="form-control">{{ per_info.Additional_notes }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="section card p-3" style="border-top: 3px solid green;">
+            <h4 class="font-weight-normal">Payment</h4>
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <label>Amount.*</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-money"></i>
+                            </span>
+                            <input type="hidden" name="payid" value={{payment_obj.id}}>
+                        </div>
+                        <input type="text" value="{{ payment_obj.amount }}" name="amount" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <label>Payment Method.*</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-money"></i>
+                            </span>
+                        </div>
+                        <select class="form-control" name="pay_method" required>
+                            <option value="">Please select</option>
+                            <option value="0" {% if payment_obj.payment_method == 0 %}selected{% endif %}>Cash</option>
+                            <option value="1" {% if payment_obj.payment_method == 1 %}selected{% endif %}>Card</option>
+                            <option value="2" {% if payment_obj.payment_method == 2 %}selected{% endif %}>Cheque</option>
+                            <option value="3" {% if payment_obj.payment_method == 3 %}selected{% endif %}>Bank Transfer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <label>Payment Account.*</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                <i class="fa fa-money"></i>
+                            </span>
+                        </div>
+                        <select class="form-control" name="payment_account" required>
+                            <option value="">Please select</option>
+                            {% for account in accounts %}
+                                {% if payment_obj.payment_account.id == account.id %}
+                                    <option value="{{account.id}}" selected>{{account.name}}</option>
+                                {% else %}
+                                    <option value="{{account.id}}">{{account.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-6 col-md-6">
+                    <label>Payment Note</label>
+                    <textarea class="form-control" value="{{ payment_obj.payment_notes }}" name="pay_notes" rows="1">{{ payment_obj.payment_notes }}</textarea>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <b>Payment Due:</b>
+                    <input type="text" value="{% if payment_obj.payment_due %}{{ payment_obj.payment_due }}{% else %}0{% endif %}" name="pay_due" class="form-control" />
+                </div>
+            </div>
+            <hr>
+            <input type="submit" class="btn btn-primary w-100 mb-5 mt-3" value="UPDATE">
+        </div>
+    </form>
+</div>
+<script>
+    var count = 0;
+    var sum = 0
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = "json";
+    xhr.open('GET', "{% url 'search_product_list' %}");
+    xhr.onload = () => {
+        const products = xhr.response['prod_list'];
+        console.log(products)
+
+        const searchInput = document.querySelector('.search-input');
+        const suggestionsPanel = document.querySelector('.suggestions');
+        searchInput.addEventListener('keyup', function () {
+            const input = searchInput.value;
+            suggestionsPanel.innerHTML = '';
+            const suggestions = products.filter(function (product) {
+                return product.name.toLowerCase().startsWith(input);
+            });
+            suggestions.forEach(function (suggested) {
+                const div = document.createElement('div');
+                div.innerHTML = suggested.name;
+                div.style.cursor = "pointer";
+                div.addEventListener('mouseenter', () => {
+                    div.style.color = "white";
+                    div.style.backgroundColor = "blue";
+                })
+                div.addEventListener('mouseleave', () => {
+                    div.style.color = "black";
+                    div.style.backgroundColor = "white";
+                })
+                div.addEventListener('click', () => {
+                    const p_name = document.getElementById('p_name');
+                    p_name.value = div.innerText;
+                    searchInput.value = div.innerText;
+                    suggestionsPanel.innerHTML = "";
+                    const product = document.getElementById("p_name");
+                    const xhr = new XMLHttpRequest();
+                    xhr.responseType = "json";
+                    xhr.open('GET', `/dashboard/product_informtion_api/${product.value}`);
+                    console.log(product.value)
+                    xhr.onload = () => {
+                        count++;
+                        const prod_inf = xhr.response['prod_info'];
+                        console.log(prod_inf);
+                        const tbody = document.getElementById("purchase_cal")
+                        console.log(tbody)
+                        let net_cost = parseFloat(prod_inf.purchase_price_exc_tax) + (parseFloat(prod_inf.purchase_price_exc_tax) * (parseFloat(prod_inf.applicable_tax) / 100))
+                        let HTML = `<tr > 
+                <th scope="row">${count}</th>
+                <input type="hidden" name="count" value="${count}" />
+                <td><input type="text" class='form-control' name="nam${count}" id="nam${count}" value="${product.value}" readonly/></td> 
+                <td><input type="text" class='form-control' name="qan${count}" id="qan${count}"  value="1" onkeyup="calcul(${count});" /></td>
+                <td><input type="text" class='form-control' name="pp${count}"  id="pp${count}" value="${prod_inf.purchase_price_exc_tax}" readonly/></td>
+                <td><input type="text" class='form-control' name="dis${count}" id="dis${count}" value="0" onkeyup="caldis(${count})";/></td>
+                <td><input type="text" class='form-control' name="ucbt${count}" id="ucbt${count}" value="${prod_inf.purchase_price_exc_tax}" readonly/></td>
+                <td><input type="text" class='form-control' name="st${count}"  id="st${count}" value="${prod_inf.purchase_price_exc_tax}" readonly/></td>
+                <td><input type="text" class='form-control' name="tax${count}" id="tax${count}" value="${prod_inf.applicable_tax}" onkeyup="caltax(${count})" /></td>
+                <td><input type="text" class='form-control' name="nc${count}" id="nc${count}" value="${net_cost}" readonly/></td>
+                <td><input type="text" class="line-t form-control" name="lt${count}"  id="lt${count}"  onkeyup="cal()" value="${net_cost}"/></td>
+                <td><input type="text" class='form-control' name="margin${count}" id="margin${count}" value="0" onkeyup="calmar(${count})"/></td>
+                <td ><input type="text" class='form-control' name="usp${count}" id="usp${count}" value="${net_cost}"/></td>
+                </tr>`;
+                        tbody.innerHTML += HTML;
+                        cal();
+                    }
+                    xhr.send();
+                })
+                suggestionsPanel.appendChild(div);
+            });
+            if (input === '') {
+                suggestionsPanel.innerHTML = '';
+            }
+        });
+    }
+    xhr.send();
+
+
+
+</script>
+<script>
+    function purchase_fun() {
+        var net_amt = document.getElementById("net_total_amt")
+        var purchase_tax = document.getElementById("pur_tax")
+        var purchase_tax_amount = document.getElementById("pur_tax_amount")
+        purchase_tax_amount.value = (parseFloat(net_amt.value) * (parseFloat(purchase_tax.value) / 100)).toFixed(2);
+        purtotal();
+    };
+</script>
+<script>
+    function calcul(arg) {
+        var quantity = document.getElementById(`qan${arg}`);
+        var unit_cost_before_tax = document.getElementById(`ucbt${arg}`)
+        var unit_selling_price = document.getElementById(`usp${arg}`);
+        var margin = document.getElementById(`margin${arg}`);
+        var Subtotal = document.getElementById(`st${arg}`)
+        var Subtotal_btax = parseFloat(quantity.value) * parseFloat(unit_cost_before_tax.value)
+        Subtotal.value = Subtotal_btax.toFixed(2);
+        var net_cost = document.getElementById(`nc${arg}`)
+        var line_total = document.getElementById(`lt${arg}`)
+        var tax = document.getElementById(`tax${arg}`)
+        line_total.value = (parseFloat(Subtotal.value) + (parseFloat(Subtotal.value) * (parseFloat(tax.value) / 100))).toFixed(2);
+        net_cost.value = (parseFloat(unit_cost_before_tax.value) + (parseFloat(unit_cost_before_tax.value) * (parseFloat(tax.value) / 100))).toFixed(2);
+        unit_selling_price.value = (parseFloat(net_cost.value) + (parseFloat(margin.value) * (parseFloat(margin.value) / 100))).toFixed(2);
+        cal();
+
+    }
+</script>
+<script>
+    function caltax(arg) {
+        var tax = document.getElementById(`tax${arg}`)
+        var margin = document.getElementById(`margin${arg}`);
+        var unit_selling_price = document.getElementById(`usp${arg}`);
+        var unit_cost_before_tax = document.getElementById(`ucbt${arg}`)
+        var Subtotal = document.getElementById(`st${arg}`);
+        var net_cost = document.getElementById(`nc${arg}`);
+        var line_total = document.getElementById(`lt${arg}`);
+        net_cost.value = (parseFloat(unit_cost_before_tax.value) + (parseFloat(unit_cost_before_tax.value) * (parseFloat(tax.value) / 100))).toFixed(2);
+        line_total.value = (parseFloat(Subtotal.value) + (parseFloat(Subtotal.value) * (parseFloat(tax.value) / 100))).toFixed(2);
+        unit_selling_price.value = (parseFloat(net_cost.value) + (parseFloat(margin.value) * (parseFloat(margin.value) / 100))).toFixed(2);
+        cal();
+
+    };
+</script>
+
+<script>
+    function caldis(arg) {
+        console.log(arg)
+        var discount = document.getElementById(`dis${arg}`);
+        var quantity = document.getElementById(`qan${arg}`);
+        var margin = document.getElementById(`margin${arg}`);
+        var unit_cost_before_tax = document.getElementById(`ucbt${arg}`);
+        var Subtotal = document.getElementById(`st${arg}`)
+        var purchase_price = document.getElementById(`pp${arg}`);
+        var line_total = document.getElementById(`lt${arg}`);
+        var net_cost = document.getElementById(`nc${arg}`);
+        var tax = document.getElementById(`tax${arg}`)
+        var unit_selling_price = document.getElementById(`usp${arg}`);
+        unit_cost_before_tax.value = (parseFloat(purchase_price.value) - (parseFloat(purchase_price.value) * (parseFloat(discount.value) / 100))).toFixed(2);
+        var Subtotal_btax = parseFloat(quantity.value) * parseFloat(unit_cost_before_tax.value)
+        Subtotal.value = Subtotal_btax.toFixed(2);
+        net_cost.value = (parseFloat(unit_cost_before_tax.value) + (parseFloat(unit_cost_before_tax.value) * (parseFloat(tax.value) / 100))).toFixed(2);
+        line_total.value = (parseFloat(Subtotal.value) + (parseFloat(Subtotal.value) * (parseFloat(tax.value) / 100))).toFixed(2);
+        unit_selling_price.value = (parseFloat(net_cost.value) + (parseFloat(margin.value) * (parseFloat(margin.value) / 100))).toFixed(2);
+        cal();
+
+    };
+</script>
+
+<script>
+    function calmar(arg) {
+        console.log(arg)
+        var margin = document.getElementById(`margin${arg}`);
+        var net_cost = document.getElementById(`nc${arg}`);
+        var unit_selling_price = document.getElementById(`usp${arg}`);
+        unit_selling_price.value = (parseFloat(net_cost.value) + (parseFloat(margin.value) * (parseFloat(margin.value) / 100))).toFixed(2);
+        cal();
+
+    };
+</script>
+
+<script>
+    function cal() {
+        console.log("I'm in")
+        var line_t = document.querySelectorAll(`.line-t`)
+        var net_amt = document.getElementById("net_total_amt")
+        var sum = 0
+        line_t.forEach(vp => {
+            sum = sum + parseFloat(vp.value)
+            net_amt.value = sum.toFixed(2)
+            console.log(net_amt.value)
+        });
+        purchase_fun();
+        myfun()
+
+    }
+
+</script>
+
+<script>
+    function myfun() {
+        var dis_amt = document.getElementById("dis_amt");
+        var net_amt = document.getElementById("net_total_amt");
+        var exact_dis_amt = document.getElementById("plce_dis_amt");
+        var dis_val = parseFloat(net_amt.value) * (parseFloat(dis_amt.value) / 100);
+        exact_dis_amt.value = dis_val.toFixed(2);
+        purtotal();
+    };
+
+</script>
+
+<script>
+    function purtotal() {
+        var net_amt = document.getElementById("net_total_amt");
+        var exact_dis_amt = document.getElementById("plce_dis_amt");
+        var purchase_tax_amount = document.getElementById("pur_tax_amount");
+        var add_ship_charges = document.getElementById("add_shipping_chages");
+        var pur_total = document.getElementById("pur_total");
+        pur_total.value = ((parseFloat(net_amt.value) - parseFloat(exact_dis_amt.value)) + (parseFloat(purchase_tax_amount.value) + parseFloat(add_ship_charges.value))).toFixed(2);
+
+    };
+</script>
+
+
+{%endblock%} {% block alljs %}
+
+<!-- <script>
+    $(document).ready(function() {
+        $('#usertable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+{%endblock%}

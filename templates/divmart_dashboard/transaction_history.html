@@ -1,0 +1,46 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+
+<div class="container-fluid">
+    <h5>
+        Transaction History
+    </h5>
+    <div class="section card p-3" style="border-top:3px solid #00c0ef">
+
+        <table class="table  table-sm" id="mdtable">
+            <thead class="text-center">
+                <tr>
+                    <th>S.No</th>
+                    <th>UserName</th>
+                    <th>Withdraw Amount</th>
+                    <th>Payment Status</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                {% for paid in paid_requests %}
+                <tr class="font-weight-bold">
+                    <td>{{forloop.counter}}</td>
+                    <td>{{paid.member.fname}}</td>
+                    <td>&#8377; {{paid.amount|floatformat:2}}</td>
+                    <td><button type="button" class="btn btn-success btn-sm w-25">Paid</button></td>
+                    <td>{{paid.created|date:'d-m-Y H:i'}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#mdtable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{%endblock%}

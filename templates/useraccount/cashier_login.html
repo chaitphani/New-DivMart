@@ -1,0 +1,17 @@
+<form class="text-center" style="color: #757575;" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <span style="color: red;">{{error}}</span>
+    <div>
+        <label >Username</label>
+        <input type="text"  name="uname"  required>
+    </div>
+    <div>
+        <label >Password</label>
+        <input type="text"  name="pwd"  required>
+    </div>
+    <span style="color: red;">{{errori}}</span>
+    <div>
+        <button type="submit">Log in</button>
+    </div>
+</form>

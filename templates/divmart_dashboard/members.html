@@ -1,0 +1,84 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+    <div class="container-fluid"> 
+        <h5>Members</h5>
+        <div class="section card p-3" style="border-top:3px solid green">
+            <p>All Members</p>
+            {% if messages %}
+                <ul class="messages list-unstyled">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }} text-center font-weight-bold p-2 m-0"{% endif %}>
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="overflow-auto">
+            <table class="table table-sm w-100" id="membertable">
+                <thead>
+                    <tr>
+                        <th>S.no</th>
+                        <th>UserName</th>
+                        <!-- <th>Name</th> -->
+                        <th>Email</th>
+                        <th>Mobile Number</th>
+                        <!-- <th>Pending SC</th>
+                    <th>Approved SC</th> -->
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for list in lists %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{list.fname}} {{list.lname}}</td>
+                        <td>{{list.email}}</td>
+                        <td>{{list.contact}}</td>
+                        <!-- <td>{{list.}}</td>
+                        <td>{{list.}}</td> -->
+                        <td>{% if list.status == 1 %}Active{% else %}Inactive{% endif %}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    Action
+                                </button>
+                                <div class="dropdown-menu bg-primary">
+                                    <a href="{% url 'edit_members' list.id %}" class="dropdown-item">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;Edit
+                                    </a>
+                                    <a href="{% url 'view_members' list.id %}" class="dropdown-item">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>&nbsp;View
+                                    </a>
+                                    <a href="{% url 'member-remove' list.id %}" class="dropdown-item btn-click">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+    
+    {%endblock%} {% block alljs %}
+    <script>
+        $(document).ready(function () {
+            $('#membertable').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+    <script>
+        $('.btnClickRem').click(function (e) {
+            var action = confirm('Are you sure to remove member from this list...?');
+            if (action == false) {
+                e.preventDefault();
+            } else { location.reload(); }
+        })
+    </script>
+    {%endblock%}

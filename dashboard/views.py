@@ -4,11 +4,10 @@ from django.contrib.auth.models import User
 from django.core.checks import messages
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Sum, F, Q, Count, aggregates
+from django.db.models import Sum, F, Q
 from django.http import HttpResponse,JsonResponse
 from django.utils.decorators import method_decorator
 from django.urls import reverse
-from django_filters.filters import DateRangeFilter
 
 from rest_framework import serializers
 from rest_framework.response import Response
@@ -31,9 +30,6 @@ from membership.models import *
 from useraccount.models import *
 from div_settings.models import *
 
-
-from itertools import groupby
-from dateutil.relativedelta import relativedelta
 
 @login_required(login_url='/useraccount/common_login')
 def home(request):
@@ -420,14 +416,15 @@ def add_new_product(request):
     business_location = BusinessLocation.objects.filter(status=True)
 
     if request.method == 'POST':
-        prod_obj = Product.objects.create(product_name=request.POST['product_name'], business_location=BusinessLocation.objects.get(id=request.POST['business_location']), brand=Brand.objects.get(id=request.POST['brand']), unit=Units.objects.get(id=request.POST['unit']), category=Category.objects.get(id=request.POST['category']), sub_category=SubCategory.objects.get(id=request.POST['sub_category']), SKU=request.POST['SKU'], barcode_type='EAN13', alert_quantity=request.POST['alert_quantity'], Product_description=request.POST['Product_description'], product_image=request.FILES['product_image'], weight=request.POST['weight'], applicable_tax=TaxRate.objects.get(rate=request.POST['applicable_tax']), product_type=request.POST['product_type'], sale_mrp=request.POST['sale_mrp'], purchase_price_exc_tax=request.POST['purchase_price_exc_tax'], purchase_price_inc_tax=request.POST['purchase_price_inc_tax'], margin=request.POST['margin'], status=True, selling_price_exc_tax=request.POST['selling_price_exc_tax'])
+        prod_obj = Product.objects.create(product_name=request.POST.get('product_name', ''), business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), brand=Brand.objects.get(id=request.POST.get('brand', '')), unit=Units.objects.get(id=request.POST.get('unit', '')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), barcode_type='EAN13', alert_quantity=request.POST.get('alert_quantity', 0), Product_description=request.POST.get('Product_description', ''), product_image=request.FILES.get('product_image', ''), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax', 0)), product_type=request.POST.get('product_type', ''), sale_mrp=request.POST.get('sale_mrp', 0), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax', 0), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax', 0), margin=request.POST.get('margin', 0), status=True, selling_price_exc_tax=request.POST.get('selling_price_exc_tax', 0))
 
         prod_obj.selling_price = prod_obj.selling_price_exc_tax
         prod_obj.purchase_price = prod_obj.purchase_price_inc_tax
         prod_obj.prod_mrp = prod_obj.purchase_price_exc_tax
         prod_obj.save()
-
-    #     form = ProductForm(request.POST)
+        return redirect('list_products')
+        
+    #     form = Produ  ctForm(request.POST)
     #     if form.is_valid():
     #         form_save = form.save(commit=False)
     #         form_save.status=True

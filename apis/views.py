@@ -463,9 +463,9 @@ class ProductListCreateView(APIView):
 
             prod = serializer.save()
             prod.applicable_tax = tax_rate_obj.id
-            # print('---prod applicable tax----', prod.applicable_tax)
             prod.ref_no = 'PRC-100' + str(prod.id) 
             prod.status = True
             prod.save()
             return redirect('list_products')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

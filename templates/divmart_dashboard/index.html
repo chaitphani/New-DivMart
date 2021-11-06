@@ -425,23 +425,17 @@
                                 </li>
                                 {% if request.user.is_superuser %}
                                 <li class="nav-item">
-                                    <a href="{%url 'add_new_product'%}" class="nav-link">
-                                        <i class="fa fa-plus nav-icon"></i>
-                                        <p><small> Add Products</small></p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
                                     <a href="{%url 'print_label'%}" class="nav-link">
                                         <i class="fa fa-barcode nav-icon"></i>
                                         <p> <small>Print Labels</small> </p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                <!-- <li class="nav-item">
                                     <a href="{%url 'variations'%}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p><small>Variations</small> </p>
                                     </a>
-                                </li>
+                                </li> -->
 
                                 <li class="nav-item">
                                     <a href="{%url 'import_product'%}" class="nav-link">
@@ -456,12 +450,12 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item">
+                                <!-- <li class="nav-item">
                                     <a href="{%url 'selling-price-groups'%}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p><small>Selling Price Group</small> </p>
                                     </a>
-                                </li>
+                                </li> -->
                                 <li class="nav-item">
                                     <a href="{%url 'units-list'%}" class="nav-link">
                                         <i class="fa fa-balance-scale nav-icon" aria-hidden="true"></i>

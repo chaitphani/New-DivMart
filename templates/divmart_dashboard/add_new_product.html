@@ -51,7 +51,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
+                <!-- <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Sub Category (optional)</label>
                     <select class="form-control" name="sub_category">
                         <option value="">Please Select</option>
@@ -59,7 +59,7 @@
                         <option value="{{ u.id }}">{{ u.name }}</option>
                         {% endfor %}
                     </select>
-                </div>
+                </div> -->
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>SKU*</label>
                     <input type="text" class="form-control" name="SKU" placeholder="Product Name" >
@@ -118,7 +118,7 @@
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Weight (optional)</label>
-                    <input type="text" class="form-control" name="weight" placeholder="Weight">
+                    <input type="number" class="form-control" name="weight" value="0" placeholder="Weight">
                 </div>
             </div>
         </div>
@@ -228,15 +228,13 @@
                             <td>
                                 <label>Inc. tax</label>
                                 <input type="text" id="selling_price_exc_tax" name="selling_price_exc_tax"
-                                    class="form-control" placeholder="Inc. tax">
+                                    class="form-control" placeholder="Inc. tax" onkeyup="marginCal()">
                             </td>
                         </tr>
-                        <!-- <input type="text" id="selling_price_exc_tax" name="selling_price_exc_tax"> -->
                     </tbody>
                 </table>
             </div>
             <input type="submit" class="btn btn-primary mb-3 mt-3" value="SUBMIT">
-            <!-- <button type="button" class="btn btn-primary p-2 mb-4">Save & Add Opening Stock</button> -->
         </div>
     </form>
 
@@ -268,12 +266,23 @@
         }
     }
 </script>
+<script>
+    function marginCal(){
+        let price = document.getElementById("base_price").value;
+        let selling_price_value = document.getElementById('selling_price_exc_tax').value;
 
-<!-- <script>
-    $(document).ready(function () {
-        $('.select2').select2();
-    });
-</script> -->
+        var sp_val = ((parseFloat(selling_price_value)-parseFloat(price))/parseFloat(price))*100
+
+        if (selling_price_value.value != '') {
+            if (price.length != '') {
+                document.getElementById("margin").value = sp_val.toFixed(2);
+            }
+            else {
+                document.getElementById("margin").value = (0).toFixed(2);
+            }
+        }
+    }
+</script>
 <script>
     $(document).ready(function () {
         $(document).on('change', '.btn-file :file', function () {

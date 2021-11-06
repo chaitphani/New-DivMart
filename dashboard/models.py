@@ -241,20 +241,21 @@ class Expenses_category(models.Model):
 
 class Expenses(models.Model):
 
-    expenses_date = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+    status_choice = (('Paid' ,'Paid'), ('Unpaid', 'Unpaid'), ('Rejected', 'Rejected'))
+
     ref_no = models.CharField(max_length=50, blank=True)
     expense_category = models.ForeignKey(Expenses_category,on_delete=models.CASCADE)
     business_location = models.ForeignKey(BusinessLocation, on_delete=models.SET_NULL, null=True)
-    # payment_status = models.CharField(max_length=50, blank=True)
-    total_amount = models.FloatField(default=0)
-    # payment_due = models.FloatField(default=0)
-    expense_for = models.CharField(max_length=100, blank=True)
+    date = models.DateTimeField()
+    payment_status = models.CharField(max_length=50, choices=status_choice, default='Unpaid')
+    amount = models.FloatField(default=0)
     expense_note = models.CharField(max_length=100, blank=True) 
-    expanses_image = models.ImageField(upload_to='media/expenses/image', null=True, blank=True)
+    docs = models.ImageField(upload_to='media/expenses/image', null=True, blank=True)
     status = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.total_amount)
+        return str(self.amount)
 
 
 class StockTransfer(models.Model):

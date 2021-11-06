@@ -1151,23 +1151,33 @@ def add_expenses(request):
 @login_required(login_url='/useraccount/common_login')
 def list_expenses(request):
 
-    list_expense = ''
-    year_for = ''
-    month_for = ''
-    day_for = ''
-
     if request.method == 'POST':
         prod_type = request.POST.get('location')
         prod_cat = request.POST.get('category')
-        prod_unit = request.POST.get('date')
+        date = request.POST.get('date')
 
-        formated = prod_unit.split('T')[0]
-        year_for = formated.split('-')[0]
-        month_for = formated.split('-')[1]
-        day_for = formated.split('-')[2]
+        try:
+            formated = date.split('T')[0]
+            year_for = formated.split('-')[0]
+            month_for = formated.split('-')[1]
+            day_for = formated.split('-')[2]
 
-        list_expense = Expenses.objects.filter(Q(expenses_date__year = int(year_for), expenses_date__month = int(month_for), expenses_date__day = int(day_for)) | Q(expense_category__id__contains=prod_cat) | Q(business_location__id__contains=prod_type)
-        ).filter(status=True)
+            if date != None and prod_type != 'none' and prod_cat != 'none':
+                list_expense = Expenses.objects.filter(Q(expense_category__id__contains=prod_cat) & Q(business_location__id__contains=prod_type) & Q(date__day=day_for, date__month=month_for, date__year=year_for)).filter(status=True)
+
+            elif date != None and prod_type != 'none':
+                list_expense = Expenses.objects.filter(Q(business_location__id__contains=prod_type) & Q(date__day=day_for, date__month=month_for, date__year=year_for)).filter(status=True)
+
+            elif date != None and prod_cat != 'none':
+                list_expense = Expenses.objects.filter(Q(expense_category__id__contains=prod_cat) & Q(date__day=day_for, date__month=month_for, date__year=year_for)).filter(status=True)
+
+            else:
+                list_expense = Expenses.objects.filter(Q(date__day=day_for, date__month=month_for, date__year=year_for)).filter(status=True)
+        except:
+            if prod_type != 'none' and prod_cat != 'none':
+                list_expense = Expenses.objects.filter(Q(expense_category__id__contains=prod_cat) & Q(business_location__id__contains=prod_type)).filter(status=True)
+            else:
+                list_expense = Expenses.objects.filter(Q(expense_category__id__contains=prod_cat) | Q(business_location__id__contains=prod_type))
 
     else:
         list_expense = Expenses.objects.filter(status=True)

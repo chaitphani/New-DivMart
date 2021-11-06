@@ -17,22 +17,16 @@
                         <div class="col-sm-3 col-md-3 col-lg-3">
                             <label>Business Location</label>
                             <select class="form-control" name="location">
-                                <option value="">Please select</option>
+                                <option value="none">Please select</option>
                                 {% for loc in locations %}
                                 <option value="{{loc.id}}">{{loc.name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <!-- <div class="col-sm-3 col-md-3 col-lg-3">
-                        <label>Business For</label>
-                        <select class="form-control" name="business_for">
-                            <option>All</option>
-                        </select>
-                    </div> -->
                         <div class="col-md-3 col-lg-3 col-sm-3">
                             <label>Expenses Category</label>
                             <select class="form-control" name="category">
-                                <option value="">Please select</option>
+                                <option value="none">Please select</option>
                                 {% for cat in category %}
                                 <option value="{{cat.id}}">{{cat.name}}</option>
                                 {% endfor %}
@@ -47,26 +41,12 @@
                                     </span>
                                 </div>
                                 <input type="datetime-local" class="form-control" name="date"
-                                    placeholder="date range" />
+                                    placeholder="date range" value="none"/>
                             </div>
                         </div>
-                        <!-- <div class="col-lg-3 col-md-3">
-                        <label>Payment Status</label>
-                        <select class="form-control" name="payment_status">
-                            <option></option>
-                        </select>
-                    </div> -->
                     </div>
-                    <input type="submit" value="FILTER" class="btn btn-outline-primary w-25 float-right">
+                    <input type="submit" value="SUBMIT" class="btn btn-primary w-25 float-right">
                 </form>
-                <!-- <div class="form-group row">
-                <div class="col-lg-3 col-md-3">
-                    <label>Payment Status</label>
-                    <select class="form-control" name="payment_status">
-                        <option></option>
-                    </select>
-                </div>
-            </div> -->
             </div>
         </div>
     </div>
@@ -88,7 +68,6 @@
                     <th class="th-sm">Expense Category</th>
                     <th class="th-sm">Location</th>
                     <th class="th-sm">Total Amount</th>
-                    <th class="th-sm">Expense For</th>
                     <th class="th-sm">Expense Note</th>
                     <!-- <th class="th-sm">Action</th> -->
                 </tr>
@@ -96,13 +75,12 @@
             <tbody>
                 {% for v in list_expense %}
                 <tr>
-                    <td>{{ v.expenses_date|date:'d-m-Y H:i:s' }}</td>
+                    <td>{{ v.date|date:'d-M-Y' }}</td>
                     <td>{{ v.ref_no }}</td>
                     <td>{{v.expense_category}}</td>
                     <td>{{ v.business_location }}</td>
-                    <td>{{ v.total_amount }}</td>
-                    <td>{{ v.expense_for }}</td>
-                    <td>{{ v.expense_note }}</td>
+                    <td>{{ v.amount|floatformat:2 }}</td>
+                    <td>{% if v.expense_note %}{{ v.expense_note }}{% else %}NP{% endif %}</td>
                     <!-- <td></td> -->
                 </tr>
                 {% endfor %}

@@ -329,18 +329,18 @@ class SellDetailUpdateDelView(RetrieveUpdateDestroyAPIView):
                                                    
 
 class AddExpensesView(ListCreateAPIView):
+    
     authentication_classes = [SessionAuthentication]
-    # permission_classes = [IsAuthenticated]
     queryset = Expenses.objects.all()
     serializer_class = AddExpensesSerializers 
 
     def post(self, request, *args, **kwargs):
-        serializer = AddExpensesSerializers(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             exser = serializer.save()
-            exser.status=  True
+            exser.ref_no = 'EXP0-'+str(exser.id)
+            exser.status = True
             exser.save()
-            serializer = AddExpensesSerializers(exser)
             return redirect('list_expenses')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 

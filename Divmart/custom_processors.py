@@ -16,7 +16,7 @@ def custom_data_for_index(request):
 
     total_purchase_shipping = Purchase_info.objects.filter(status=True, purchase_date__year=today.year, purchase_date__month=today.month, purchase_date__day=today.day).aggregate(Sum('additional_ship_charges'))
 
-    expense_obj = Expenses.objects.filter(status=True, expenses_date__year=today.year, expenses_date__month=today.month, expenses_date__day=today.day).aggregate(Sum('total_amount'))
+    expense_obj = Expenses.objects.filter(status=True, date__year=today.year, date__month=today.month, date__day=today.day).aggregate(Sum('amount'))
 
     stock_total_adjustment = StockAdjustment.objects.filter(status=True, date_of_adjust__year=today.year, date_of_adjust__month=today.month, date_of_adjust__day=today.day).aggregate(Sum('total_amount_recovered'))
 
@@ -61,6 +61,6 @@ def custom_data_for_index(request):
         'stock_recovered':stock_total_adjustment['total_amount_recovered__sum'],
         'gross':gross_profit_total,
         'net':net_profit,
-        'expense':expense_obj['total_amount__sum'],
+        'expense':expense_obj['amount__sum'],
         'user':staff_obj,
     }

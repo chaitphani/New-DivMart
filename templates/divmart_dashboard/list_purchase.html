@@ -10,6 +10,7 @@
 
 <div class="container-fluid">
     <h5>Purchase</h5>
+    {% if request.user.is_superuser %}
     <div class="card accordion p-2" id="accordionExample" style="border-top:2px solid green">
         <div class="card-header bg-white" id="headingOne">
             <i class="fas fa-filter accordion text-primary" id="accordionExample" data-toggle="collapse"
@@ -25,7 +26,7 @@
                         <div class="col-sm-3 col-md-3 col-lg-3">
                             <label>Business Location</label>
                             <select class="form-control" name="business_location">
-                                <option value="">Please select</option>
+                                <option value="none">Please select</option>
                                 {% for location in business_location_list %}
                                     <option value="{{location.name}}">{{ location.name }}</option>
                                 {% endfor %}
@@ -34,7 +35,7 @@
                         <div class="col-sm-3 col-md-3 col-lg-3">
                             <label>Supplier</label>
                             <select class="form-control" name="supplier">
-                                <option value="">Please select</option>
+                                <option value="none">Please select</option>
                                 {% for supplier in supplier_users %}
                                     <option value="{{ supplier.business_name }}">{{ supplier.business_name }}</option>
                                 {% endfor %}
@@ -43,7 +44,7 @@
                         <div class="col-sm-3 col-md-3 col-lg-3">
                             <label>Payment Status</label>
                             <select class="form-control" name="payment_status">
-                                <option value="">Please select</option>
+                                <option value="none">Please select</option>
                                 <option value="True">Paid</option>
                                 <option value="False">Unpaid</option>
                             </select>
@@ -63,6 +64,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
     <div class="section card p-3" style="border-top: 3px solid green;">
         <h6>All Purchases
             {% if request.user.is_superuser %}

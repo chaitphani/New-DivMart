@@ -1836,18 +1836,29 @@ def add_purchase(request):
 @login_required(login_url='/useraccount/common_login')
 def list_purchase(request):
 
+    pur_info = ''
     if request.method == 'POST':
         location = request.POST.get('business_location')
         supplier = request.POST.get('supplier')
         payment_status = request.POST.get('payment_status')
 
-        if request.user.is_superuser:
+        if location != 'none' and supplier != 'none' and payment_status != 'none':
             pur_info = Purchase_info.objects.filter(Q(business_location__name__icontains = location) & Q(payment_info__payment_status=payment_status) & Q(supplier__business_name__icontains = supplier)).filter(status=True)
-        else:
-            pur_info = Purchase_info.objects.filter(Q(business_location__name__icontains = location) & Q(payment_info__payment_status=payment_status) & Q(supplier__business_name__icontains = supplier)).filter(status=True, business_location=StaffUser.objects.get(user=request.user).business_location)
-            
-        # pay_obj = Add_Payments.objects.filter(payment_status=True)
 
+        elif location != 'none' and supplier != 'none':
+            pur_info = Purchase_info.objects.filter(Q(business_location__name__icontains = location) & Q(supplier__business_name__icontains = supplier)).filter(status=True)
+
+        elif location != 'none' and payment_status != 'none':
+            pur_info = Purchase_info.objects.filter(Q(business_location__name__icontains = location) & Q(payment_info__payment_status=payment_status)).filter(status=True)
+
+        elif supplier != 'none' and payment_status != 'none':
+            pur_info = Purchase_info.objects.filter(Q(supplier__business_name__icontains = supplier) & Q(payment_info__payment_status=payment_status)).filter(status=True)            
+
+        elif payment_status == 'none':
+            pur_info = Purchase_info.objects.filter(Q(business_location__name__icontains = location) | Q(supplier__business_name__icontains = supplier)).filter(status=True)
+
+        else:
+            pur_info = Purchase_info.objects.filter(payment_info__payment_status=payment_status).filter(status=True)
     else:
         if request.user.is_superuser:
             pur_info = Purchase_info.objects.filter(status=True)

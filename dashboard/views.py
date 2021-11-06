@@ -256,7 +256,7 @@ def admin_user_creation(request):
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = '__all__'
+        exclude = ['permissions_provided']
 
 
 class RoleView(APIView):
@@ -282,10 +282,11 @@ class RoleView(APIView):
             role_name = request.POST.get("role")
             req_data_ser = RoleSerializer(data={'title':role_name})
 
+            # try:
             if(req_data_ser.is_valid()):
-                # try:
                 r_obj = Role.objects.create(title=role_name)
                 content = request.POST.get('content_type')
+
                 for k, v in request.POST.items():
                     key_con  = k.split('#')
                     if v == "on":
@@ -293,9 +294,9 @@ class RoleView(APIView):
                         r_obj.permissions_provided.add(p_obj)
                 messages.success(request, role_name + ' Role create success...')
                 return redirect("roles")
-                # except:
-                #     pass
-                #     return redirect('add_role')
+            # except:
+            #     pass
+            #     return redirect('add_role')
             return Response(req_data_ser.errors,status=422)
 
 

@@ -54,16 +54,12 @@
                     {% endfor %}
                 {% endif %}
             {% else %}
-
                 <label>Role Name*</label>
                 <input type=text class="form-control" name="role" id="role" placeholder="Role Name" required/>
                 <p class="mt-2 mb-2 m-0 p-0">Permissions:*</p> 
-
-                <form>
                 <div class="checkboxes">
                     <label><input type="checkbox" id="ckbCheckAll2"><span>&nbsp;<strong>Select All</strong></span></label>
                  </div>
-                </form>
                 <!--inline checkbox-->
                 <style>
                     .checkboxes label {
@@ -96,7 +92,6 @@
                 {% endfor %}
             {% endif %}
 
-            <!-- <button type="submit" class="btn btn-info nav-btn text-white f-25 nav-btn" style="padding-top:2px">SAVE</button> -->
             <input type="submit" class="btn btn-primary w-100 mb-3 mt-4" value="Assign Role">
         </form>
     </div>

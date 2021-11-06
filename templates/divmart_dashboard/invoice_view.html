@@ -1,36 +1,48 @@
 {% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
 <style>
-    #invoice {
+    #printableArea {
         max-width: 350px
     }
 
-    #invoice .border-top {
+    #printableArea .border-top {
         border-top: 1px dashed #ccc
     }
 
-    #invoice .border-bottom {
+    #printableArea .border-bottom {
         border-bottom: 1px dashed #ccc;
         padding-bottom: 3px
     }
+
+    @media print {
+  body * {
+    visibility: hidden;
+  }
+  #section-to-print, #section-to-print * {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
 </style>
 
 <div class="container-fluid">
-    <div class="row mb-3">
+    <div class="row">
         <div class="col-4">
-            <a onclick="window.history.back()" class="btn btn-primary btn-sm text-white"><i
-                    class="fa fa-arrow-left"></i>&nbsp; Back</a>
+            <a onclick="window.history.back()" class="btn btn-primary btn-sm text-white">
+            <i class="fa fa-arrow-left"></i>&nbsp; Back</a>
         </div>
         <div class="col-md-8 text-right">
-            <a href="{% url 'list_pos' %}" class="btn btn-secondary btn-sm text-white"><i class="fa fa-shopping-cart"
-                    aria-hidden="true"></i>&nbsp; POS List</a>
-            <!-- <h5 class="d-none"><span>{% if obj.status == 'D' %} Draft {% elif obj.status == 'Q' %} Quotation {% else %}
-                    Invoice {% endif %}</span>View - <span
-                    class="text-danger font-weight-bold">{{obj.invoice_no}}</span></h5> -->
+                  <a href="{% url 'list_pos' %}" class="btn btn-success btn-sm text-white"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp; POS List</a>
+                    <!-- <h5 class="d-none"><span>{% if obj.status == 'D' %} Draft {% elif obj.status == 'Q' %} Quotation {% else %}
+                    Invoice {% endif %}</span>View - <span class="text-danger font-weight-bold">{{obj.invoice_no}}</span></h5> -->
         </div>
     </div>
 
     {% if messages %}
-    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+    <div class="alert alert-primary text-center text-capitalize alert-dismissible fade show" role="alert">
         {% for message in messages %}
         <span {% if message.tags %} class="{{ message.tags }} text-center" 
         style="background-color:transparent" {% endif %}>
@@ -45,7 +57,8 @@
     {% endif %}
 </div>
 
-<div class="container-fluid" id="invoice">
+
+<div class="container-fluid" id="printableArea">
     <!-- header parts of invoice -->
     <div class="section card p-3" style="border-top: 3px solid green;" id="DivIdToPrint">
         <div class="text-center">
@@ -121,9 +134,10 @@
         </div>
     </div>
 </div>
+
 <div class="row">
-    <div class="col-12">
-        <a class="btn btn-primary float-right text-white" id="clickBtn" onclick=window.print();>
+    <div class="col-12 text-center">
+        <a class="btn btn-secondary text-white" id="clickBtn" onclick="printDiv('printableArea')">
             <i class="fa fa-print"></i>&nbsp; Print
         </a>
     </div>
@@ -226,25 +240,19 @@
 </div>
 
 
-<script>
-    function printDiv() {
-        var divToPrint = document.getElementById('DivIdToPrint');
-        var newWin = window.open('', 'Print-Window');
-        newWin.document.open();
-        newWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
-        newWin.document.close();
-        setTimeout(function () { newWin.close(); }, 10);
-    }
-</script>
-<!-- <script>
-    $('#clickBtn').click(function (e) {
-        e.preventDefault();
-        $('.btn-sm').css("display", "none");
-        $('#clickBtn').css("display", "none");
-        $('.text-center').css("display", "none");
-        window.print();
-    })
-    // location.reload();
-</script> -->
 
+
+
+<script>
+function printDiv(divName) {
+     var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+}
+</script>
 {%endblock%}

@@ -30,4 +30,4 @@ class TaxRate(models.Model):
     status = models.BooleanField(default=True)
 
     def __str__(self):
-        return '{}-{}'.format(self.name, self.rate)
+        return '{}'.format(self.rate)

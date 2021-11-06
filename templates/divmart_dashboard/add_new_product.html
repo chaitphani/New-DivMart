@@ -156,9 +156,9 @@
         <div class="section card p-3" style="border-top:3px solid green">
             <div class="form-group row">
                 <div class="col-lg-4 col-md-4">
-                    <label>Applicable Tax*</label>
+                    <label>Applicable Tax</label>
                     <!-- <input type="number" name="applicable_tax" class="form-control"> -->
-                    <select id="tax" class="form-control" name="applicable_tax" onchange="pricecal()" >
+                    <select id="tax" class="form-control" name="applicable_tax" onchange="pricecal()">
                         <option value="">Please select</option>
                         {% for rate in rates %}
                             <option value="{{rate.rate}}">{{rate.name}}-{{rate.rate}}</option>
@@ -248,22 +248,37 @@
         let tax = document.getElementById("tax").value;
         let margin = document.getElementById("margin").value;
 
-        var cal_tax = parseFloat(price) * parseFloat(tax / 100)
-        var inc = parseFloat(price) + parseFloat(cal_tax)
+        if (tax >= 0.0){
+            var cal_tax = parseFloat(price) * parseFloat(tax / 100)
+            var inc = parseFloat(price) + parseFloat(cal_tax)
 
-        var cal_margin = (parseFloat(price) * parseFloat(margin/100))
-        var selling_price = parseFloat(cal_margin) + parseFloat(price)
+            var cal_margin = (parseFloat(price) * parseFloat(margin/100))
+            var selling_price = parseFloat(cal_margin) + parseFloat(price)
 
-        if (tax.value != '') {
-            if (price.length != '') {
-                document.getElementById("inc").value = inc.toFixed(2)
-                document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+            if (tax.value != '') {
+                if (price.length != '') {
+                    document.getElementById("inc").value = inc.toFixed(2)
+                    document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+                }
+                else {
+                    document.getElementById("inc").value = price.toFixed(2)
+                    document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+                }
             }
-            else {
-                document.getElementById("inc").value = price.toFixed(2)
-                document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
-            }
-        }
+        }else{
+            var cal_margin = (parseFloat(price) * parseFloat(margin/100))
+            var selling_price = parseFloat(cal_margin) + parseFloat(price)
+
+            if (tax.value != '') {
+                if (price.length != '') {
+                    document.getElementById("inc").value = price.toFixed(2)
+                    document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+                }
+                else {
+                    document.getElementById("inc").value = price.toFixed(2)
+                    document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+                }
+            }}
     }
 </script>
 <script>

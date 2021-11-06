@@ -12,8 +12,8 @@
                         onchange="my_check_func(this)" id="bus_loca">
                         <option value="">Please Select</option>
                         {% for location in locations %}
-                        <option value="{{location.id}}" {% if obj.business_location.id==location.id %}selected{% endif
-                            %}>{{location.name}}</option>
+                        <option value="{{location.id}}" {% if obj.business_location.id == location.id %}selected
+                        {% endif %}>{{location.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -22,8 +22,8 @@
                     <select name="adjustment_type" required id="id_adjustment_type" class="form-control"
                         onchange="my_check_func()">
                         <option value="" selected>Please Select</option>
-                        <option value="1" {% if obj.adjustment_type=='1' %} selected {% endif %}>Normal</option>
-                        <option value="2" {% if obj.adjustment_type=='2' %} selected {% endif %}>Abnormal</option>
+                        <option value="1" {% if obj.adjustment_type == '1' %} selected {% endif %}>Normal</option>
+                        <option value="2" {% if obj.adjustment_type == '2' %} selected {% endif %}>Abnormal</option>
                     </select>
                 </div>
             </div>

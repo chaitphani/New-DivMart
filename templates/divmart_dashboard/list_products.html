@@ -92,14 +92,14 @@
                         <th><input type="checkbox" id='all_check' name="chk[]"></th>
                         <!-- <th></th> -->
                         <th class="th-sm">Product</th>
-                        <th class="th-sm">MRP</th>
+                        <th class="th-sm">PurchasePrice</th>
                         <th class="th-sm">Selling Price</th>
                         <th class="th-sm">Current Stock</th>
                         <!-- <th class="th-sm">Product Type</th> -->
                         <!-- <th class="th-sm">Category</th> -->
                         <!-- <th class="th-sm">Sub Category</th> -->
                         <!-- <th class="th-sm">Brand</th> -->
-                        <th class="th-sm">Tax</th>
+                        <th class="th-sm">Tax(%)</th>
                         <th class="th-sm">Sku</th>
                         <th class="th-sm">Action</th>
                     </tr>
@@ -117,8 +117,8 @@
                             {% endif %}
                         </td> -->
                         <td>{{ val.product_name }}</td>
-                        <td>{{ val.prod_mrp|floatformat:2|intcomma }}</td>
-                        <td>{{ val.selling_price|floatformat:2|intcomma }}</td>
+                        <td>{{ val.purchase_price_exc_tax|floatformat:2|intcomma }}</td>
+                        <td>{{ val.selling_price_exc_tax|floatformat:2|intcomma }}</td>
                         <td
                             class="font-weight-bold {% if val.current_stock == 0 %} text-danger {% else %}text-success{% endif %}">
                             {{ val.current_stock }}</td>

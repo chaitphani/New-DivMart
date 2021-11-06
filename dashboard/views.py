@@ -786,8 +786,10 @@ def add_stock_transfer(request):
         total_amount = request.POST.get('total_amount')
         shipping_charges = request.POST.get('shipping_charges', 0)
         notes = request.POST.get('notes')
+
         location_obj_1 = BusinessLocation.objects.get(id=location_from)
         location_obj_2 = BusinessLocation.objects.get(id=location_to)
+
         try:
             stock_obj = StockTransfer(date=date, ref_no=ref_id, location_from=location_obj_1, location_to=location_obj_2, 
                 total_amount=total_amount, shipping_charges=shipping_charges, notes=notes, status=True)
@@ -799,9 +801,11 @@ def add_stock_transfer(request):
                 prod_price = request.POST.get("usp"+str(v))
                 sub_total = request.POST.get("sub"+str(v))
                 prod_obj = Product.objects.get(product_name=prod_name)
-
-                stock_prod_trans_obj = StockProdTransfer(stock_transfer=stock_obj, product=prod_obj, quantity=prod_quan, unit_price=prod_price, sub_total=sub_total)
-                stock_prod_trans_obj.save()
+                if prod_obj.current_stock >= prod_quan:
+                    stock_prod_trans_obj = StockProdTransfer(stock_transfer=stock_obj, product=prod_obj, quantity=prod_quan, unit_price=prod_price, sub_total=sub_total)
+                    stock_prod_trans_obj.save()
+                else:
+                    messages.error(request, 'Stock unavailable...')
         except:
             stock_obj.delete()
             messages.error(request, 'Please choose a valid product...')
@@ -828,6 +832,7 @@ def edit_stock_trasfer(request, id):
         total_amount = request.POST.get('total_amount')
         shipping_charges = request.POST.get('shipping_charges', 0)
         notes = request.POST.get('notes')
+
         location_obj_1 = BusinessLocation.objects.get(id=location_from)
         location_obj_2 = BusinessLocation.objects.get(id=location_to)
 
@@ -842,11 +847,14 @@ def edit_stock_trasfer(request, id):
             stock_prod_trans_id = request.POST.get("stctrobj"+str(v))
             prod_obj = Product.objects.get(product_name=prod_name)
 
-            if StockProdTransfer.objects.filter(id=stock_prod_trans_id):
-                StockProdTransfer.objects.filter(id=stock_prod_trans_id).update(stock_transfer=trans_obj, product=prod_obj, quantity=prod_quan, unit_price=prod_price, sub_total=sub_total)
+            if prod_obj.current_stock >= prod_quan:
+                if StockProdTransfer.objects.filter(id=stock_prod_trans_id):
+                    StockProdTransfer.objects.filter(id=stock_prod_trans_id).update(stock_transfer=trans_obj, product=prod_obj, quantity=prod_quan, unit_price=prod_price, sub_total=sub_total)
+                else:
+                    trans_obj_create = StockProdTransfer(stock_transfer=trans_obj, product=prod_obj, quantity=prod_quan, unit_price=prod_price, sub_total=sub_total)
+                    trans_obj_create.save()
             else:
-                trans_obj_create = stock_prod_trans_id(stock_transfer=trans_obj, product=prod_obj, quantity=prod_quan, unit_price=prod_price, sub_total=sub_total)
-                trans_obj_create.save()
+                messages.error(request, 'Stock unavailable...')
 
         messages.success(request, trans_obj.ref_no + ' update success...')
         return redirect('stock_transfer_list')
@@ -895,7 +903,6 @@ def add_stock_adjustment(request):
         ref_id_get = stock_adjst_obj.split('-')[1]
         ref_id = int(ref_id_get) + 1
     except Exception as e:
-        print('-exception in stock transfer---', e)
         ref_id = 'STA-1000' + str(1)
 
     if request.method == 'POST':
@@ -918,13 +925,16 @@ def add_stock_adjustment(request):
             prod_quan = request.POST.get("qan"+str(v))
             prod_price = request.POST.get("usp"+str(v))
             sub_total = request.POST.get("sub"+str(v))
+
             prod_obj = Product.objects.get(product_name=prod_name)
+            prod_obj.current_stock = prod_quan
+            prod_obj.save()
 
             stock_prod_trans_obj = StockProdAdjustment(stock_adjustment=stock_obj, product=prod_obj, quantity=prod_quan, unit_price=prod_price, sub_total=sub_total)
             stock_prod_trans_obj.save()
             
         messages.success(request, 'stock adjustment success...')
-        return redirect('stock_transfer_list')
+        return redirect('list_stock_adjustment')
 
     locations = BusinessLocation.objects.filter(status=True)
     return render(request,'divmart_dashboard/add_stock_adjustment.html', {'locations':locations})
@@ -954,7 +964,10 @@ def edit_stock_adjustment(request, id):
             prod_price = request.POST.get("usp"+str(v))
             sub_total = request.POST.get("sub"+str(v))
             stock_prod_adjst_id = request.POST.get("stctrobj"+str(v))
+
             prod_obj = Product.objects.get(product_name=prod_name)
+            prod_obj.current_stock = prod_quan
+            prod_obj.save()
 
             if StockProdAdjustment.objects.filter(id=stock_prod_adjst_id).exists():
                 StockProdAdjustment.objects.filter(id=stock_prod_adjst_id).update(stock_adjustment=adjst_obj, product=prod_obj, quantity=prod_quan, 
@@ -1691,7 +1704,7 @@ def dashboard_pos(request):
             return redirect(reverse('invoice_view', kwargs={'id':int(sale_obj.id)}))
     except Exception as e:
         messages.error(request, e)
-    
+
     if not request.user.is_superuser:
         pos_list_final = Sell.objects.filter(status='F', business_location=staffuser_obj.business_location, is_deleted=False)[:5]
         pos_list_quotes = Sell.objects.filter(status='Q', business_location=staffuser_obj.business_location, is_deleted=False)[:5]

@@ -26,12 +26,12 @@
                 <b class="text-primary">Filters</b>
             </i>
         </div>
-
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
             <div class="card-body">
                 <form action="" method="POST">
                     {% csrf_token %}
                     <div class="form-group row">
+                        {% if request.user.is_superuser %}
                         <div class="col-sm-3 col-md-3 col-lg-3">
                             <label>Business Location</label>
                             <select class="form-control" name="business_location">
@@ -41,6 +41,7 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        {% endif %}
                         <!-- <div class="col-sm-3 col-md-3 col-lg-3">
                             <label>Customer</label>
                             <select class="form-control" name="customer">
@@ -50,22 +51,12 @@
                                 {% endfor %}
                             </select>
                         </div> -->
-                        <!-- <div class="col-sm-3 col-md-3 col-lg-3">
-                            <label>Payment Status</label>
-                            <select class="form-control" name="payment_status">
-                                <option>All</option>
-                            </select>
-                        </div> -->
                         <div class="col-sm-3 col-md-3 col-lg-3">
                             <label>Date Range</label>
                             <input type="datetime-local" class="form-control" name="date">
                         </div>
-
-                        <!-- <div class="col-sm-3 col-md-3 col-lg-3 pt-4"> -->
-                            <!-- </div> -->
-                        </div>
-                        
-                        <input type="submit" value="SUBMIT" class="btn btn-primary btn-block w-25 float-right">
+                    </div>
+                    <input type="submit" value="SUBMIT" class="btn btn-primary btn-block w-25 float-right">
                 </form>
             </div>
         </div>

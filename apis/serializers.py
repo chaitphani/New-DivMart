@@ -1,3 +1,4 @@
+from django.db.models import fields
 from rest_framework import serializers
 from useraccount.models import AdminUser,LoginUser,BaseUser,InformativeUser,StaffUser,SupplierUser,CustomerUser,CustomerGroups
 from dashboard.models import Bank, Barcode_storage,Product,Category,Brand,Units,Category,SubCategory,Purchase,Sell,Expenses,Expenses_category,Add_Payments,Purchase_info
@@ -97,6 +98,7 @@ class SellSerializers(serializers.ModelSerializer):
 class AddExpensesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Expenses
+        # exclude = ['status', 'created_on', 'ref_no']
         fields = '__all__'
 
 

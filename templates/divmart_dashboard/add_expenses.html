@@ -17,40 +17,35 @@
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Expense Category:*</label>
-                    <select class="form-control" name="expense_category">
+                    <select class="form-control" name="expense_category" required>
                         <option value="">Please select</option>
                         {% for val in expense_categories %}
                         <option value="{{ val.id }}">{{ val.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
-                    <label>Reference No:*</label>
-                    <input type="text" class="form-control" name="ref_no" required />
-                </div>
             </div>
             <div class="form-group row pl-3 pr-2 ">
                 <div class="col-md-4 col-lg-4 col-sm-4">
                     <label>Date:*</label>
                     <div class="input-group mb-3">
-                        <input type="date" class="form-control" name="expenses_date" placeholder="date range"
-                            required />
+                        <input type="datetime-local" class="form-control" name="date" placeholder="date range" required/>
                     </div>
                 </div>
                 <div class="col-md-4 col-lg-4 col-sm-4">
                     <label>Total Amount:*</label>
-                    <input type="text" class="form-control" name="total_amount" required />
+                    <input type="text" class="form-control" name="amount" required />
                 </div>
-                <div class="col-md-4 col-lg-4 col-sm-4">
+                <!-- <div class="col-md-4 col-lg-4 col-sm-4">
                     <label>Expense For:</label>
                     <input type="text" class="form-control" name="expense_for" />
-                </div>
+                </div> -->
             </div>
             <div class="form-group row pl-3 pr-2">
                 <div class="col-md-4 col-lg-4 col-sm-4">
                     <label>Attach Document:</label>
                     <div class="input-group">
-                        <input type="file" name="expanses_image" />
+                        <input type="file" name="docs" />
                     </div>
                 </div>
                 <div class="col-md-8 col-lg-8 col-sm-8">

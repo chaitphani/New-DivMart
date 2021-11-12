@@ -68,12 +68,9 @@
             <ul class="navbar-nav ml-auto bg-info p-2" style="border-radius:5px">
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item">
-                    <a class="text-white"  href="{% url 'admin_logout' %}" role="button">
-                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                    <a class="text-capitalize text-dark text-decoration-none" href="{% url 'member-logout' %}" title="{{obj.fname|capfirst}}-logout">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;{{obj.fname}}
                     </a>
-                </li>&nbsp;
-                <li class="nav-item">
-                    <a class="text-capitalize text-white" href="{% url 'member-logout' %}" role="button">{{obj.fname}}</span></i></a>
                 </li>
             </ul>
         </nav>

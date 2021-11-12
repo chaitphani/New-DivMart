@@ -138,6 +138,18 @@ input[type="color"]:focus,
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
   outline: 0 none;
 }
+.logoutbtn {
+            border: 2px solid #aaa;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 14px;
+            padding: 4px 5px 5px 5px;
+        }
+
+        .logoutbtn:hover {
+            border: 2px solid #ccc;
+
+        }
     </style>
     <script>
         $(function () {
@@ -164,14 +176,14 @@ input[type="color"]:focus,
         <div class="row pl-2 pr-2" style="background-color:#605ca8">
             <div class="col-5 p-2">
                 <span>
-                    <a class="btn btn-info btn-sm text-white" href="{%url 'home'%}" title="Go Back">
+                    <a class="text-white logoutbtn text-decoration-none" href="{%url 'home'%}" title="Go Back">
                         <i class="fa fa-chevron-left"></i>&nbsp;Back
                     </a>
                 </span>&nbsp;
                 <span>
                     <a class="" role="button" style="cursor:text;font-size:14px;font-weight:bold" data-toggle="tooltip"
                         data-placement="bottom" title="Today's Date">
-                        <span id="date_today" class="text-white"></span>
+                        <span id="date_today" class="text-white logoutbtn"></span>
                     </a>
                 </span>
             </div>
@@ -198,10 +210,11 @@ input[type="color"]:focus,
                 </span>
                 &nbsp;
                 <span>
-                     <a class="btn btn-info text-white" href="{% url 'admin_logout' %}" role="button"
-                        title="Logout {{request.user}}">
-                        <span class="logoutbtn"><i class="fa fa-sign-out" aria-hidden="true"></i>
-                            {{request.user.username}}</span>
+                    <a class="text-white text-decoration-none" href="{% url 'admin_logout' %}" title="logout-{{request.user|capfirst}}">
+                        <span class="logoutbtn">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i>
+                            {{request.user.username}}
+                        </span>
                     </a>
                 </span>
             </div>
@@ -1213,7 +1226,7 @@ input[type="color"]:focus,
  
      <script>
         var date = new Date;
-        formatted_date = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+        formatted_date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
         document.getElementById('date_today').innerText = formatted_date;
         $('#date_today').css('color', 'black');
     </script>

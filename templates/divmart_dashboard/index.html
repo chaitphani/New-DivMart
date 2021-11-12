@@ -173,7 +173,8 @@
         }
 
         .logoutbtn:hover {
-            border: 2px solid #ccc
+            border: 2px solid #ccc;
+
         }
     </style>
 </head>
@@ -189,85 +190,45 @@
                             class="fas fa-bars"></i></a>
                 </li>
             </ul>
-            <!-- <ul class="navbar-nav ml-auto"> -->
-            <!-- <li class="nav-item">
-                    <button type="button" class="btn btn-success ml-20" data-toggle="tooltip" data-placement="bottom" title="Today's profit">
-                        <i class="fa fa-question-circle" aria-hidden="true"></i>
-                    </button>
-                </li> -->
-            <!-- </ul> -->
-            <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
-                <!-- Notifications Dropdown Menu -->
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="fas fa-bell"></i> <span class="badge badge-warning navbar-badge">15</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-header">15 Notifications</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
-                            <span class="float-right text-muted text-sm">3 mins</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-users mr-2"></i> 8 friend requests
-                            <span class="float-right text-muted text-sm">12 hours</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
-                            <span class="float-right text-muted text-sm">2 days</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                    </div>
-                </li> -->
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="https://www.divmart.com/" role="button" target="_blank"><i
-                            class="fa fa-globe" aria-hidden="true">View Site</i>
-                    </a>
-                </li> -->
+            <ul class="list-unstyled">
                 <li class="nav-item">
+                    <a class="nav-link" style="cursor:pointer;" data-toggle="tooltip"
+                        data-placement="bottom" title="Today's Date">
+                        <span id="date_today" class="text-white logoutbtn"></span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <!-- <li class="nav-item">
                     <a type="button" onclick="location.reload();" class="button" data-toggle="tooltip"
                         data-placement="bottom" title="Refresh">
                         <i class="fa fa-refresh fa-md" aria-hidden="true"></i>
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
-                    <button type="button" class="button" data-toggle="modal" data-target="#myModal"
+                    <a type="button" class="button" data-toggle="modal" data-target="#myModal"
                         data-toggle="tooltip" data-placement="bottom" title="Calculator">
                         <i class="fa fa-calculator fa-md" aria-hidden="true"></i>
-                    </button>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a type="button" style="width:65px;text-decoration:none" href="{% url 'dashboard_pos' %}"
-                        class="button" data-toggle="tooltip" data-placement="bottom" title="POS">
+                    <a type="button" style="width:65px;" href="{% url 'dashboard_pos' %}"
+                        class="button text-decoration-none" data-toggle="tooltip" data-placement="bottom" title="POS">
                         <span><i class="fa fa-th-large fa-md" aria-hidden="true"></i> POS</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <!-- <button type="button" class="btn btn-success ml-20" data-toggle="tooltip" data-placement="bottom"
-                        title="Today's profit">
-                        <i class="fa fa-money" aria-hidden="true"></i>
-                    </button> -->
-                    <button type="button" class="button" data-toggle="modal" data-target="#todays_profitmodalbox"
+                    <a type="button" class="button" data-toggle="modal" data-target="#todays_profitmodalbox"
                         data-toggle="tooltip" data-placement="bottom" title="today's Profit">
                         <span><i class="fa fa-money fa-md" aria-hidden="true"></i></span>
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" role="button" style="cursor:text;font-size:14px;" data-toggle="tooltip"
-                        data-placement="bottom" title="Today's Date">
-                        <span id="date_today" class="text-white"></span>
                     </a>
                 </li>
                 <li class="nav-item text-capitalize">
-                    <a class="nav-link text-white" href="{% url 'admin_logout' %}" role="button"
-                        title="Logout {{request.user}}">
-                        <span class="logoutbtn"><i class="fa fa-sign-out" aria-hidden="true"></i>
-                            {{request.user.username}}</span>
+                    <a class="nav-link text-white" href="{% url 'admin_logout' %}" title="logout-{{request.user|capfirst}}">
+                        <span class="logoutbtn">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i>
+                            {{request.user.username}}
+                        </span>
                     </a>
                 </li>
             </ul>
@@ -280,8 +241,6 @@
             <div class="sidebar pb-5 p-0">
                 <div class="text-center font-weight-bold" style="height:49px;background-color:#605ca8;box-shadow:none">
                     <a class="brand-link pt-2" href="/dashboard">Divmart</a></div>
-                <!-- <img src="{%static 'divepay_dashboard/image/logo.jpeg'%}" alt="AdminLTE Logo"> -->
-                <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-1 mb-3 pt-2 pb-1 d-flex">
                     <div class="image">
                         <img src="{%static 'divmart_dashboard/image/icon/user.png'%}" style="border-radius: 50px;"
@@ -296,8 +255,6 @@
                 <nav class="mt-0">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-                            with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
                             <a href="{% url 'home' %}" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -1097,7 +1054,7 @@
 
     <script>
         var date = new Date;
-        formatted_date = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+        formatted_date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
         document.getElementById('date_today').innerText = formatted_date;
         $('#date_today').css('color', 'black');
     </script>

@@ -21,7 +21,7 @@
 										<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
 									</div>
 									<select class="form-control" name="customer">
-										<option value="">Please Select</option>
+										<option value="none">Please Select</option>
 										{% for customer in customers %}
 											<option value="{{customer.first_name}}">{{customer.first_name}}</option>
 										{% endfor %}
@@ -35,7 +35,7 @@
 										<span class="input-group-text" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
 									</div>
 									<select class="form-control" name="location">
-										<option value="">Please Select</option>
+										<option value="none">Please Select</option>
 										{% for location in locations %}
 											<option value="{{location.name}}">{{location.name}}</option>
 										{% endfor %}
@@ -76,7 +76,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{% for sale in sales %}
+				{% for sale in credit_sale_list %}
 				<tr>
 					<td>{{sale.ref_no}}</td>
 					<td>{{sale.sale_date}}</td>

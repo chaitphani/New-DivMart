@@ -9,20 +9,22 @@
         <table class="table table-sm" id="mdtable">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Level</th>
-                    <th>Amount</th>
+                    <!-- <th>Level</th> -->
+                    <!-- <th>Amount</th> -->
                     <th>Created on</th>
                 </tr>
             </thead>
             {% for data in resp_data %}
             <tr>
                 <tbody>
+                    <td>{{forloop.counter}}</td>
                     <td>{{data.fname}} {{data.lname}}</td>
                     <td>{{data.email}}</td>
-                    <td>{{data.level}}</td>
-                    <td>{{data.commission}}</td>
+                    <!-- <td>{{data.level}}</td> -->
+                    <!-- <td>{{data.commission}}</td> -->
                     <td>{{data.created|date:'d-M-Y'}}</td>
                 </tbody>
             </tr>

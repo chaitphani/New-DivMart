@@ -37,11 +37,24 @@ def manage_directs(request):
 
 @is_authenticated
 def direct_transaction(request):
-  
+    val = True
+    li = []
+
     session_val = request.session.get('email')
     mem_obj = RegisteredMembers.objects.filter(Q(email=session_val) | Q(self_ref_id=session_val)).first()
-    resp_obj = RegisteredMembers.objects.filter(sponser_id=mem_obj.self_ref_id)
-    return render(request,'membership/direct_transaction.html', {'obj':mem_obj, 'resp_data':resp_obj})
+    li.append(mem_obj.id)
+    if mem_obj:
+        while val:
+            mem1 = RegisteredMembers.objects.filter(sponser_id=mem_obj.self_ref_id).first()		
+            if mem1:
+                li.append(mem1.id)
+                mem_obj = mem1     
+            else:
+                val=False
+    members = RegisteredMembers.objects.filter(id__in=li)
+    print('----logein user0-------', mem_obj.fname)
+    print('----members------,', members)
+    return render(request,'membership/direct_transaction.html', {'obj':mem_obj, 'resp_data':members})
 
 
 @is_authenticated

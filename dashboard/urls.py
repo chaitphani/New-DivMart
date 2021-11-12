@@ -18,8 +18,6 @@ urlpatterns = (
 
     path('',views.home, name='home'),
     path('user',views.user, name='user'),
-    path('credit-sale',views.credit_sale, name='credit_sale'),
-    path('credit-sale_report',views.credit_sale_report, name='credit_sale_report'),
 
     path('admin_user_creation',views.admin_user_creation, name='admin_user_creation'),
     path('user_edit/<id>',views.user_edit,name='user_edit'),
@@ -195,14 +193,7 @@ urlpatterns = (
 
     path('user/<id>/view',views.user_detail, name='user_detail'),
 
+    path('credit-sale',views.credit_sale, name='credit_sale'),
+    path('credit-sale_report',views.credit_sale_report, name='credit_sale_report'),
 )
 
-
-# Cashier:
-
-# 1. product(view) done
-# 2. sale(add, edit, view) Done
-# 3. purchase(view) Done
-# 4. pos(add, View) Done
-# 5. invoice generation(view) Done
-# 6. customer(add, edit, view)

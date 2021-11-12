@@ -191,8 +191,8 @@ class Purchase(models.Model):
 
 class Sell(models.Model):
 
-    dis_choice = [("F","Fixed"),("P","Percentage")]
-    st_choice = [("F","Final"),("D","Draft"),("Q","Quotation")]
+    dis_choice = (("F","Fixed"),("P","Percentage"))
+    st_choice = (("F","Final"),("D","Draft"),("Q","Quotation"), ("C", "Credit"))
     per_choice = ((0, False),(1, True),)
 
     ref_no = models.CharField(max_length=40)

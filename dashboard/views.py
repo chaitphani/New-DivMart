@@ -1676,6 +1676,9 @@ def dashboard_pos(request):
             elif request.POST.get('quote') == "Quotation":
                 sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='Q', invoice_no=invoice_last, payment_info=pay_obj, cashier=staffuser_obj)
 
+            elif request.POST.get('credit') == "Credit Sale":
+                sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='C', invoice_no=invoice_last, payment_info=pay_obj, cashier=staffuser_obj)
+
             else:
                 sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='F', invoice_no=invoice_last, payment_info=pay_obj, cashier=staffuser_obj)
 
@@ -2043,20 +2046,20 @@ def member_status_change(request, id):
 
 @login_required(login_url='/useraccount/common_login')
 def list_draft(request):
-    try:
+    if not request.user.is_superuser:
         staff_user = StaffUser.objects.get(user=request.user)
         draft_list = Sell.objects.filter(status='D', business_location=staff_user.business_location, is_deleted=False)
-    except:
+    else:
         draft_list = Sell.objects.filter(status='D', is_deleted=False)
     return render(request,'divmart_dashboard/list_draft.html', {'drafts':draft_list})
 
 
 @login_required(login_url='/useraccount/common_login')
 def list_quotations(request):
-    try:
+    if request.user.is_superuser:
         staff_user = StaffUser.objects.get(user=request.user)
         quotes_list = Sell.objects.filter(status='Q', business_location=staff_user.business_location, is_deleted=False)
-    except:
+    else:
         quotes_list = Sell.objects.filter(status='Q', is_deleted=False)
 
     return render(request,'divmart_dashboard/list_quotations.html', {'quotes':quotes_list})
@@ -2807,8 +2810,46 @@ def transaction_history(request):
     return render(request, 'divmart_dashboard/transaction_history.html', {'paid_requests':withdraw_requests})
 
 
+@login_required(login_url='/useraccount/common_login')
 def credit_sale(request):
-    return render(request,'divmart_dashboard/credit_sale.html')
 
+    if request.user.is_superuser:
+        credit_sale_list = Sell.objects.filter(status='C', is_deleted=False)
+    else:
+        staff_user = StaffUser.objects.get(user=request.user)
+        credit_sale_list = Sell.objects.filter(status='C', business_location=staff_user.business_location, is_deleted=False)
+
+    if request.method == "GET" and request.is_ajax():
+        payment_obj = Sell.objects.get(id=request.GET.get('id'),)
+        payment_obj.status = request.GET.get('payment_status',)
+        payment_obj.save()
+
+        messages.success(request, 'Payment-status change success...')
+        return redirect('/dashboard/sales')
+
+    return render(request,'divmart_dashboard/credit_sale.html', {'credit_sale_list':credit_sale_list})
+
+
+@login_required(login_url='/useraccount/common_login')
 def credit_sale_report(request):
-    return render(request,'divmart_dashboard/credit_sell_report.html')    
+    if request.method == 'POST':
+        location = request.POST.get('location')
+        customer = request.POST.get('customer')
+
+        if not customer == 'none':
+            print('-----inside customer not none----')
+            credit_sale_list = Sell.objects.filter(customer__first_name=customer).filter(status='C', is_deleted=False)
+        elif not location == 'none':
+            print('------inside location not none-------')
+            credit_sale_list = Sell.objects.filter(business_location__name=location).filter(status='C', is_deleted=False)
+        else:
+            print('------inside else of both conditions--------')
+            credit_sale_list = Sell.objects.filter(customer__first_name=customer, business_location__name=location).filter(status='C', is_deleted=False)
+
+    else:
+        credit_sale_list = Sell.objects.filter(status='C', is_deleted=False)
+    
+    customers = CustomerUser.objects.filter(is_deleted=0)
+    locations = BusinessLocation.objects.filter(status=True)
+    return render(request,'divmart_dashboard/credit_sell_report.html', {'customers':customers, 'locations':locations, 'credit_sale_list':credit_sale_list})
+

@@ -80,72 +80,26 @@
                         <th class="th-sm">Customer Name</th>
                         <th class="th-sm">Location</th>
                         <th class="th-sm">Total Amount</th>
-                        <th class="th-sm">Paid Type</th>
-
-                        <!-- <th class="th-sm">Invoice No</th> -->
-                        <!-- <th class="th-sm">Payment Status</th> -->
-                        <!-- <th>Payment Due</th> -->
+                        <!-- <th class="th-sm">Total Payable</th> -->
                         <th class="th-sm">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for list in lists %}
+                    {% for list in credit_sale_list %}
                     <tr>
-                        <td>{{list.sale_date|date:'d-m-Y H:i:s'}}</td>
+                        <td>{{list.sale_date|date:'d-m-Y H:i'}}</td>
                         <td>{{list.ref_no}}</td>
                         <td>{{list.customer}}</td>
                         <td>{{list.business_location}}</td>
                         <td>₹ {{list.total_amount}}</td>
-                        <td>₹ {{list.total_payable}}</td>
-
-                        <!-- <td data-toggle="modal" data-target=".invoice_mdl">09/02/2020 20:52</td> -->
-                        <!-- <td>0056</td> -->
-                        <!-- <td class="text-center"> <a class="bg-success p-2" data-toggle="modal" data-target=".payment_status_mdl">paid</a></td> -->
-                        <!-- <td> <b>Sell Due:</b> ₹ 0.00</td> -->
+                        <!-- <td>₹ {{list.total_payable}}</td> -->
                         <td>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Action
-                                </button>
-                                <div class="dropdown-menu bg-primary">
-                                    <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target=".invoice_mdl"> <i
-                                        class="fa fa-external-link" aria-hidden="true"></i> &nbsp;&nbsp; View</a> -->
-
-                                    <a class="dropdown-item" href="{% url 'sale_edit' list.id %}"><i
-                                            class="fa fa-pencil" aria-hidden="true"></i>
-                                        &nbsp;&nbsp; Edit</a>
-                                    <a href="{% url 'invoice_view' list.id %}" class="dropdown-item"><i
-                                            class="fa fa-eye"></i>&nbsp;&nbsp; View</a>
-                                    <a class="dropdown-item del_btn" href="{% url 'delete_sale' list.id %}"> <i
-                                            class="fa fa-trash" aria-hidden="true"></i>
-                                        &nbsp;&nbsp; Delete </a>
-
-                                    <!-- <a class="dropdown-item" href="#"><i class="fa fa-print" aria-hidden="true"></i>
-                                    &nbsp;&nbsp; Print</a> -->
-
-                                    <!-- <a class="dropdown-item" href="#"> <i class="fa fa-file-text"
-                                        aria-hidden="true"></i>&nbsp;&nbsp;Packing Slip</a> -->
-
-                                    <!-- <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#"><i class="fa fa-money"
-                                        aria-hidden="true"></i>&nbsp;&nbsp; View Payments</a>
-                                <a class="dropdown-item" href="#"> <i class="fa fa-files-o"
-                                        aria-hidden="true"></i>&nbsp;&nbsp; Duplicate Sell</a>
-                                <a class="dropdown-item" href="#"><i class="fa fa-undo" aria-hidden="true"></i>
-                                    &nbsp;&nbsp;Sell Return</a>
-                                <a class="dropdown-item" href="#"><i class="fa fa-external-link" aria-hidden="true"></i>
-                                    &nbsp;&nbsp; Invoice URL</a>
-                                <a class="dropdown-item" href="#"><i class="fa fa-envelope-o"
-                                        aria-hidden="true"></i>&nbsp;&nbsp;New Sell Notification</a> -->
-                                </div>
-                            </div>
+                            <select name="status" class="form-control bg-navy" id="payment_status_{{list.id}}" onchange="payment_status_change({{list.id}})">
+                                <option value="F" {% if list.status == 'F' %}selected{% endif %}>Paid</option>
+                                <option value="C" {% if list.status == 'C' %}selected{% endif %}>Un-paid</option>
+                            </select>
                         </td>
-
-                        <!-- <td>
-                        <a href="{% url 'sale_edit' list.id %}" class="btn btn-outline-info btn-sm"><i
-                                class="fa fa-pencil"></i>&nbsp; Edit</a>
-                    </td> -->
+                        <!-- <td>{{list.status}}</td> -->
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -540,5 +494,29 @@
             location.reload();
         }
     })
+</script>
+<script>
+    function payment_status_change(id) {
+    var payment_status = $("#payment_status_" + id).val()
+    var action = confirm("Are you sure to change the status...?")
+
+    if (action == true) {
+        $.ajax({
+            type: "GET",
+            url: `{% url 'credit_sale' %}`,
+            data: {'id': id, 'payment_status': payment_status},
+            success: function (data) {
+                location.reload();
+            },
+            error: function (response) {
+              
+                location.reload();
+            }
+        });
+    } else {
+        // id.preventDefault();
+        location.reload();
+    }
+}
 </script>
 {% endblock %}

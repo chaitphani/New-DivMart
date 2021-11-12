@@ -10,7 +10,7 @@ class Add_PaymentAdmin(admin.ModelAdmin):
     list_display = ('amount', 'payment_account',)
 
 class SellAdmin(admin.ModelAdmin):
-    list_display = ('ref_no', 'customer', 'total_payable')
+    list_display = ('ref_no', 'customer', 'total_payable', 'status')
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'brand', 'current_stock', 'status')

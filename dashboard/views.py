@@ -2806,3 +2806,9 @@ def transaction_history(request):
     withdraw_requests = WithdrawlTransactionRequests.objects.filter(payment_status='Paid')
     return render(request, 'divmart_dashboard/transaction_history.html', {'paid_requests':withdraw_requests})
 
+
+def credit_sale(request):
+    return render(request,'divmart_dashboard/credit_sale.html')
+
+def credit_sale_report(request):
+    return render(request,'divmart_dashboard/credit_sell_report.html')    

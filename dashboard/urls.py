@@ -18,6 +18,9 @@ urlpatterns = (
 
     path('',views.home, name='home'),
     path('user',views.user, name='user'),
+    path('credit-sale',views.credit_sale, name='credit_sale'),
+    path('credit-sale_report',views.credit_sale_report, name='credit_sale_report'),
+
     path('admin_user_creation',views.admin_user_creation, name='admin_user_creation'),
     path('user_edit/<id>',views.user_edit,name='user_edit'),
     path('user_delete/<id>',views.user_delete,name='user_delete'),

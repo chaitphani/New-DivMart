@@ -1,0 +1,106 @@
+{% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<div class="container-fluid ">
+	<h5>Credit Sale Report</h5>
+	<div class="section card p-3" style="border-top: 3px solid green;">
+		<div class="row">
+			<div class="col-lg-12 box-solid">
+				<a data-toggle="collapse" href="#collapsebox" role="button" aria-expanded="true"
+					aria-controls="collapsebox">
+					<div><i class="fa fa-filter"></i>Filters</div>
+				</a>
+				<div class="collapse show" id="collapsebox">
+					<form action="" method="POST">
+						{% csrf_token %}
+						<div class="row">
+							<div class="col-lg-4 filterbox">
+								<label>Customer:</label>
+								<!-- search here -->
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
+									</div>
+									<select class="form-control" name="customer">
+										<option value="">Please Select</option>
+										{% for customer in customers %}
+											<option value="{{customer.first_name}}">{{customer.first_name}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-4 filterbox">
+								<label>Business Location:</label>
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
+									</div>
+									<select class="form-control" name="location">
+										<option value="">Please Select</option>
+										{% for location in locations %}
+											<option value="{{location.name}}">{{location.name}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<!-- <div class="col-lg-4 pt-4 filterbox"> -->
+								<!-- </div> -->
+							</div>
+							<input type="submit" class="btn btn-primary btn-block w-25 float-right" value="FILTER">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="section card p-3 oveflow-auto" style="border-top: 3px solid green;">
+	<div class="section">
+                <span class="float-right">
+                      <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        CSV </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        EXCEL </a>
+                        <a class="btn btn-secondary btn-sm mb-2" href=""> <i class="fa fa-print" aria-hidden="true"></i>&nbsp;
+                        PDF </a>
+                </span>
+    </div>
+		<table class="table table-sm" id="sell_pay_report">
+			<thead>
+				<tr>
+					<th>Reference No</th>
+					<th>Paid on</th>
+					<th>Amount</th>
+					<th>Customer</th>
+					<th>Payment Method</th>
+					<!-- <th>Sell</th>
+					<th>Action</th> -->
+				</tr>
+			</thead>
+			<tbody>
+				{% for sale in sales %}
+				<tr>
+					<td>{{sale.ref_no}}</td>
+					<td>{{sale.sale_date}}</td>
+					<td>₹ {{sale.payment_info.amount}}</td>
+					<td>{{sale.customer.first_name}}</td>
+					<td>{{sale.payment_info.get_payment_method_display}}</td>
+					<!-- <td></td>
+					<td><input type="button" value="View" class="btn btn-primary btn-sm"></td> -->
+				</tr>
+				{% endfor %}
+			</tbody>
+			<!-- footer row -->
+			<!-- <tr>
+				<th colspan="2" class="text-center">Total</td>
+				<th class="text-center">₹ 0.00</th>
+				<th colspan="4" class="text-center"></th>
+			</tr> -->
+	
+		</table>
+	</div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#sell_pay_report').dataTable();
+    });
+</script>
+{%endblock%}

@@ -48,33 +48,63 @@ class RegisteredMembersView(APIView):
                                         if len(_head_refer) > 0:
                                             _head_qual_refer = RegisteredMembers.objects.get(self_ref_id=main_qual_refer.sponser_id)
 
-                                            ref_qual_user.commission += 0.08 * float(request.data.get('member_amount'))
-                                            main_qual_refer.commission += 0.05 * float(request.data.get('member_amount'))
-                                            _head_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
+                                            if not _head_qual_refer.sponser_id == None or not _head_qual_refer.sponser_id == "":
+                                                _4th_refer = RegisteredMembers.objects.filter(self_ref_id=_head_qual_refer.sponser_id, status=1)
 
-                                            _head_qual_refer.level = 1
-                                            main_qual_refer.level = 2
-                                            ref_qual_user.level = 3
+                                                if len(_4th_refer) > 0:
+                                                    _4th_qual_refer = RegisteredMembers.objects.get(self_ref_id=_head_qual_refer.sponser_id)
 
-                                            main_qual_refer.save()
-                                            ref_qual_user.save()
-                                            _head_qual_refer.save()
+                                                    if not _4th_qual_refer.sponser_id == None or not _4th_qual_refer.sponser_id == "":
+                                                        _5th_refer = RegisteredMembers.objects.filter(self_ref_id=_4th_qual_refer.sponser_id, status=1)
+
+                                                        if len(_5th_refer) > 0:
+                                                            _5th_qual_refer = RegisteredMembers.objects.get(self_ref_id=_4th_qual_refer.sponser_id, status=1) 
+
+                                                            if not _5th_qual_refer.sponser_id == None or _5th_qual_refer.sponser_id == "":
+                                                                _6th_refer = RegisteredMembers.objects.filter(self_ref_id=_5th_qual_refer.sponser_id, status=1)
+
+                                                                if len(_6th_refer) > 0:
+                                                                    _6th_qual_refer = RegisteredMembers.objects.get(self_ref_id=_5th_qual_refer.sponser_id, status=1)
+                                                                    
+                                                                    _6th_qual_refer.commission += 0.05 * float(request.data.get('member_amount'))
+                                                                    _5th_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
+                                                                    _4th_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
+                                                                    _head_qual_refer.commission += 0.02 * float(request.data.get('member_amount'))
+                                                                    main_qual_refer.commission += 0.01 * float(request.data.get('member_amount'))
+                                                                    ref_qual_user.commission += 0.01 * float(request.data.get('member_amount'))
+
+                                                            else:
+                                                                _5th_qual_refer.commission += 0.05 * float(request.data.get('member_amount'))
+                                                                _4th_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
+                                                                _head_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
+                                                                main_qual_refer.commission += 0.02 * float(request.data.get('member_amount'))
+                                                                ref_qual_user.commission += 0.01 * float(request.data.get('member_amount'))
+                                                    else:
+                                                        _4th_qual_refer.commission += 0.05 * float(request.data.get('member_amount'))
+                                                        _head_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
+                                                        main_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
+                                                        ref_qual_user.commission += 0.02 * float(request.data.get('member_amount'))
+
+                                            else:    
+                                                ref_qual_user.commission += 0.05 * float(request.data.get('member_amount'))
+                                                main_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
+                                                _head_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
+
+                                                main_qual_refer.save()
+                                                ref_qual_user.save()
+                                                _head_qual_refer.save()
 
                                         else:
                                             # if dual referers
-                                            ref_qual_user.commission += 0.08 * float(request.data.get('member_amount'))
-                                            main_qual_refer.commission += 0.05 * float(request.data.get('member_amount'))
-
-                                            ref_qual_user.level = 2
-                                            main_qual_refer.level = 1
+                                            ref_qual_user.commission += 0.05 * float(request.data.get('member_amount'))
+                                            main_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
 
                                             ref_qual_user.save()
                                             main_qual_refer.save()
                                             
                             else:
                                 # if single referer
-                                ref_qual_user.commission += 0.08 * float(request.data.get('member_amount'))
-                                ref_qual_user.level = 1
+                                ref_qual_user.commission += 0.05 * float(request.data.get('member_amount'))
                                 ref_qual_user.save()
                     
                     serialize.save()
@@ -119,37 +149,37 @@ class PointTransactionView(generics.ListCreateAPIView):
     serializer_class = PointsTransactionRequestsSerializer
 
 
+# testing cron view
+# class CronTest(APIView):
 
-class CronTest(APIView):
+#     def get(self, request):
 
-    def get(self, request):
+#         today = datetime.date.today()
+#         reg_members = RegisteredMembers.objects.filter(status=1).annotate(
+#             created_date = F('created__date'),
+#             updated_date = F('updated__date')
+#         )
 
-        today = datetime.date.today()
-        reg_members = RegisteredMembers.objects.filter(status=1).annotate(
-            created_date = F('created__date'),
-            updated_date = F('updated__date')
-        )
+#         for each_member in reg_members:
+#             created_date = each_member.created_date
+#             #months for 4.5 Years => 4*12 = 48 + 6 = 54
+#             created_date_after_4_5 = created_date + relativedelta(months=54)
+#             points_to_be_credited = 0
 
-        for each_member in reg_members:
-            created_date = each_member.created_date
-            #months for 4.5 Years => 4*12 = 48 + 6 = 54
-            created_date_after_4_5 = created_date + relativedelta(months=54)
-            points_to_be_credited = 0
+#             if(each_member.member_amount == 10000):
+#                 points_to_be_credited = 20000
+#             elif(each_member.member_amount==25000):
+#                 points_to_be_credited = 50000
 
-            if(each_member.member_amount == 10000):
-                points_to_be_credited = 20000
-            elif(each_member.member_amount==25000):
-                points_to_be_credited = 50000
+#             if(today == created_date_after_4_5):
 
-            if(today == created_date_after_4_5):
-
-                data = {'member':each_member.id, 'points':points_to_be_credited, 'added_by':'CRON'}
-                ser_obj = CreditedPointsSerializer(data=data)
-                if(ser_obj.is_valid(raise_exception=True)):
-                    ser_obj.save()
-                    return Response(ser_obj.data, status=200)
-                else:
-                    return Response({"msg":'nothing'}, status=404)
-            else:
-                return Response({'msg':'not found'}, status=400)
+#                 data = {'member':each_member.id, 'points':points_to_be_credited, 'added_by':'CRON'}
+#                 ser_obj = CreditedPointsSerializer(data=data)
+#                 if(ser_obj.is_valid(raise_exception=True)):
+#                     ser_obj.save()
+#                     return Response(ser_obj.data, status=200)
+#                 else:
+#                     return Response({"msg":'nothing'}, status=404)
+#             else:
+#                 return Response({'msg':'not found'}, status=400)
 

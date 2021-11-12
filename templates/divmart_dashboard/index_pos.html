@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 
- <!-- Bootstrap 4 -->
+    <!-- Bootstrap 4 -->
     <script src="{% static 'divmart_dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
-    
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
@@ -116,29 +116,33 @@
         .myaccordion li+li {
             margin-top: 10px;
         }
-     .form-control{font-size:14px}
 
-     textarea:focus,
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="datetime"]:focus,
-input[type="datetime-local"]:focus,
-input[type="date"]:focus,
-input[type="month"]:focus,
-input[type="time"]:focus,
-input[type="week"]:focus,
-input[type="number"]:focus,
-input[type="email"]:focus,
-input[type="url"]:focus,
-input[type="search"]:focus,
-input[type="tel"]:focus,
-input[type="color"]:focus,
-.uneditable-input:focus {   
-  border-color: rgba(126, 239, 104, 0.8);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
-  outline: 0 none;
-}
-.logoutbtn {
+        .form-control {
+            font-size: 14px
+        }
+
+        textarea:focus,
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="datetime"]:focus,
+        input[type="datetime-local"]:focus,
+        input[type="date"]:focus,
+        input[type="month"]:focus,
+        input[type="time"]:focus,
+        input[type="week"]:focus,
+        input[type="number"]:focus,
+        input[type="email"]:focus,
+        input[type="url"]:focus,
+        input[type="search"]:focus,
+        input[type="tel"]:focus,
+        input[type="color"]:focus,
+        .uneditable-input:focus {
+            border-color: rgba(126, 239, 104, 0.8);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+            outline: 0 none;
+        }
+
+        .logoutbtn {
             border: 2px solid #aaa;
             text-align: center;
             border-radius: 5px;
@@ -170,8 +174,9 @@ input[type="color"]:focus,
 
 </head>
 
-<body style="height: 100vh;background:url(/static/assets/image/POS-1.jpg);background-repeat:no-repeat;background-position:center;background-size:cover">
-<div class="container-fluid">
+<body
+    style="height: 100vh;background:url(/static/assets/image/POS-1.jpg);background-repeat:no-repeat;background-position:center;background-size:cover">
+    <div class="container-fluid">
 
         <div class="row pl-2 pr-2" style="background-color:#605ca8">
             <div class="col-5 p-2">
@@ -196,10 +201,10 @@ input[type="color"]:focus,
                     </a>
                 </span>
                 <span>
-                    <a class="btn btn-success button bg-navy btn-sm text-white" data-toggle="modal" data-target="#myModal"
-                        data-toggle="tooltip" data-placement="bottom" title="Calculator">
+                    <a class="btn btn-success button bg-navy btn-sm text-white" data-toggle="modal"
+                        data-target="#myModal" data-toggle="tooltip" data-placement="bottom" title="Calculator">
                         <i class="fa fa-calculator"></i>
-                    </a> 
+                    </a>
                 </span>
                 <!-- <div class="p-2">
                     <a class="btn btn-warning text-white btn-sm" data-toggle="tooltip" data-placement="bottom" title="View Suspended Sales"><i class="fa fa-window-maximize fa-lg"></i>Press F11 to go FULL screen</a>
@@ -210,7 +215,8 @@ input[type="color"]:focus,
                 </span>
                 &nbsp;
                 <span>
-                    <a class="text-white text-decoration-none" href="{% url 'admin_logout' %}" title="logout-{{request.user|capfirst}}">
+                    <a class="text-white text-decoration-none" href="{% url 'admin_logout' %}"
+                        title="logout-{{request.user|capfirst}}">
                         <span class="logoutbtn">
                             <i class="fa fa-sign-out" aria-hidden="true"></i>
                             {{request.user.username}}
@@ -219,89 +225,90 @@ input[type="color"]:focus,
                 </span>
             </div>
         </div>
-</div>
+    </div>
 
-        <div class="container-fluid">
-           <div class="mt-3 mb-3 p-2" style="border-radius:5px;background-color:rgb(0,128,0,0.5)"><h4 class="text-white text-center">POS Terminal<i class="fa fa-keyboard ml-3"></i></h4></div>
+    <div class="container-fluid">
+        <div class="mt-3 mb-3 p-2" style="border-radius:5px;background-color:rgb(0,128,0,0.5)">
+            <h4 class="text-white text-center">POS Terminal<i class="fa fa-keyboard ml-3"></i></h4>
+        </div>
 
-            {% if messages %}
-            <div class="alert alert-danger alert-dismissible fade show" style="opacity:0.8" role="alert">
-             {% for message in messages %}
-                <span {% if message.tags %} class="{{ message.tags }} text-center" style="background-color:transparent" {% endif %}>
-                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-                    {{ message }}
-                </span>
+        {% if messages %}
+        <div class="alert alert-danger alert-dismissible fade show" style="opacity:0.8" role="alert">
+            {% for message in messages %}
+            <span {% if message.tags %} class="{{ message.tags }} text-center" style="background-color:transparent" 
+            {% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+            </span>
             {% endfor %}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            </div>
-            {% endif %}
-
-
-
-            <div class="row">
-                <div class="col-md-7 col-lg-7 col-sm-7 mb-5">
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                        <div class="section card p-3" style="border-top:3px solid green;background-color:rgb(255, 255, 255, 0.8)">
-                            <div class="form-group row pl-2">
-                                <div class="col-lg-6 col-md-6">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon3">
-                                                <i class="fa fa-map-marker"></i>
-                                            </span>
-                                        </div>
-                                        {% if request.user.is_superuser %}
-                                            <select class="form-control" name="business_location" required>
-                                                <option value="">Please select</option>
-                                                {% for location in locations %}
-                                                    <option value="{{location.id}}">{{location.name}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        {% else %}
-                                            <select class="form-control" name="business_location">
-                                                <option>{{staff_obj.business_location.name}}</option>
-                                            </select>
-                                        {% endif %}
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon3">
-                                                <i class="fa fa-info-circle text-info" data-toggle="tooltip"
-                                                    data-placement="bottom" data-target=".bd-example-modal-lg"
-                                                    title="Business Location From where you want to sell">
-                                                </i>
-                                            </span>
-                                        </div>
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-7 col-lg-7 col-sm-7 mb-5">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="section card p-3"
+                        style="border-top:3px solid green;background-color:rgb(255, 255, 255, 0.8)">
+                        <div class="form-group row pl-2">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon3">
+                                            <i class="fa fa-map-marker"></i>
+                                        </span>
                                     </div>
-                                </div>
-
-                                <div class="col-lg-6 col-md-6">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon3"><i
-                                                    class="fa fa-user"></i></span>
-                                        </div>
-                                        <select class="form-control" name="customer" required>
-                                            <option value="">Please select customer</option>
-                                            {% for customer in customers %}
-                                            <option value="{{customer.id}}">{{customer.first_name}}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <a class="fa fa-plus-circle text-info" data-toggle="modal"
-                                                    data-placement="bottom" data-target=".bd-example-modal-lg">
-                                                    <!-- title="Selling Price Group in wich you want sell" -->
-                                                </a>
-                                            </span>
-                                        </div>
+                                    {% if request.user.is_superuser %}
+                                    <select class="form-control" name="business_location">
+                                        <option value="">Please select</option>
+                                        {% for location in locations %}
+                                        <option value="{{location.id}}">{{location.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {% else %}
+                                    <select class="form-control" name="business_location">
+                                        <option>{{staff_obj.business_location.name}}</option>
+                                    </select>
+                                    {% endif %}
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon3">
+                                            <i class="fa fa-info-circle text-info" data-toggle="tooltip"
+                                                data-placement="bottom" data-target=".bd-example-modal-lg"
+                                                title="Business Location From where you want to sell">
+                                            </i>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group row pl-2">
-                                <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon3"><i
+                                                class="fa fa-user"></i></span>
+                                    </div>
+                                    <select class="form-control" name="customer">
+                                        <option value="">Please select customer</option>
+                                        {% for customer in customers %}
+                                        <option value="{{customer.id}}">{{customer.first_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <a class="fa fa-plus-circle text-info" data-toggle="modal"
+                                                data-placement="bottom" data-target=".bd-example-modal-lg">
+                                                <!-- title="Selling Price Group in wich you want sell" -->
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row pl-2">
+                            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon3"><i class="fa fa-money"></i></span>
@@ -318,7 +325,7 @@ input[type="color"]:focus,
                                 </div>
                             </div>
                             </div> -->
-                                    <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+                            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="custom-control custom-checkbox checkbox-xl float-right pr-5 pt-3">
                                     <input type="checkbox" class="custom-control-input" id="checkbox-3" checked="">
                                     <label class="custom-control-label text-dark" for="checkbox-3" data-toggle="modal"
@@ -327,17 +334,18 @@ input[type="color"]:focus,
                                     </label>
                                 </div>
                             </div> -->
-                            </div>
-                            <div class="form-group row pl-2">
-                                <div class="col-12">
-                                    <div class="rounded bg-white">
+                        </div>
+                        <div class="form-group row pl-2">
+                            <div class="col-12">
+                                <div class="rounded bg-white">
                                     <div class="input-group mb-1">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon3">
                                                 <i class="fa fa-barcode"></i>
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control search-input" id="p_name" placeholder="Search for products.." name="search" />
+                                        <input type="text" class="form-control search-input" id="p_name"
+                                            placeholder="Search for products.." name="search" />
                                         <!-- <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon3">
                                         <i class="fa fa-plus-circle text-info" data-toggle="tooltip" data-placement="bottom" title="Selling Price Group in which you want sell"></i>
@@ -345,10 +353,10 @@ input[type="color"]:focus,
                                         </div> -->
                                     </div>
                                     <div class="suggestions font-weight-bold" style="font-size:13px;color:#000"></div>
-                                    </div>
                                 </div>
                             </div>
-                            <!-- <div class="form-group row pl-2 pr-2">
+                        </div>
+                        <!-- <div class="form-group row pl-2 pr-2">
                         <div class="col-lg-6 col-md-6">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -370,51 +378,50 @@ input[type="color"]:focus,
                             </div>
                         </div>
                     </div> -->
-                            <div class="row pl-4 pr-4 overflow-auto">
-                                <table class="table table-bordered table-sm w-100" style="font-size:13px">
-                                    <thead>
-                                        <tr class="text-dark text-center">
-                                            <th>S.no</th>
-                                            <th scope="col">Product</th>
-                                            <th scope="col">Quantity</th>
-                                            <th scope="col">MRP</th>
-                                            <th scope="col">Price inc. tax</th>
-                                            <th scope="col">Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-center" id="pos_cal"></tbody>
-                                </table>
-                            </div>
-                            <div class="section row table-responsive overflow-auto"
-                                style="margin: 0;">
-                                <table class="mt-3">
-                                    <thead>
-                                        <tr>
-                                            <td colspan="2" class="text-dark">
-                                                <small class="font-weight-bold">Total Amount:</small><br>
-                                                <input type="number" class="form-control" name="total_amount"
-                                                    id="total_amount" readonly value="0">
-                                                <!-- <span id="total_amount"></span> -->
-                                            </td>
-                                            <td class="text-dark">
-                                                <!-- <input type="checkbox" id="check_disc"> -->
-                                                <small class="font-weight-bold">Flat Discount(-):
-                                                    <!-- <i class="fa fa-info-circle text-info" data-container="body"
+                        <div class="row pl-4 pr-4 overflow-auto">
+                            <table class="table table-bordered table-sm w-100" style="font-size:13px">
+                                <thead>
+                                    <tr class="text-dark text-center">
+                                        <th>S.no</th>
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">MRP</th>
+                                        <th scope="col">Price inc. tax</th>
+                                        <th scope="col">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center" id="pos_cal"></tbody>
+                            </table>
+                        </div>
+                        <div class="section row table-responsive overflow-auto" style="margin: 0;">
+                            <table class="mt-3">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2" class="text-dark">
+                                            <small class="font-weight-bold">Total Amount:</small><br>
+                                            <input type="number" class="form-control" name="total_amount"
+                                                id="total_amount" readonly value="0">
+                                            <!-- <span id="total_amount"></span> -->
+                                        </td>
+                                        <td class="text-dark">
+                                            <!-- <input type="checkbox" id="check_disc"> -->
+                                            <small class="font-weight-bold">Flat Discount(-):
+                                                <!-- <i class="fa fa-info-circle text-info" data-container="body"
                                                 data-toggle="popover" 
                                                 data-placement="bottom"
                                                 data-content="Set 'Default Sale Discount' for all sales in Business Settings. 
                                                 Click on the edit icon below to add/update discount.">
                                             </i> -->
-                                                </small>
-                                                <input type="text" value=0 class="form-control" id="disc_amt"
-                                                    name="discount_amount" onkeyup="discAmount(); shippAmount()">
-                                                <!-- <span>
+                                            </small>
+                                            <input type="text" value=0 class="form-control" id="disc_amt"
+                                                name="discount_amount" onkeyup="discAmount(); shippAmount()">
+                                            <!-- <span>
                                             <i class="fa fa-pencil-square-o font-weight-bold text-info"
                                                 style="cursor: pointer;">
                                             </i> xxx
                                         </span> -->
-                                            </td>
-                                            <!-- <td class="text-dark">
+                                        </td>
+                                        <!-- <td class="text-dark">
                                         <b>Order Tax(+):
                                             <i class="fa fa-info-circle text-info" data-container="body"
                                                 data-toggle="popover" data-placement="bottom"
@@ -427,82 +434,91 @@ input[type="color"]:focus,
                                             </i>xxx
                                         </span>
                                     </td> -->
-                                            <td class="text-dark">
-                                                <!-- <input type="checkbox" id="check_ship"> -->
-                                                <small class="font-weight-bold">Shipping(+):
-                                                    <!-- <i class="fa fa-info-circle text-info" data-container="body"
+                                        <td class="text-dark">
+                                            <!-- <input type="checkbox" id="check_ship"> -->
+                                            <small class="font-weight-bold">Shipping(+):
+                                                <!-- <i class="fa fa-info-circle text-info" data-container="body"
                                                 data-toggle="popover" data-placement="bottom"
                                                 data-content="Set shipping details and shipping charges. Click on the edit icon below to add/update shipping details and charges.">
                                             </i> -->
-                                                </small>
-                                                <input type="number" value="0" name="shipping_charges"
-                                                    id="shipping_charges" class="form-control" onkeyup="shippAmount()" disabled>
-                                                <!-- <span>
+                                            </small>
+                                            <input type="number" value="0" name="shipping_charges" id="shipping_charges"
+                                                class="form-control" onkeyup="shippAmount()" disabled>
+                                            <!-- <span>
                                             <i class="fa fa-pencil-square-o font-weight-bold text-info"
                                                 style="cursor: pointer;">
                                             </i>xxx
                                         </span> -->
-                                            </td>
-                                            <td class="text-dark">
-                                                <small class="font-weight-bold">Total Payable:</small><br>
-                                                <input type="number" value="0" name="total_payable" id="total_payable" class="form-control" readonly/>
-                                            </td>
-                                            <!-- <td>
+                                        </td>
+                                        <td class="text-dark">
+                                            <small class="font-weight-bold">Total Payable:</small><br>
+                                            <input type="number" value="0" name="total_payable" id="total_payable"
+                                                class="form-control" readonly />
+                                        </td>
+                                        <!-- <td>
                                         <a class="btn btn-danger text-white btn-sm mt-3">Cancel</a>
                                     </td> -->
-                                        </tr>
-                                        <tr style="height:5px"></tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <button type="submit" class="btn font-weight-bold btn-warning btn-block text-white" name="draft">
-                                                    <i class="fa fa-save text-white" aria-hidden="true"></i> Draft
-                                                </button>
+                                    </tr>
+                                    <tr style="height:5px"></tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <button type="submit"
+                                                class="btn font-weight-bold btn-warning btn-block text-white"
+                                                name="draft">
+                                                <i class="fa fa-save text-white" aria-hidden="true"></i> Draft
+                                            </button>
 
-                                                <button type="submit" class="btn btn-info font-weight-bold btn-block text-white" name="quote">
-                                                    <i class="fa fa-quote-left text-white" aria-hidden="true"></i> Quotaions
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-block bg-maroon text-white"
-                                                    name="card" disabled>
-                                                 <i class="fa fa-check text-white" aria-hidden="true"></i>
+                                            <button type="submit"
+                                                class="btn btn-info font-weight-bold btn-block text-white" name="quote">
+                                                <i class="fa fa-quote-left text-white" aria-hidden="true"></i> Quotaions
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-block bg-maroon text-white" name="card"
+                                                disabled>
+                                                <i class="fa fa-check text-white" aria-hidden="true"></i>
                                                 Cards
-                                                </button>
-                                                <button class="btn bg-red btn-block text-white" name="suspend"
-                                                    onclick="location.reload();" disabled>
-                                                    <i class="fa fa-pause"></i>&nbsp; Suspend
-                                                </button>
-                                            </td>
-                                            <td>
-                                                 <button type="submit" class="btn bg-navy btn-block text-white p-3" name="Multiple" disabled>
+                                            </button>
+                                            <button class="btn bg-red btn-block text-white" name="suspend"
+                                                onclick="location.reload();" disabled>
+                                                <i class="fa fa-pause"></i>&nbsp; Suspend
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn bg-navy btn-block text-white p-3"
+                                                name="credit">
                                                 <div class="text-center">
-                                                    <i class="fa fa-credit-card fa-lg text-white" aria-hidden="true"></i>
+                                                    <i class="fa fa-credit-card fa-lg text-white"
+                                                        aria-hidden="true"></i>
                                                     <i class="fa fa-cc-visa fa-lg text-white" aria-hidden="true"></i>
-                                                    <i class="fa fa-cc-mastercard fa-lg text-white" aria-hidden="true"></i>
+                                                    <i class="fa fa-cc-mastercard fa-lg text-white"
+                                                        aria-hidden="true"></i>
                                                     <i class="fa fa-cc-amex fa-lg text-white" aria-hidden="true"></i>
                                                     <br>
-                                                    <h6>Multiple Pay</h6>
+                                                    <h6>Credit Sale</h6>
                                                 </div>
-                                                </button>
-                                            </td>                                          
-                                            <td>
-                                            <button type="submit" class="btn btn-success btn-block text-white p-3" name="cash" >
-                                            <div class="text-center">
-                                                <i class="fa fa-money-bill-wave fa-lg text-white" aria-hidden="true"></i><br>
-                                                <h6>Cash Payment</h6>
-                                            </div>
                                             </button>
-                                            </td>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-success btn-block text-white p-3"
+                                                name="cash">
+                                                <div class="text-center">
+                                                    <i class="fa fa-money-bill-wave fa-lg text-white"
+                                                        aria-hidden="true"></i><br>
+                                                    <h6>Cash Payment</h6>
+                                                </div>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
-                    </form>
-                </div>
-            
-                <div class="col-md-5 col-lg-5 col-sm-5 mb-5">
-                    <!--<div id="accordion" class="myaccordion">
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-5 col-lg-5 col-sm-5 mb-5">
+                <!--<div id="accordion" class="myaccordion">
                     <div class="section card p-3" style="border-top:3px solid green;">
                         <div id="headingOne">
                             <div class="form-group row">
@@ -556,52 +572,52 @@ input[type="color"]:focus,
                         </div>
                     </div>
                     </div>-->
-                    <!--<div class="section card mt-2" style="border-top:2px solid green">-->
+                <!--<div class="section card mt-2" style="border-top:2px solid green">-->
 
-                    <div id="accordions" class="myaccordions">
-                        <div class=" section card pt-0 p-3" style="border-top:3px solid green;background-color:rgb(255, 255, 255, 0.8);min-height:405px">
-                            <div class="" id="headingOne" style="height:5vh">
-                               
-                                    <div class="col-12 pl-1">
-                                        <b><i class="fa fa-receipt"></i> Recent Transactions</b>
-                                    </div>
-                               
+                <div id="accordions" class="myaccordions">
+                    <div class=" section card pt-0 p-3"
+                        style="border-top:3px solid green;background-color:rgb(255, 255, 255, 0.8);min-height:405px">
+                        <div class="" id="headingOne" style="height:5vh">
+
+                            <div class="col-12 pl-1">
+                                <b><i class="fa fa-receipt"></i> Recent Transactions</b>
                             </div>
-                            <div class="pb-3 pl-1 pr-1 mt-3">
-                            
-                                <nav>
-                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                        <a class="nav-item nav-link active text-dark" id="nav-final-tab"
-                                            data-toggle="tab" href="#nav-final" role="tab" aria-controls="nav-final"
-                                            aria-selected="true">
-                                            <b><i class="fa fa-check fa-sm"></i>&nbsp;Final</b>
-                                        </a>
-                                        <a class="nav-item nav-link text-dark" id="nav-quotation-tab" data-toggle="tab"
-                                            href="#nav-quotation" role="tab" aria-controls="nav-quotation"
-                                            aria-selected="false">
-                                            <b><i class="fa fa-quote-left fa-sm"></i>&nbsp;Quotations</b>
-                                        </a>
-                                        <a class="nav-item nav-link text-dark" id="nav-draft-tab" data-toggle="tab"
-                                            href="#nav-draft" role="tab" aria-controls="nav-draft"
-                                            aria-selected="false">
-                                            <b><i class="fa fa-save fa-sm"></i>&nbsp;Draft</b>
-                                        </a>
-                                    </div>
-                                </nav>
 
-                                <div class="tab-content" id="nav-tabContent">
-                                    <div class="tab-pane fade show active pt-0" id="nav-final" role="tabpanel"
-                                        aria-labelledby="nav-final-tab">
-                                        <!-- in final tab content start here -->
-                                        <div class="overflow-auto">
-                                            <table id="finaltble" class="table table-striped table-sm" style="border-left:1px solid #ccc;border-right:1px solid #ccc;font-size:14px">
-                                                <tbody>
-                                                    {% for list in final_list %}
-                                                    <tr>
-                                                        <td>{{forloop.counter}}</td>
-                                                        <td>{{list.customer}}</td>
-                                                        <td>{{list.total_payable}}</td>
-                                                        <!-- <td>
+                        </div>
+                        <div class="pb-3 pl-1 pr-1 mt-3">
+
+                            <nav>
+                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                    <a class="nav-item nav-link active text-dark" id="nav-final-tab" data-toggle="tab"
+                                        href="#nav-final" role="tab" aria-controls="nav-final" aria-selected="true">
+                                        <b><i class="fa fa-check fa-sm"></i>&nbsp;Final</b>
+                                    </a>
+                                    <a class="nav-item nav-link text-dark" id="nav-quotation-tab" data-toggle="tab"
+                                        href="#nav-quotation" role="tab" aria-controls="nav-quotation"
+                                        aria-selected="false">
+                                        <b><i class="fa fa-quote-left fa-sm"></i>&nbsp;Quotations</b>
+                                    </a>
+                                    <a class="nav-item nav-link text-dark" id="nav-draft-tab" data-toggle="tab"
+                                        href="#nav-draft" role="tab" aria-controls="nav-draft" aria-selected="false">
+                                        <b><i class="fa fa-save fa-sm"></i>&nbsp;Draft</b>
+                                    </a>
+                                </div>
+                            </nav>
+
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active pt-0" id="nav-final" role="tabpanel"
+                                    aria-labelledby="nav-final-tab">
+                                    <!-- in final tab content start here -->
+                                    <div class="overflow-auto">
+                                        <table id="finaltble" class="table table-striped table-sm"
+                                            style="border-left:1px solid #ccc;border-right:1px solid #ccc;font-size:14px">
+                                            <tbody>
+                                                {% for list in final_list %}
+                                                <tr>
+                                                    <td>{{forloop.counter}}</td>
+                                                    <td>{{list.customer}}</td>
+                                                    <td>{{list.total_payable}}</td>
+                                                    <!-- <td>
                                                         <div class="btn-group btn-group-sm" role="group"
                                                             aria-label="Basic example" data-toggle="tooltip"
                                                             data-placement="bottom" title="Customer:Test Mobile:9890016784">
@@ -610,24 +626,25 @@ input[type="color"]:focus,
                                                             <i class="fa fa-print text-success ml-2"></i>
                                                         </div>
                                                     </td> -->
-                                                    </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <!-- in final tab content end here -->
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="tab-pane fade" id="nav-quotation" role="tabpanel"
-                                        aria-labelledby="nav-quotation-tab">
-                                        <!-- in Quotation tab content start here -->
-                                        <table class="table table-striped table-sm" style="border-left:1px solid #ccc;border-right:1px solid #ccc;font-size:14px">
-                                            <tbody>
-                                                {% for list in quotes_list %}
-                                                <tr>
-                                                    <td>{{forloop.counter}}</td>
-                                                    <td>{{list.customer}}</td>
-                                                    <td>{{list.total_payable}}</td>
-                                                    <!-- <td>
+                                    <!-- in final tab content end here -->
+                                </div>
+                                <div class="tab-pane fade" id="nav-quotation" role="tabpanel"
+                                    aria-labelledby="nav-quotation-tab">
+                                    <!-- in Quotation tab content start here -->
+                                    <table class="table table-striped table-sm"
+                                        style="border-left:1px solid #ccc;border-right:1px solid #ccc;font-size:14px">
+                                        <tbody>
+                                            {% for list in quotes_list %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{list.customer}}</td>
+                                                <td>{{list.total_payable}}</td>
+                                                <!-- <td>
                                                         <div class="btn-group btn-group-sm" role="group"
                                                             aria-label="Basic example" data-toggle="tooltip"
                                                             data-placement="bottom" title="Customer:Walk in customer">
@@ -636,23 +653,24 @@ input[type="color"]:focus,
                                                             <i class="fa fa-print text-success ml-2"></i>
                                                         </div>
                                                     </td> -->
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <!-- in Quotation tab content end here -->
-                                    <div class="tab-pane fade" id="nav-draft" role="tabpanel"
-                                        aria-labelledby="nav-draft-tab">
-                                        <!-- in draft tab content start here -->
-                                        <table id="drafttbl" class="table table-striped table-sm" style="border-left:1px solid #ccc;border-right:1px solid #ccc;font-size:14px">
-                                            <tbody>
-                                                {% for list in draft_list %}
-                                                <tr>
-                                                    <td>{{forloop.counter}}</td>
-                                                    <td>{{list.customer}}</td>
-                                                    <td>{{list.total_payable}}</td>
-                                                    <!-- <td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- in Quotation tab content end here -->
+                                <div class="tab-pane fade" id="nav-draft" role="tabpanel"
+                                    aria-labelledby="nav-draft-tab">
+                                    <!-- in draft tab content start here -->
+                                    <table id="drafttbl" class="table table-striped table-sm"
+                                        style="border-left:1px solid #ccc;border-right:1px solid #ccc;font-size:14px">
+                                        <tbody>
+                                            {% for list in draft_list %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{list.customer}}</td>
+                                                <td>{{list.total_payable}}</td>
+                                                <!-- <td>
                                                         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example"
                                                             data-toggle="tooltip" data-placement="bottom"
                                                             title="Customer:Walk in customer">
@@ -661,28 +679,28 @@ input[type="color"]:focus,
                                                             <i class="fa fa-print text-success ml-2"></i>
                                                         </div>
                                                     </td> -->
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                        <!-- in draft tab content end here -->
-                                    </div>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <!-- in draft tab content end here -->
                                 </div>
                             </div>
                         </div>
-                        <!-- </div> -->
                     </div>
+                    <!-- </div> -->
                 </div>
             </div>
         </div>
     </div>
+    </div>
 
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg" >
+        <div class="modal-dialog modal-lg">
             <div class="modal-content p-2" style="border-top:3px solid green">
                 <div class="modal-header bg-success">
-                    <h6 class="modal-title" id="exampleModalLabel">Add  New Contact</h6>
+                    <h6 class="modal-title" id="exampleModalLabel">Add New Contact</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -758,10 +776,10 @@ input[type="color"]:focus,
                             </div>
                             <div class="col-md-4 col-lg-4">
                                 <small>Pay Term*</small>
-                                
-                                        <input type="text" class="form-control" name="pay_term" placeholder="pay term"
-                                            required />
-                                 
+
+                                <input type="text" class="form-control" name="pay_term" placeholder="pay term"
+                                    required />
+
                             </div>
                             <div class="col-lg-4 col-md-4">
                                 <small>Customer Group</small>
@@ -780,7 +798,7 @@ input[type="color"]:focus,
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <div class="col-md-3 col-lg-3">
                                 <small>Email*</small>
@@ -959,25 +977,27 @@ input[type="color"]:focus,
             </div>
         </div> -->
 
-  <!--calculator-->
-  
-   <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog change-dailog" style="position: fixed;margin: auto;height: 100%;right: 10px;width:245px">
+    <!--calculator-->
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog change-dailog"
+            style="position: fixed;margin: auto;height: 100%;right: 10px;width:245px">
             <!-- Modal content-->
             <div class="modal-content p-1 bg-dark modal-sm">
                 <div class="modal-body">
-                <div class="row">
-                    <div class="col-8"><span class="text-center h5">Calculator</span></div>
-                    <div class="col-4"><button type="button" class="close" data-dismiss="modal">&times;</button></div>
-                </div>
-            
+                    <div class="row">
+                        <div class="col-8"><span class="text-center h5">Calculator</span></div>
+                        <div class="col-4"><a type="button" class="close" data-dismiss="modal">&times;</a></div>
+                    </div>
+
                     <form name="Calc">
                         <div class="overflow-auto">
                             <table border="0">
                                 <tr>
                                     <td>
-                                        <input type="text" class="mb-1 p-1 form-control text-white bg-transparent rounded"
-                                            name="input" Size="20" style="font-size:20px">
+                                        <input type="text"
+                                            class="mb-1 p-1 form-control text-white bg-transparent rounded" name="input"
+                                            Size="20" style="font-size:20px">
                                     </td>
                                 </tr>
                                 <br>
@@ -1034,7 +1054,7 @@ input[type="color"]:focus,
             </div>
         </div>
     </div>
-    
+
     <script>
         count = 0
         const xhr = new XMLHttpRequest();
@@ -1050,7 +1070,7 @@ input[type="color"]:focus,
                 suggestionsPanel.innerHTML = '';
                 const suggestions = products.filter(function (product) {
                     return product.name.toLowerCase().match(input);
-                   
+
                 });
                 suggestions.forEach(function (suggested) {
                     const div = document.createElement('div');
@@ -1063,13 +1083,13 @@ input[type="color"]:focus,
                     div.addEventListener('mouseenter', () => {
                         div.style.color = "#000";
                         div.style.backgroundColor = "whitesmoke";
-                        div.style.borderRadius="0px";
-                        
+                        div.style.borderRadius = "0px";
+
                     })
                     div.addEventListener('mouseleave', () => {
                         div.style.color = "black";
                         div.style.backgroundColor = "white";
-                        
+
                     })
 
                     div.addEventListener('click', () => {
@@ -1223,8 +1243,8 @@ input[type="color"]:focus,
             })
         };
     </script>
- 
-     <script>
+
+    <script>
         var date = new Date;
         formatted_date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
         document.getElementById('date_today').innerText = formatted_date;

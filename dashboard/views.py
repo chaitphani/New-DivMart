@@ -2837,13 +2837,10 @@ def credit_sale_report(request):
         customer = request.POST.get('customer')
 
         if not customer == 'none':
-            print('-----inside customer not none----')
             credit_sale_list = Sell.objects.filter(customer__first_name=customer).filter(status='C', is_deleted=False)
         elif not location == 'none':
-            print('------inside location not none-------')
             credit_sale_list = Sell.objects.filter(business_location__name=location).filter(status='C', is_deleted=False)
         else:
-            print('------inside else of both conditions--------')
             credit_sale_list = Sell.objects.filter(customer__first_name=customer, business_location__name=location).filter(status='C', is_deleted=False)
 
     else:

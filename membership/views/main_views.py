@@ -52,8 +52,7 @@ def direct_transaction(request):
             else:
                 val=False
     members = RegisteredMembers.objects.filter(id__in=li)
-    print('----logein user0-------', mem_obj.fname)
-    print('----members------,', members)
+    
     return render(request,'membership/direct_transaction.html', {'obj':mem_obj, 'resp_data':members})
 
 

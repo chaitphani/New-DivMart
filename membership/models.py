@@ -18,47 +18,6 @@ def generate_expiry_date():
 def generate_maturity_date():
     return datetime.datetime.now() + datetime.timedelta(days=1643, hours=12)
 
-# class Member(models.Model):
-#     fname = models.CharField(max_length=50)
-#     mname = models.CharField(max_length=50)
-#     lname = models.CharField(max_length=50)
-#     contact = models.CharField(max_length=15)
-#     alt_contact = models.CharField(max_length=15, null=True, blank=True) 
-#     email = models.EmailField(max_length=50, unique=True)
-#     dob = models.DateTimeField(blank=True, null=True)
-#     address = models.TextField(blank=True, null=True)
-#     city = models.CharField(max_length=50)
-#     state = models.CharField(max_length=50)
-#     pin_code = models.CharField(max_length=10)
-#     blood_group = models.CharField(max_length=5, null=True, blank=True)
-#     pan_no = models.CharField(max_length=20, null=True, blank=True, unique=True)
-#     identity_proof_front = models.FileField(upload_to="images/ids")
-#     identity_proof_back = models.FileField(upload_to="images/ids")
-#     account_holder = models.CharField(max_length=50)
-#     account_no = models.CharField(max_length=50)
-#     bank_name = models.CharField(max_length=50)
-#     bank_branch = models.CharField(max_length=50)
-
-
-#     def __str__(self):
-#         return f"{self.fname} {self.lname}"
-
-
-# class Card(models.Model):
-#     member = models.OneToOneField(Member, on_delete=models.CASCADE)
-#     card_ID = models.CharField(max_length=50)
-#     created_on = models.DateTimeField(auto_now_add=True)
-#     expires_on = models.DateTimeField(default=generate_expiry_date)
-#     total_points_earned = models.IntegerField(default=0)
-#     redeemable_points = models.IntegerField(default=0)
-#     opening_amount = models.IntegerField(default=0)
-#     maturity_date = models.DateTimeField(default=generate_maturity_date)
-#     maturity_return = models.IntegerField(default=0)
-#     cancellation_refund = models.IntegerField(default=0)
-
-#     def __str__(self):
-#         return f"{self.member.fname} - {self.card_ID[-4:]}"
-
 
 class RegisteredMembers(models.Model):
 
@@ -75,14 +34,6 @@ class RegisteredMembers(models.Model):
     dob = models.DateTimeField(blank=True, null=True)
     perminent_address = models.TextField()
     current_address = models.TextField(blank=True)
-
-    # city = models.CharField(max_length=50)
-    # state = models.CharField(max_length=50)
-    # pin_code = models.CharField(max_length=10)
-    # blood_group = models.CharField(max_length=5, null=True, blank=True)
-    # pan_no = models.CharField(max_length=20, null=True, blank=True, unique=True)
-    # identity_proof_front = models.FileField(upload_to="images/ids")
-    # identity_proof_back = models.FileField(upload_to="images/ids")
     
     id_proof_name = models.CharField(max_length=100)
     id_proof_number = models.CharField(max_length=100)
@@ -103,6 +54,14 @@ class RegisteredMembers(models.Model):
     level = models.IntegerField(null=True, blank=True)
     amount_at_level = models.FloatField(null=True, blank=True)
 
+    # city = models.CharField(max_length=50)
+    # state = models.CharField(max_length=50)
+    # pin_code = models.CharField(max_length=10)
+    # blood_group = models.CharField(max_length=5, null=True, blank=True)
+    # pan_no = models.CharField(max_length=20, null=True, blank=True, unique=True)
+    # identity_proof_front = models.FileField(upload_to="images/ids")
+    # identity_proof_back = models.FileField(upload_to="images/ids")
+    
     def update_self_ref_id(self,id):
         # You now have both access to self.id and self.name
         RegisteredMembers.objects.filter(id=id).update(self_ref_id='DG100'+str(id))
@@ -155,3 +114,46 @@ class CreditedPoints(models.Model):
 
     def __str__(self):
         return '{}-{}-{}'.format(self.member.fname, self.points, self.status)
+
+
+
+# class Member(models.Model):
+#     fname = models.CharField(max_length=50)
+#     mname = models.CharField(max_length=50)
+#     lname = models.CharField(max_length=50)
+#     contact = models.CharField(max_length=15)
+#     alt_contact = models.CharField(max_length=15, null=True, blank=True) 
+#     email = models.EmailField(max_length=50, unique=True)
+#     dob = models.DateTimeField(blank=True, null=True)
+#     address = models.TextField(blank=True, null=True)
+#     city = models.CharField(max_length=50)
+#     state = models.CharField(max_length=50)
+#     pin_code = models.CharField(max_length=10)
+#     blood_group = models.CharField(max_length=5, null=True, blank=True)
+#     pan_no = models.CharField(max_length=20, null=True, blank=True, unique=True)
+#     identity_proof_front = models.FileField(upload_to="images/ids")
+#     identity_proof_back = models.FileField(upload_to="images/ids")
+#     account_holder = models.CharField(max_length=50)
+#     account_no = models.CharField(max_length=50)
+#     bank_name = models.CharField(max_length=50)
+#     bank_branch = models.CharField(max_length=50)
+
+
+#     def __str__(self):
+#         return f"{self.fname} {self.lname}"
+
+
+# class Card(models.Model):
+#     member = models.OneToOneField(Member, on_delete=models.CASCADE)
+#     card_ID = models.CharField(max_length=50)
+#     created_on = models.DateTimeField(auto_now_add=True)
+#     expires_on = models.DateTimeField(default=generate_expiry_date)
+#     total_points_earned = models.IntegerField(default=0)
+#     redeemable_points = models.IntegerField(default=0)
+#     opening_amount = models.IntegerField(default=0)
+#     maturity_date = models.DateTimeField(default=generate_maturity_date)
+#     maturity_return = models.IntegerField(default=0)
+#     cancellation_refund = models.IntegerField(default=0)
+
+#     def __str__(self):
+#         return f"{self.member.fname} - {self.card_ID[-4:]}"

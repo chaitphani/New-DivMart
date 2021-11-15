@@ -131,7 +131,7 @@ class RegisteredMembersView(APIView):
 
                                                         _head_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
                                                         _head_qual_refer.level = 2
-                                                        _head_qual_refer..amount_at_level = 0.04 * float(request.data.get('member_amount'))
+                                                        _head_qual_refer.amount_at_level = 0.04 * float(request.data.get('member_amount'))
 
                                                         main_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
                                                         main_qual_refer.level = 3

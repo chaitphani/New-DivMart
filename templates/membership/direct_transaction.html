@@ -8,7 +8,7 @@
         <table class="table table-sm" id="mdtable">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <!-- <th>#</th> -->
                     <th>Name</th>
                     <th>Email</th>
                     <th>Level</th>
@@ -19,11 +19,11 @@
             {% for data in resp_data %}
             <tr>
                 <tbody>
-                    <td>{{forloop.counter}}</td>
+                    <!-- <td>{{forloop.counter}}</td> -->
                     <td>{{data.fname}} {{data.lname}}</td>
                     <td>{{data.email}}</td>
-                    <td>{{data.level}}</td>
-                    <td>{{data.commission}}</td>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{data.amount_at_level}}</td>
                     <td>{{data.created|date:'d-M-Y'}}</td>
                 </tbody>
             </tr>

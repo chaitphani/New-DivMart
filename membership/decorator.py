@@ -8,7 +8,7 @@ def is_authenticated(f):
         try:
             user_obj = RegisteredMembers.objects.filter(email=request.session['email']) | RegisteredMembers.objects.filter(self_ref_id=request.session['email'])
         except Exception as e:
-            print('--exception as e in decorator-----', e)
+            # print('--exception as e in decorator-----', e)
             user_obj = False
         if 'email' in request.session.keys() and user_obj:
             return f(request, *args, **kwargs)

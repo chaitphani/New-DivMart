@@ -35,12 +35,6 @@ def manage_directs(request):
         resp_obj = RegisteredMembers.objects.filter(sponser_id=memo_obj.self_ref_id)
     return render(request,'membership/manage_directs.html',{'resp_data':resp_obj, 'obj':memo_obj})
 
-'''
-@here status as on 15th Nov, 2021
-WHY2 - 2137 - Automate API to Check chargebacks for the monthly payout - IN PROGRESS
-done with 
-'''
-
 
 @is_authenticated
 def direct_transaction(request):

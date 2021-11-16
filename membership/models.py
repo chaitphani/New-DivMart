@@ -99,8 +99,8 @@ class WithdrawlTransactionRequests(models.Model):
     updated = models.DateTimeField(auto_now=True)
     payment_status = models.CharField(max_length=10, choices=status_choices, default='Pending')
 
-    def __str__(self):
-        return '{}-{}'.format(self.member.fname, self.amount)
+    # def __str__(self):
+    #     return '{}-{}'.format(self.member.fname, self.amount)
 
 
 class CreditedPoints(models.Model):

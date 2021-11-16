@@ -27,68 +27,87 @@ class RegisteredMembersView(APIView):
 
                     # referal logic starts here
                     if request.data.get('ref_id'):
+                        # print('----------if ref id------', request.data.get('ref_id'))
 
-                        serialize.sponser_id = request.data.get('ref_id')
-                        serialize.save()
-                        ref_user = RegisteredMembers.objects.filter(self_ref_id=request.data.get('ref_id'), status=1)
-
+                        ref_user = RegisteredMembers.objects.filter(self_ref_id=request.data.get('ref_id'))
                         if len(ref_user) > 0:
+
+                            # print('------if ref user-------')
                             ref_qual_user = RegisteredMembers.objects.get(self_ref_id=request.data.get('ref_id'))
+                            # print('--------ref user-------', ref_qual_user.fname)
+                            print(serialize.sponser_id)
+                            serialize.sponser_id = ref_qual_user.self_ref_id
+                            print(ref_qual_user.level, '-------------')
+                            serialize.level = ref_qual_user.level + 1
+                            serialize.save()
+                            print(serialize, '------------')
+                            print(serialize.level)
+                            print(serialize.sponser_id)
 
                             if not ref_qual_user.sponser_id == None or not ref_qual_user.sponser_id == "":
-                                main_refer = RegisteredMembers.objects.filter(self_ref_id=ref_qual_user.sponser_id, status=1)
+                                main_refer = RegisteredMembers.objects.filter(self_ref_id=ref_qual_user.sponser_id)
 
                                 if len(main_refer) > 0:
+                                    # print('-------if main ref user------')
                                     main_qual_refer = RegisteredMembers.objects.get(self_ref_id=ref_qual_user.sponser_id)
+                                    # print('-----main ref user------', main_qual_refer.fname)
 
                                     if not main_qual_refer.sponser_id == None or not main_qual_refer.sponser_id == "":
-                                        _head_refer = RegisteredMembers.objects.filter(self_ref_id=main_qual_refer.sponser_id, status=1)
+                                        _head_refer = RegisteredMembers.objects.filter(self_ref_id=main_qual_refer.sponser_id)
 
                                         # if three referers
                                         if len(_head_refer) > 0:
+                                            # print('------if heaf ref user-----')
                                             _head_qual_refer = RegisteredMembers.objects.get(self_ref_id=main_qual_refer.sponser_id)
+                                            # print('-----head qual ref user-------', _head_qual_refer.fname)
 
                                             if not _head_qual_refer.sponser_id == None or not _head_qual_refer.sponser_id == "":
-                                                _4th_refer = RegisteredMembers.objects.filter(self_ref_id=_head_qual_refer.sponser_id, status=1)
+                                                _4th_refer = RegisteredMembers.objects.filter(self_ref_id=_head_qual_refer.sponser_id)
 
                                                 if len(_4th_refer) > 0:
+                                                    # print('----if 4th level ref user-------')
                                                     _4th_qual_refer = RegisteredMembers.objects.get(self_ref_id=_head_qual_refer.sponser_id)
+                                                    # print('----4th qual ref user-----', _4th_qual_refer.fname)
 
                                                     if not _4th_qual_refer.sponser_id == None or not _4th_qual_refer.sponser_id == "":
-                                                        _5th_refer = RegisteredMembers.objects.filter(self_ref_id=_4th_qual_refer.sponser_id, status=1)
+                                                        _5th_refer = RegisteredMembers.objects.filter(self_ref_id=_4th_qual_refer.sponser_id)
 
                                                         if len(_5th_refer) > 0:
-                                                            _5th_qual_refer = RegisteredMembers.objects.get(self_ref_id=_4th_qual_refer.sponser_id, status=1) 
+                                                            # print('---if 5th ref user------')
+                                                            _5th_qual_refer = RegisteredMembers.objects.get(self_ref_id=_4th_qual_refer.sponser_id) 
+                                                            # print('-------5th qual ref user------', _5th_qual_refer.fname)
 
                                                             if not _5th_qual_refer.sponser_id == None or _5th_qual_refer.sponser_id == "":
-                                                                _6th_refer = RegisteredMembers.objects.filter(self_ref_id=_5th_qual_refer.sponser_id, status=1)
+                                                                _6th_refer = RegisteredMembers.objects.filter(self_ref_id=_5th_qual_refer.sponser_id)
 
                                                                 if len(_6th_refer) > 0:
-                                                                    _6th_qual_refer = RegisteredMembers.objects.get(self_ref_id=_5th_qual_refer.sponser_id, status=1)
+                                                                    # print('-----if 6th ref user-------')
+                                                                    _6th_qual_refer = RegisteredMembers.objects.get(self_ref_id=_5th_qual_refer.sponser_id)
+                                                                    # print('-----6th qual ref user------', _6th_qual_refer.fname)
                                                                     
                                                                     _6th_qual_refer.commission += 0.05 * float(request.data.get('member_amount'))
-                                                                    _6th_qual_refer.level = 1
-                                                                    _6th_qual_refer.amount_at_level = 0.05 * float(request.data.get('member_amount'))
+                                                                    # _6th_qual_refer.level = 1
+                                                                    # _6th_qual_refer.amount_at_level = 0.05 * float(request.data.get('member_amount'))
 
                                                                     _5th_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
-                                                                    _5th_qual_refer.level = 2
-                                                                    _5th_qual_refer.amount_at_level = 0.04 * float(request.data.get('member_amount'))
+                                                                    # _5th_qual_refer.level = 1
+                                                                    # _5th_qual_refer.amount_at_level = 0.04 * float(request.data.get('member_amount'))
 
                                                                     _4th_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
-                                                                    _4th_qual_refer.level = 3
-                                                                    _4th_qual_refer.amount_at_level = 0.03 * float(request.data.get('member_amount'))
+                                                                    # _4th_qual_refer.level = 2
+                                                                    # _4th_qual_refer.amount_at_level = 0.03 * float(request.data.get('member_amount'))
 
                                                                     _head_qual_refer.commission += 0.02 * float(request.data.get('member_amount'))
-                                                                    _head_qual_refer.level = 4
+                                                                    # _head_qual_refer.level = 3
                                                                     _head_qual_refer.amount_at_level = 0.02 * float(request.data.get('member_amount'))
 
                                                                     main_qual_refer.commission += 0.01 * float(request.data.get('member_amount'))
-                                                                    main_qual_refer.level = 5
-                                                                    main_qual_refer.amount_at_level = 0.01 * float(request.data.get('member_amount'))
+                                                                    # main_qual_refer.level = 4
+                                                                    # main_qual_refer.amount_at_level = 0.01 * float(request.data.get('member_amount'))
 
                                                                     ref_qual_user.commission += 0.01 * float(request.data.get('member_amount'))
-                                                                    main_qual_refer.level = 6
-                                                                    main_qual_refer.amount_at_level = 0.01 * float(request.data.get('member_amount'))
+                                                                    # main_qual_refer.level = 5
+                                                                    # main_qual_refer.amount_at_level = 0.01 * float(request.data.get('member_amount'))
 
                                                                     _6th_qual_refer.save()
                                                                     _5th_qual_refer.save()
@@ -98,25 +117,26 @@ class RegisteredMembersView(APIView):
                                                                     ref_qual_user.save()
 
                                                             else:
+                                                                print('----inside else of no 6th ref user---')
                                                                 _5th_qual_refer.commission += 0.05 * float(request.data.get('member_amount'))
-                                                                _5th_qual_refer.level = 1
-                                                                _5th_qual_refer.amount_at_level = 0.05 * float(request.data.get('member_amount'))
+                                                                # _5th_qual_refer.level = 1
+                                                                # _5th_qual_refer.amount_at_level = 0.05 * float(request.data.get('member_amount'))
 
                                                                 _4th_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
-                                                                _4th_qual_refer.level = 2
-                                                                _4th_qual_refer.amount_at_level = 0.04 * float(request.data.get('member_amount'))
+                                                                _4th_qual_refer.level = 1
+                                                                # _4th_qual_refer.amount_at_level = 0.04 * float(request.data.get('member_amount'))
 
                                                                 _head_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
-                                                                _head_qual_refer.level = 3
-                                                                _head_qual_refer.amount_at_level = 0.03 * float(request.data.get('member_amount'))
+                                                                _head_qual_refer.level = 2
+                                                                # _head_qual_refer.amount_at_level = 0.03 * float(request.data.get('member_amount'))
 
                                                                 main_qual_refer.commission += 0.02 * float(request.data.get('member_amount'))
-                                                                main_qual_refer.level = 4
-                                                                main_qual_refer.amount_at_level = 0.02 * float(request.data.get('member_amount'))
+                                                                main_qual_refer.level = 3
+                                                                # main_qual_refer.amount_at_level = 0.02 * float(request.data.get('member_amount'))
 
                                                                 ref_qual_user.commission += 0.01 * float(request.data.get('member_amount'))
                                                                 ref_qual_user.level = 4
-                                                                ref_qual_user.amount_at_level = 0.01 * float(request.data.get('member_amount'))
+                                                                # ref_qual_user.amount_at_level = 0.01 * float(request.data.get('member_amount'))
                                                                 
                                                                 _5th_qual_refer.save()
                                                                 _4th_qual_refer.save()
@@ -124,65 +144,75 @@ class RegisteredMembersView(APIView):
                                                                 main_qual_refer.save()
                                                                 ref_qual_user.save()
 
-                                                    else:
-                                                        _4th_qual_refer.commission += 0.05 * float(request.data.get('member_amount'))
-                                                        _4th_qual_refer.level = 1
-                                                        _4th_qual_refer.amount_at_level = 0.05 * float(request.data.get('member_amount'))
+                                                        else:
+                                                            print('-----inside else of no 5 th ref user-----')
+                                                            _4th_qual_refer.commission += 0.05 * float(request.data.get('member_amount'))
+                                                            # _4th_qual_refer.level = 1
+                                                            # _4th_qual_refer.amount_at_level = 0.05 * float(request.data.get('member_amount'))
 
-                                                        _head_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
-                                                        _head_qual_refer.level = 2
-                                                        _head_qual_refer.amount_at_level = 0.04 * float(request.data.get('member_amount'))
+                                                            _head_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
+                                                            _head_qual_refer.level = 1
+                                                            # _head_qual_refer.amount_at_level = 0.04 * float(request.data.get('member_amount'))
 
-                                                        main_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
-                                                        main_qual_refer.level = 3
-                                                        main_qual_refer.amount_at_level = 0.03 * float(request.data.get('member_amount'))
+                                                            main_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
+                                                            main_qual_refer.level = 2
+                                                            # main_qual_refer.amount_at_level = 0.03 * float(request.data.get('member_amount'))
 
-                                                        ref_qual_user.commission += 0.02 * float(request.data.get('member_amount'))
-                                                        ref_qual_user.level = 4
-                                                        ref_qual_user.amount_at_level = 0.02 * float(request.data.get('member_amount'))
+                                                            ref_qual_user.commission += 0.02 * float(request.data.get('member_amount'))
+                                                            ref_qual_user.level = 3
+                                                            # ref_qual_user.amount_at_level = 0.02 * float(request.data.get('member_amount'))
 
-                                                        _4th_qual_refer.save()
-                                                        _head_qual_refer.save()
-                                                        main_qual_refer.save()
-                                                        ref_qual_user.save()
+                                                            _4th_qual_refer.save()
+                                                            _head_qual_refer.save()
+                                                            main_qual_refer.save()
+                                                            ref_qual_user.save()
 
-                                            else:    
-                                                main_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
-                                                main_qual_refer.level = 1
-                                                main_qual_refer.amount_at_level = 0.04 * float(request.data.get('member_amount'))
+                                                else: 
+                                                    print('-----inside else of no 4th ref user-----')   
+                                                    main_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
+                                                    # main_qual_refer.level = 1
+                                                    # main_qual_refer.amount_at_level = 0.04 * float(request.data.get('member_amount'))
 
-                                                ref_qual_user.commission += 0.05 * float(request.data.get('member_amount'))
-                                                ref_qual_user.level = 2
-                                                ref_qual_user.amount_at_level = 0.04 * float(request.data.get('member_amount'))
+                                                    ref_qual_user.commission += 0.05 * float(request.data.get('member_amount'))
+                                                    ref_qual_user.level = 1
+                                                    # ref_qual_user.amount_at_level = 0.04 * float(request.data.get('member_amount'))
 
-                                                _head_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
-                                                _head_qual_refer.level = 3
-                                                _head_qual_refer.amount_at_level = 0.03 * float(request.data.get('member_amount'))
+                                                    _head_qual_refer.commission += 0.03 * float(request.data.get('member_amount'))
+                                                    _head_qual_refer.level = 2
+                                                    # _head_qual_refer.amount_at_level = 0.03 * float(request.data.get('member_amount'))
 
-                                                main_qual_refer.save()
-                                                ref_qual_user.save()
-                                                _head_qual_refer.save()
+                                                    main_qual_refer.save()
+                                                    ref_qual_user.save()
+                                                    _head_qual_refer.save()
 
                                         else:
+                                            print('---inside else of no head ref user--------')
                                             # if dual referers
                                             main_qual_refer.commission += 0.04 * float(request.data.get('member_amount'))
-                                            main_qual_refer.level = 1
-                                            main_qual_refer.amount_at_level = 0.03 * float(request.data.get('member_amount'))
+                                            # main_qual_refer.level = 1
+                                            # main_qual_refer.amount_at_level = 0.03 * float(request.data.get('member_amount'))
 
                                             ref_qual_user.commission += 0.05 * float(request.data.get('member_amount'))
-                                            ref_qual_user.level = 2
-                                            ref_qual_user.amount_at_level = 0.05 * float(request.data.get('member_amount'))
+                                            ref_qual_user.level = 1
+                                            # ref_qual_user.amount_at_level = 0.05 * float(request.data.get('member_amount'))
 
                                             main_qual_refer.save()
                                             ref_qual_user.save()
                                             
-                            else:
-                                # if single referer
-                                ref_qual_user.commission += 0.05 * float(request.data.get('member_amount'))
-                                ref_qual_user.level = 1
-                                ref_qual_user.amount_at_level = 0.05 * float(request.data.get('member_amount'))
-                                ref_qual_user.save()
+                                else:
+                                    print('------inside else of no main ref user------')
+                                    # if single referer
+                                    ref_qual_user.commission += 0.05 * float(request.data.get('member_amount'))
+                                    # ref_qual_user.level = 1
+                                    # ref_qual_user.amount_at_level = 0.05 * float(request.data.get('member_amount'))
+                                    ref_qual_user.save()
+                        else:
+                            serialize.sponser_id = ''
+                            serialize.level = 0
+                            serialize.save()
                     
+                    else:
+                        serialize.level = 0
                     serialize.save()
                     # referal logic ends here
 

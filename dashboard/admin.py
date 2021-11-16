@@ -14,9 +14,11 @@ class SellAdmin(admin.ModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'brand', 'current_stock', 'status')
+    list_filter = ('status', 'selling_price_tax_type', 'product_type', 'category__name')
 
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ('product_name', 'purchase_quantity', 'sub_total')
+    list_display = ('product_name', 'purchase_quantity', 'sub_total',)
+    list_filter = ('product_name__business_location__name', 'product_name__status',)
 
 class ItemSoldAdmin(admin.ModelAdmin):
     list_display = ('items_name', 'quantity', 'sub_total')
@@ -72,8 +74,19 @@ admin.site.register(CustomerUser, CustomerUserAdmin)
 admin.site.register(CustomerGroups)
 admin.site.register(SupplierUser, SupplierUserAdmin) 
 
-admin.site.register(RegisteredMembers)
+
+class RegisteredMembersAdmin(admin.ModelAdmin):
+    list_display = ('fname', 'self_ref_id', 'sponser_id', 'commission', 'status')
+    list_filter = ('status',)
+
+class WithdrawlTransactionRequestsAdmin(admin.ModelAdmin):
+    list_display = ('member', 'amount', 'payment_status', 'created')
+    list_filter = ('payment_status', )
+    date_hierarchy = 'created'
+    
+
+admin.site.register(RegisteredMembers, RegisteredMembersAdmin)
 admin.site.register(PointsTransactionRequests)
-admin.site.register(WithdrawlTransactionRequests)
+admin.site.register(WithdrawlTransactionRequests, WithdrawlTransactionRequestsAdmin)
 admin.site.register(CreditedPoints)
 

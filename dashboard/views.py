@@ -1,3 +1,4 @@
+from itertools import product
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
@@ -1081,39 +1082,33 @@ def delete_variation(request, id):
 @login_required(login_url='/useraccount/common_login')
 def import_products(request):
 
-    unit_obj = Units.objects.filter(status=True)
-    
     if request.method == 'POST':
         file = request.FILES.get('products')
         try:
             data_set = file.read().decode('UTF-8')
             io_string = io.StringIO(data_set)
+            prod_units = {p_unit.id: p_unit for p_unit in Units.objects.all()}
+            prod_category = {p_category.id: p_category for p_category in Category.objects.all()}
+            prod_brand = {p_brand.id: p_brand for p_brand in Brand.objects.all()}
 
+            products = []
             for values in csv.reader(io_string):
-                for unit in unit_obj:
-                    if unit.name == values[1] or unit.short_name == values[1]:
-                        prod_obj = Product.objects.create(product_name=values[0], unit=unit, selling_price_tax_type=values[2], product_type=values[3])
-                        prod_obj.save()
-                        messages.success(request, 'Product add success...!')
-            else:
-                messages.error(request, 'Error with data in provided file...!')
+                prod_unit_id = values[4]
+                prod_category_id = values[6]
+                prod_brand_id = values[5]
+
+                unit = prod_units.get(prod_unit_id)
+                category = prod_category.get(prod_category_id)
+                brand = prod_brand.get(prod_brand_id)
+
+                prod_obj = Product(product_name=values[0], unit=unit, selling_price_tax_type=values[2], product_type=values[3], category=category, brand=brand, SKU=values[12])
+                products.append(prod_obj)
+
+            if products:
+                Product.objects.bulk_create(products)
+                
         except Exception as e:
-            print('--exception as e-----', e)
-            messages.error(request, 'please provide valid file...')
-
-        # try:
-    #         for unit in unit_obj:
-    #             if unit.name == values[1] or unit.short_name == values[1]:
-    #                 prod_obj = Product.objects.create(product_name=values[0], unit=unit, selling_price_tax_type=values[2], product_type=values[3], 
-    #                 brand=values[4], category=values[5], sub_category=values[6], SKU=values[7], barcode_type=values[8], alert_quantity=values[9],   
-    #                 Product_description=values[10], product_image=values[11], weight=values[12], applicable_tax=values[13], selling_price=values[14], 
-    #                 selling_price_exc_tax=values[15], purchase_price=values[16], purchase_price_exc_tax=values[17], purchase_price_inc_tax=values[18], 
-    #                 margin=values[19], current_stock=values[20])
-    #                 prod_obj.save()
-        #     # return redirect('list_products')
-
-        # except Exception as e:
-        #     print('--exception error in product import--', e)
+            messages.error(request, e)
 
     return render(request,'divmart_dashboard/import_product.html')
 
@@ -1364,6 +1359,8 @@ def list_products(request):
         else:
             prod_search = Product.objects.filter(status=True, business_location=StaffUser.objects.get(user=request.user).business_location)
 
+    print('--------prod search----')
+    prod_search = prod_search[:1]
     return render(request,'divmart_dashboard/list_products.html',{'unit':unit,'brand':brand,'cat':cat,'sub_cat': sub_cat, 'new_prod':prod_search, 'locations':locations})
 
 

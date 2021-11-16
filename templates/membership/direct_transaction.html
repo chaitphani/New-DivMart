@@ -1,4 +1,6 @@
-{% extends 'membership/index.html' %} {% load i18n %} {% load static %} {% block home%}
+{% extends 'membership/index.html' %} 
+{% load mathfilters %}
+{% load i18n %} {% load static %} {% block home%}
 
 <div class="container-fluid">
     <h5>Manage Direct Transaction</h5>
@@ -8,24 +10,39 @@
         <table class="table table-sm" id="mdtable">
             <thead>
                 <tr>
-                    <!-- <th>#</th> -->
                     <th>Name</th>
                     <th>Email</th>
                     <th>Level</th>
                     <th>Amount</th>
+                    <th>Status</th>
                     <th>Created on</th>
                 </tr>
             </thead>
             {% for data in resp_data %}
             <tr>
-                <tbody>
-                    <!-- <td>{{forloop.counter}}</td> -->
-                    <td>{{data.fname}} {{data.lname}}</td>
+                    <th>{{data.fname}} {{data.lname}}</th>
                     <td>{{data.email}}</td>
-                    <td>{{forloop.counter}}</td>
-                    <td>{{data.amount_at_level}}</td>
+                    <td>{{data.level|sub:obj.level}}</td>
+                    {% with a=data.level|sub:obj.level %}
+                    {% if a == 6 %}
+                        <td>{{data.member_amount|mul:0.01}}</td>
+                    {% else %}
+                        {% with b=6|sub:a %}
+                        {% with c=b|div:100 %}
+                        <td>{{data.member_amount|mul:c}}</td>
+                        {% endwith %}
+                        {% endwith %}
+                    {% endif %}
+                    {% endwith %}
+                    <!-- <td>{{data.member_amount|mul:data.level|sub:obj.level}}</td> -->
+                    <td>
+                        {% if data.status == 1 %}
+                        <button class="btn btn-success btn-sm w-50">Active</button>
+                        {% else %}
+                        <button class="btn btn-danger btn-sm w-50">Inactive</button>
+                        {% endif %}
+                    </td>
                     <td>{{data.created|date:'d-M-Y'}}</td>
-                </tbody>
             </tr>
             {% endfor %}
         </table>
@@ -34,8 +51,11 @@
 
 <script>
     $(document).ready(function () {
-        $('#mdtable').DataTable();
-        $('.dataTables_length').addClass('bs-select');
+        $('#mdtable').DataTable({
+            "order": [[ 2, "asc" ]],
+            "lengthMenu": [[5, 10, 20, -1], [5, 10, 20, "All"]]
+        });
+        // $('.dataTables_length').addClass('bs-select');
     });
 </script>
 

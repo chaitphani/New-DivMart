@@ -1,3 +1,4 @@
+from itertools import product
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.conf import settings
@@ -34,25 +35,36 @@ def manage_directs(request):
         resp_obj = RegisteredMembers.objects.filter(sponser_id=memo_obj.self_ref_id)
     return render(request,'membership/manage_directs.html',{'resp_data':resp_obj, 'obj':memo_obj})
 
+'''
+@here status as on 15th Nov, 2021
+WHY2 - 2137 - Automate API to Check chargebacks for the monthly payout - IN PROGRESS
+done with 
+'''
+
 
 @is_authenticated
 def direct_transaction(request):
-    val = True
-    li = []
 
+    li = []
+    list_1 = []
+    
     session_val = request.session.get('email')
     mem_obj = RegisteredMembers.objects.filter(Q(email=session_val) | Q(self_ref_id=session_val)).first()
-    li.append(mem_obj.id)
-    if mem_obj:
-        while val:
-            mem1 = RegisteredMembers.objects.filter(sponser_id=mem_obj.self_ref_id).first()		
-            if mem1:
-                li.append(mem1.id)
-                mem_obj = mem1     
-            else:
-                val=False
-    members = RegisteredMembers.objects.filter(id__in=li)
-    
+
+    new_mem = RegisteredMembers.objects.filter(sponser_id=mem_obj.self_ref_id)
+    li1 =  [each.self_ref_id for each in new_mem]
+    li.append(new_mem.values_list('id', flat=True))
+
+    for mem in li1:
+        mem1 = RegisteredMembers.objects.filter(sponser_id=mem)
+        if mem1:
+            li.append(mem1.values_list('id', flat=True))
+            list_1.append(mem1)
+            for each in mem1:
+                li1.append(each.self_ref_id)
+
+    data = [each1 for each in li for each1 in each]
+    members = RegisteredMembers.objects.filter(id__in=data)
     return render(request,'membership/direct_transaction.html', {'obj':mem_obj, 'resp_data':members})
 
 

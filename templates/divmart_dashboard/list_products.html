@@ -21,16 +21,16 @@
         cursor: pointer;
     }
 
-    .pagination li a{
+    .pagination li a {
         color: white;
     }
 
-    .pagination .active, .pagination .disabled{
+    .pagination .active,
+    .pagination .disabled {
         color: black;
         background-color: #494d7c52;
         cursor: auto;
     }
-
 </style>
 
 <div class="container-fluid">
@@ -164,32 +164,32 @@
         </form>
         <!-- The Modal -->
     </div>
+
+    {% if new_prod.has_other_pages %}
+    <ul class="pagination">
+        {% if new_prod.has_previous %}
+        <li><a href="?page={{ new_prod.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in new_prod.paginator.page_range %}
+        {% if new_prod.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li class="to_select"><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if new_prod.has_next %}
+        <li>
+            <a href="?page={{ new_prod.next_page_number }}">&raquo;</a>
+        </li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+
 </div>
-
-{% if new_prod.has_other_pages %}
-<ul class="pagination">
-    {% if new_prod.has_previous %}
-    <li><a href="?page={{ new_prod.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-    <li class="disabled"><span>&laquo;</span></li>
-    {% endif %}
-    {% for i in new_prod.paginator.page_range %}
-    {% if new_prod.number == i %}
-    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-    {% else %}
-    <li class="to_select"><a href="?page={{ i }}">{{ i }}</a></li>
-    {% endif %}
-    {% endfor %}
-    {% if new_prod.has_next %}
-    <li>
-        <a href="?page={{ new_prod.next_page_number }}">&raquo;</a>
-    </li>
-    {% else %}
-    <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-</ul>
-{% endif %}
-
 {%endblock%}{% block alljs %}
 <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css"
     rel="stylesheet" />

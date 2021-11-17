@@ -13,7 +13,7 @@ class SellAdmin(admin.ModelAdmin):
     list_display = ('ref_no', 'customer', 'total_payable', 'status')
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('product_name', 'brand', 'current_stock', 'status')
+    list_display = ('product_name', 'category', 'unit' , 'brand', 'current_stock', 'status')
     list_filter = ('status', 'selling_price_tax_type', 'product_type', 'category__name')
 
 class PurchaseAdmin(admin.ModelAdmin):

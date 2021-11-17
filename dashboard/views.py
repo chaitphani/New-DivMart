@@ -1087,26 +1087,29 @@ def import_products(request):
         try:
             data_set = file.read().decode('UTF-8')
             io_string = io.StringIO(data_set)
-            prod_units = {p_unit.id: p_unit for p_unit in Units.objects.all()}
-            prod_category = {p_category.id: p_category for p_category in Category.objects.all()}
-            prod_brand = {p_brand.id: p_brand for p_brand in Brand.objects.all()}
+
+            prod_units = {int(p_unit.id): p_unit for p_unit in Units.objects.all()}
+            prod_category = {int(p_category.id): p_category for p_category in Category.objects.all()}
+            prod_brand = {int(p_brand.id): p_brand for p_brand in Brand.objects.all()}
 
             products = []
             for values in csv.reader(io_string):
-                prod_unit_id = values[4]
-                prod_category_id = values[6]
-                prod_brand_id = values[5]
 
-                unit = prod_units.get(prod_unit_id)
-                category = prod_category.get(prod_category_id)
-                brand = prod_brand.get(prod_brand_id)
+                try:
+                    unit = prod_units.get(values[4])      
+                    category = prod_category.get(int(values[6]))
+                    brand = prod_brand.get(values[5])
+                except:
+                    unit = Units.objects.get(id=1)
+                    category = Brand.objects.get(id=1)
+                    brand = Brand.objects.get(id=1)
 
-                prod_obj = Product(product_name=values[0], unit=unit, selling_price_tax_type=values[2], product_type=values[3], category=category, brand=brand, SKU=values[12])
+                prod_obj = Product(product_name=values[1], unit=unit, selling_price_tax_type=values[9], product_type=values[3], category=category, brand=brand, SKU=values[12])
                 products.append(prod_obj)
 
             if products:
                 Product.objects.bulk_create(products)
-                
+                messages.success(request, 'Products upload success...')
         except Exception as e:
             messages.error(request, e)
 
@@ -1361,7 +1364,7 @@ def list_products(request):
             prod_search = Product.objects.filter(status=True, business_location=StaffUser.objects.get(user=request.user).business_location)
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(prod_search, 1)
+    paginator = Paginator(prod_search, 5)
     try:
         prod_search = paginator.page(page)
     except PageNotAnInteger:

@@ -1278,21 +1278,17 @@ def print_label(request):
             product = request.POST.get("nam"+str(val))
             labels = request.POST.get("lab"+str(val))
 
-            # try:
             price = 0
             for label in range(1, int(labels)+1):
-                
-                prod_obj = Product.objects.get(product_name=product)
-                if product_price == 'on':
-                    if tax_type == "E":
-                        price = prod_obj.purchase_price_exc_tax
-                    else:
-                        price = prod_obj.purchase_price_inc_tax
-                product_image = bar_code_generator(product, str(price), name_choice, busniness_name_choice, product_price, request)
-                images.append(product_image)
-            # except Exception as e:
-            #     messages.warning(request, e)
-
+                prod_obj = Product.objects.filter(product_name=product)
+                if len(prod_obj) > 1:
+                    if product_price == 'on':
+                        if tax_type == "E":
+                            price = prod_obj.first().purchase_price_exc_tax
+                        else:
+                            price = prod_obj.first().purchase_price_inc_tax
+                    product_image = bar_code_generator(product, str(price), name_choice, busniness_name_choice, product_price, request)
+                    images.append(product_image)
     return render(request,'divmart_dashboard/print_label.html', {'images':images}) 
 
 

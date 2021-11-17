@@ -1293,6 +1293,7 @@ def print_label(request):
     return render(request,'divmart_dashboard/print_label.html', {'images':images}) 
 
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 @login_required(login_url='/useraccount/common_login')
 def list_products(request):
 
@@ -1359,8 +1360,15 @@ def list_products(request):
         else:
             prod_search = Product.objects.filter(status=True, business_location=StaffUser.objects.get(user=request.user).business_location)
 
-    print('--------prod search----')
-    prod_search = prod_search[:1]
+    page = request.GET.get('page', 1)
+    paginator = Paginator(prod_search, 1)
+    try:
+        prod_search = paginator.page(page)
+    except PageNotAnInteger:
+        prod_search = paginator.page(1)
+    except EmptyPage:
+        prod_search = paginator.page(paginator.num_pages)
+
     return render(request,'divmart_dashboard/list_products.html',{'unit':unit,'brand':brand,'cat':cat,'sub_cat': sub_cat, 'new_prod':prod_search, 'locations':locations})
 
 

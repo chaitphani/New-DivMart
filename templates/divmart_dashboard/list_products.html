@@ -6,26 +6,52 @@
         text-decoration: none;
         background-color: #ffc107;
     }
-</style>
-<div class="container-fluid">
 
+    .pagination {
+        float: right;
+        margin-right: 5%;
+        padding: 5px;
+    }
+
+    .pagination li {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .pagination li a{
+        color: white;
+    }
+
+    .pagination .active, .pagination .disabled{
+        color: black;
+        background-color: #494d7c52;
+        cursor: auto;
+    }
+
+</style>
+
+<div class="container-fluid">
     <h5>List Products</h5>
     {% if messages %}
     <ul class="messages list-unstyled">
         {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }} p-2 font-weight-bold text-center" {% endif %}>
+        <li {% if message.tags %} class="{{ message.tags }} p-2 font-weight-bold text-center" {% endif %}>
             {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
             {{ message }}
-            </li>
-            {% endfor %}
+        </li>
+        {% endfor %}
     </ul>
     {% endif %}
     {% if request.user.is_superuser %}
     <div class="section card p-3" id="accordionExample" style="border-top:3px solid green">
         <div class="card-header bg-white" id="headingOne">
             <i class="fas fa-filter accordion text-primary" id="accordionExample" data-toggle="collapse"
-                data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><b
-                    class="text-primary">Filters</b></i>
+                data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <b class="text-primary">Filters</b>
+            </i>
         </div>
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
             <div class="card-body">
@@ -37,7 +63,7 @@
                             <select class="form-control" name="business_location">
                                 <option value=none>Please select</option>
                                 {% for location in locations %}
-                                    <option value="{{location.name}}">{{location.name}}</option>
+                                <option value="{{location.name}}">{{location.name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -78,27 +104,22 @@
         {% if request.user.is_superuser %}
         <div class="row">
             <div class="col-lg-12 col-md-12">
-                <a class="btn btn-primary btn-sm float-right" href="{%url 'add_new_product'%}"><i class="fa fa-plus-circle"></i>&nbsp; Add</a>
+                <a class="btn btn-primary btn-sm float-right" href="{%url 'add_new_product'%}"><i
+                        class="fa fa-plus-circle"></i>&nbsp; Add</a>
             </div>
         </div>
         {% endif %}
-        <form action="" method="POST">
+        <form method="POST">
             {% csrf_token %}
             <button class="btn btn-outline-danger btn-sm mb-2"><i class="fa fa-trash"></i>&nbsp; Delete</button>
-            <div class="overflow-auto">
             <table id="list_product_table" class="table table-striped table-sm w-100">
                 <thead class="bg-light">
                     <tr>
                         <th><input type="checkbox" id='all_check' name="chk[]"></th>
-                        <!-- <th></th> -->
                         <th class="th-sm">Product</th>
                         <th class="th-sm">PurchasePrice</th>
                         <th class="th-sm">Selling Price</th>
                         <th class="th-sm">Current Stock</th>
-                        <!-- <th class="th-sm">Product Type</th> -->
-                        <!-- <th class="th-sm">Category</th> -->
-                        <!-- <th class="th-sm">Sub Category</th> -->
-                        <!-- <th class="th-sm">Brand</th> -->
                         <th class="th-sm">Tax(%)</th>
                         <th class="th-sm">Sku</th>
                         <th class="th-sm">Action</th>
@@ -108,44 +129,30 @@
                     {% for val in new_prod %}
                     <tr class="pointer">
                         <td><input type="checkbox" name="prod_list" value="{{val.id}}"></td>
-                        <!-- <td data-toggle="modal" data-target="#myModal_{{val.id}}" style="cursor: pointer;">
-                            {% if product_image %}
-                            <img src="{{val.product_image.url}}" class="img-responsive" alt="User Image">
-                            {% else %}
-                            <img src="{%static 'divmart_dashboard/image/icon/user.png'%}" class="img-responsive pr-img"
-                                style="width: 5vh;" alt="User Image">
-                            {% endif %}
-                        </td> -->
                         <td>{{ val.product_name }}</td>
                         <td>{{ val.purchase_price_exc_tax|floatformat:2|intcomma }}</td>
                         <td>{{ val.selling_price_exc_tax|floatformat:2|intcomma }}</td>
                         <td
                             class="font-weight-bold {% if val.current_stock == 0 %} text-danger {% else %}text-success{% endif %}">
                             {{ val.current_stock }}</td>
-                        <!-- <td>
-                            {% if val.product_type == "S" %}Single
-                            {% elif val.product_type == "V" %}Variable
-                            {% endif %}
-                        </td> -->
-                        <!-- <td>{% if val.category %}{{val.category}}{% else %}Not Provided{% endif %}</td> -->
-                        <!-- <td>{% if cal.subcategory %}{{val.subcategory}{% else %}Not Provided {% endif %}</td> -->
-                        <!-- <td>{{ val.brand.brand_name }}</td> -->
                         <td>{{ val.applicable_tax }}</td>
                         <td>{{ val.SKU }}</td>
                         <td>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action
                                 </button>
                                 <div class="dropdown-menu bg-primary">
-                                    <a class="dropdown-item" href="{% url 'product_view' val.id %}"><i class="fa fa-eye fa-fw"></i>&nbsp; View</a>
+                                    <a class="dropdown-item" href="{% url 'product_view' val.id %}"><i
+                                            class="fa fa-eye fa-fw"></i>&nbsp; View</a>
                                     {% if request.user.is_superuser %}
-                                    <a class="dropdown-item" href="{% url 'print_label' %}"><i class="fa fa-tag fa-fw"></i>&nbsp; Labels</a>
-                                    <a class="dropdown-item" href="{% url 'edit_new_product' val.id %}"><i class="fa fa-pencil fa-fw"></i>&nbsp; Edit</a>
-                                    <!-- <div class="dropdown-divider"></div> -->
-                                    <!-- <a class="dropdown-item" href="#">Add or Edit Opening Stock</a> -->
-                                    <a class="dropdown-item del_obj" href="{% url 'product_delete' val.id %}"><i class="fa fa-trash fa-fw"></i>&nbsp; Delete</a>
+                                    <a class="dropdown-item" href="{% url 'print_label' %}"><i
+                                            class="fa fa-tag fa-fw"></i>&nbsp; Labels</a>
+                                    <a class="dropdown-item" href="{% url 'edit_new_product' val.id %}"><i
+                                            class="fa fa-pencil fa-fw"></i>&nbsp; Edit</a>
+                                    <a class="dropdown-item del_obj" href="{% url 'product_delete' val.id %}"><i
+                                            class="fa fa-trash fa-fw"></i>&nbsp; Delete</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -154,231 +161,48 @@
                     {% endfor %}
                 </tbody>
             </table>
-            </div>
         </form>
         <!-- The Modal -->
-        {% for val in new_prod %}
-        <!-- <div class="modal fade" id="myModal_{{val.id}}">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-body bg-light-green ">
-                            <div class="row">
-                                <div class="col-sm-6 col-md-6 col-lg-6">
-                                    <h4>{{ val.product_name }}</h4>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>SKU</label></div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        <div class="col-sm-5 col-md-5 col-lg-5">{{ val.SKU }}</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Brand</label></div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        {% for v in brand %}
-                                        {% if v.id == val.brand %}
-                                        <div class="col-sm-5 col-md-5 col-lg-5">{{ v.brand_name }}</div>
-                                        {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Unit</label>
-                                        </div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        {% for u in unit %}
-                                        {% if u.id == val.unit %}
-                                        <div class="col-sm-5 col-md-5 col-lg-5">{{ u.name }}</div>
-                                        {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Barcode Type</label>
-                                        </div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        <div class="col-sm-5 col-md-5 col-lg-5">C128</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Category</label>
-                                        </div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        {% for c in cat %}
-                                        {% if c.id == val.category %}
-                                        <div class="col-sm-5 col-md-5 col-lg-5">{{ c.name }}</div>
-                                        {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Sub Category</label>
-                                        </div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        {% for s in sub_cat %}
-                                        {% if s.id == val.sub_category %}
-                                        <div class="col-sm-5 col-md-5 col-lg-5">{{ s.name }}</div>
-                                        {% endif %}
-                                        {% endfor %}
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Manage Stock?</label>
-                                        </div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        <div class="col-sm-5 col-md-5 col-lg-5">Yes</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Manage Stock?</label>
-                                        </div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        <div class="col-sm-5 col-md-5 col-lg-5">{{ val.alert_quantity }}</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Expires In</label>
-                                        </div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        <div class="col-sm-5 col-md-5 col-lg-5">Not Applicable</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Applicable Tax</label>
-                                        </div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        <div class="col-sm-5 col-md-5 col-lg-5">{{ val.applicable_tax }}</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Selling Price Tax TyPE</label>
-                                        </div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        <div class="col-sm-5 col-md-5 col-lg-5">
-                                            {% if val.selling_price_tax_type == "I" %}
-                                            <td>Inclusive</td>
-                                            {% elif val.selling_price_tax_type == "E" %}
-                                            <td>Exclusive</td>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-5 col-lg-5"><label>Product Type</label>
-                                        </div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">:</div>
-                                        <div class="col-sm-5 col-md-5 col-lg-5">
-                                            {% if val.product_type == "S" %}
-                                            <td>Single</td>
-                                            {% elif val.product_type == "V" %}
-                                            <td>Variable</td>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 col-md-6 col-lg-6">
-                                    <div class="row">
-                                        <div class="card">
-                                            <img src="{{ val.product_image }}" class="img-responsive pr-img"
-                                                style="height:50vh; width: 100%;" alt="User Image">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row pl-2 pr-2">
-                                <table class="table table-sm table-bordered">
-                                    <thead class="bg-primary">
-                                        <tr>
-
-                                            <th class="th-sm">
-                                                Default Purchase Price (Exc. tax)
-                                            </th>
-                                            <th class="th-sm">Default Purchase Price (Inc. tax)
-                                            </th>
-                                            <th class="th-sm">x Margin(%)
-                                            </th>
-                                            <th class="th-sm"> Default Selling Price (Exc. tax)
-                                            </th>
-                                            <th class="th-sm">Default Selling Price (Inc. tax)
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>₹ {{ val.purchase_price_exc_tax }}</td>
-                                            <td>₹ {{ val.purchase_price_inc_tax }}</td>
-                                            <td>₹ 25%</td>
-                                            <td>₹ {{ val.selling_price_exc_tax }}</td>
-                                            <td>₹ {{ val.selling_price }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <button type="button" class="btn btn-primary float-right">Print &nbsp; <i
-                                    class="fa fa-print pt-1" aria-hidden="true"></i>
-                            </button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-        {% endfor %}
-        <!-- <div class="tab-pane container fade pt-3" id="menu1">
-            <div class="row">
-                <table class="table stock_report_table table-sm table-bordered mb-2" id="stock_report_table">
-                    <thead>
-                        <tr>
-                            <th class="th-sm">
-                                SKU
-                            </th>
-                            <th class="th-sm">Product
-                            </th>
-                            <th class="th-sm">Unit Price
-                            </th>
-                            <th class="th-sm">Current Stock
-                            </th>
-                            <th class="th-sm">Total Unit Sold
-                            </th>
-                            <th class="th-sm">Total Unit Transfered
-                            </th>
-                            <th class="th-sm">Total Unit Adjusted
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>0001</td>
-                            <td>ice-cream</td>
-                            <td> ₹ 56.25</td>
-                            <td> 980.00 u</td>
-                            <td>42.00 u</td>
-                            <td>0.00 u</td>
-                            <td>0.00 u</td>
-                        </tr>
-                        <tr>
-                            <th colspan="3" class="text-center">Total</th>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div> -->
-        <!-- <a class="btn btn-danger btn-sm mb-1 text-white">Delete Selected</a>
-        <a class="btn btn-warning btn-sm mb-1 text-white">Deactivated Selected</a> -->
     </div>
-
 </div>
+
+{% if new_prod.has_other_pages %}
+<ul class="pagination">
+    {% if new_prod.has_previous %}
+    <li><a href="?page={{ new_prod.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in new_prod.paginator.page_range %}
+    {% if new_prod.number == i %}
+    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    {% else %}
+    <li class="to_select"><a href="?page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+    {% endfor %}
+    {% if new_prod.has_next %}
+    <li>
+        <a href="?page={{ new_prod.next_page_number }}">&raquo;</a>
+    </li>
+    {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+</ul>
+{% endif %}
+
 {%endblock%}{% block alljs %}
 <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css"
     rel="stylesheet" />
 <script type="text/javascript"
     src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
+
 <script>
-    $(document).ready(function () {
-        $('#list_product_table').dataTable({
-            // columnDefs: [{
-            //     'targets': 0,
-            //     'checkboxes': {
-            //         'selectRow': true,
-            //         // 'name':'selected',    
-            //     }
-            // }],
-            order: [[1, 'asc']]
-        });
-        $('#stock_report_table').DataTable();
-    });
+    // $(document).ready(function () {
+    //     $('#list_product_table').dataTable({
+    //         order: [[1, 'asc']]
+    //     });
+    //     $('#stock_report_table').DataTable();
+    // });
 
 
     $('#all_check').click(function () {

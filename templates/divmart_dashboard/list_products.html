@@ -166,7 +166,8 @@
     </div>
 
     {% if new_prod.has_other_pages %}
-    <ul class="pagination">
+    <nav aria-label="Page navigation example"></nav>
+    <ul class="pagination justify-content-end">
         {% if new_prod.has_previous %}
         <li><a href="?page={{ new_prod.previous_page_number }}">&laquo;</a></li>
         {% else %}
@@ -187,6 +188,7 @@
         <li class="disabled"><span>&raquo;</span></li>
         {% endif %}
     </ul>
+</nav>
     {% endif %}
 
 </div>

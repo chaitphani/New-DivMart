@@ -27,7 +27,7 @@ class RegisteredMembers(models.Model):
     member_amount = models.BigIntegerField()
     fname = models.CharField(max_length=50)
     lname = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50, unique=True)
+    email = models.EmailField(max_length=50)
     password = models.CharField(max_length=100)
     contact = models.CharField(max_length=15)
     alt_contact = models.CharField(max_length=15, null=True, blank=True) 

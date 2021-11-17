@@ -40,6 +40,7 @@ class RegisteredMembersSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Sponser id is not valid")
         return ob
 
+
 class CreditedPointsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreditedPoints

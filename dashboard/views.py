@@ -650,9 +650,10 @@ def bar_code_generator(product, price, name_choice, busniness_name_choice, produ
 
         text_write.save(f"media/barcode_preview/combine_image{barcode_no}.png")
 
-        p_obj = Product.objects.get(product_name=product)
-        bar_obj = Barcode_storage(barcode_type ="ean13", product_name = p_obj, barcode_no=barcode_no)
-        bar_obj.save()
+        p_obj = Product.objects.filter(product_name=product)
+        if len(p_obj) > 1:
+            bar_obj = Barcode_storage(barcode_type ="ean13", product_name = p_obj.first(), barcode_no=barcode_no)
+            bar_obj.save()
 
         image_path = os.path.join(settings.BASE_DOMAIN, f"media/barcode_preview/combine_image{barcode_no}.png")
         return image_path
@@ -1261,9 +1262,8 @@ def search_product_with_id(request, id):
         d = {}
     return JsonResponse({'prod_list': product_list})
 
-
 def print_label(request):
-
+    
     images = ''
     if request.method == "POST":
 
@@ -1278,22 +1278,18 @@ def print_label(request):
             product = request.POST.get("nam"+str(val))
             labels = request.POST.get("lab"+str(val))
 
-            # try:
             price = 0
             for label in range(1, int(labels)+1):
-                
-                prod_obj = Product.objects.get(product_name=product)
-                if product_price == 'on':
-                    if tax_type == "E":
-                        price = prod_obj.purchase_price_exc_tax
-                    else:
-                        price = prod_obj.purchase_price_inc_tax
-                product_image = bar_code_generator(product, str(price), name_choice, busniness_name_choice, product_price, request)
-                images.append(product_image)
-            # except Exception as e:
-            #     messages.warning(request, e)
-
-    return render(request,'divmart_dashboard/print_label.html', {'images':images}) 
+                prod_obj = Product.objects.filter(product_name=product)
+                if len(prod_obj) > 1:
+                    if product_price == 'on':
+                        if tax_type == "E":
+                            price = prod_obj.first().purchase_price_exc_tax
+                        else:
+                            price = prod_obj.first().purchase_price_inc_tax
+                    product_image = bar_code_generator(product, str(price), name_choice, busniness_name_choice, product_price, request)
+                    images.append(product_image)
+    return render(request,'divmart_dashboard/print_label.html', {'images':images})
 
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -1364,7 +1360,7 @@ def list_products(request):
             prod_search = Product.objects.filter(status=True, business_location=StaffUser.objects.get(user=request.user).business_location)
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(prod_search, 5)
+    paginator = Paginator(prod_search, 10)
     try:
         prod_search = paginator.page(page)
     except PageNotAnInteger:

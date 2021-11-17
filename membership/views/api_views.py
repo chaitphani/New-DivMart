@@ -27,22 +27,14 @@ class RegisteredMembersView(APIView):
 
                     # referal logic starts here
                     if request.data.get('ref_id'):
-                        # print('----------if ref id------', request.data.get('ref_id'))
 
                         ref_user = RegisteredMembers.objects.filter(self_ref_id=request.data.get('ref_id'))
                         if len(ref_user) > 0:
 
-                            # print('------if ref user-------')
                             ref_qual_user = RegisteredMembers.objects.get(self_ref_id=request.data.get('ref_id'))
-                            # print('--------ref user-------', ref_qual_user.fname)
-                            print(serialize.sponser_id)
                             serialize.sponser_id = ref_qual_user.self_ref_id
-                            print(ref_qual_user.level, '-------------')
                             serialize.level = ref_qual_user.level + 1
                             serialize.save()
-                            print(serialize, '------------')
-                            print(serialize.level)
-                            print(serialize.sponser_id)
 
                             if not ref_qual_user.sponser_id == None or not ref_qual_user.sponser_id == "":
                                 main_refer = RegisteredMembers.objects.filter(self_ref_id=ref_qual_user.sponser_id)

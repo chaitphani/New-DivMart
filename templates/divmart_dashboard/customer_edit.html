@@ -14,16 +14,18 @@
                         <input type="text" class="form-control" name="first_name" value="{{obj.first_name}}" required />
                     </div>
                 </div>
-                 <div class="col-lg-6 col-md-6">
+                <div class="col-lg-6 col-md-6">
                     <label>Business Location*</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-store"></i></span>
                         </div>
                         <select id="bussinessLocation" class="form-control">
-                        <option>Select Business Location</option>
-                        <option>Business Location 1</option>
-                        <option>Business Location 2</option>
+                            {% for location in locations %}
+                                <option value="{{location.id}}" {% if location.id == obj.business_location.id %}selected{% endif %}>
+                                    {{location.name}}
+                                </option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -35,7 +37,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-money"></i></span>
                         </div>
-                        <input type="text" class="form-control" name="credit_limit" value="{% if obj.credit_limit %}{{obj.credit_limit}}{% else %}0{% endif %}" />
+                        <input type="text" class="form-control" name="credit_limit"
+                            value="{% if obj.credit_limit %}{{obj.credit_limit}}{% else %}0{% endif %}" />
                     </div>
                 </div>
                 <div class="col-md-4 col-lg-4">
@@ -45,7 +48,8 @@
                             <span class="input-group-text"><i class="fa fa-address-book-o" aria-hidden="true"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" value="{% if obj.contact_id %}{{obj.contact_id}}{% else %}{% endif %}" name="contact_id" />
+                        <input type="text" class="form-control"
+                            value="{% if obj.contact_id %}{{obj.contact_id}}{% else %}NP{% endif %}" name="contact_id" />
                     </div>
                 </div>
                 <div class="col-md-4 col-lg-4">
@@ -54,7 +58,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-info"></i></span>
                         </div>
-                        <input type="text" class="form-control" value="{% if obj.tax_number %}{{obj.tax_number}}{% else %}{% endif %}" name="tax_number" />
+                        <input type="text" class="form-control"
+                            value="{% if obj.tax_number %}{{obj.tax_number}}{% else %}NP{% endif %}" name="tax_number" />
                     </div>
                 </div>
             </div>
@@ -70,8 +75,8 @@
                     </div>
                 </div>
                 <div class="col-md-3 col-lg-3">
-                    <label>Pay Term*</label>           
-                            <input type="text" class="form-control" name="pay_term" value="{{obj.pay_term}}" required />
+                    <label>Pay Term*</label>
+                    <input type="text" class="form-control" name="pay_term" value="{{obj.pay_term}}" required />
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <label>Customer Group</label>
@@ -81,16 +86,15 @@
                         </div>
                         <select class="form-control" name="customer_group">
                             {% for cg in customer_group %}
-                            {% if cg.is_deleted == 0 %}
-                            <option value="{{ cg.id }}" {% if obj.customer_group.id == cg.id %}selected{% endif %}>
-                                {{ cg.name }}</option>
-                            {% endif %}
+                                <option value="{{ cg.id }}" {% if obj.customer_group.id == cg.id %}selected{% endif %}>
+                                    {{ cg.name }}
+                                </option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
             </div>
-           
+
             <div class="form-group row">
                 <div class="col-md-3 col-lg-3">
                     <label>Email*</label>
@@ -108,7 +112,8 @@
                             <span class="input-group-text"><i class="fa fa-mobile" aria-hidden="true"></i>
                             </span>
                         </div>
-                        <input type="number" class="form-control" name="mobile" value="{% if obj.mobile %}{{obj.mobile}}{% else %}{% endif %}" />
+                        <input type="number" class="form-control" name="mobile"
+                            value="{% if obj.mobile %}{{obj.mobile}}{% endif %}" />
                     </div>
                 </div>
                 <div class="col-md-3 col-lg-3">
@@ -127,7 +132,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-phone"></i></span>
                         </div>
-                        <input type="text" class="form-control" name="Landline" value="{% if obj.Landline %}{{obj.Landline}}{% else %}{% endif %}" />
+                        <input type="text" class="form-control" name="Landline"
+                            value="{% if obj.Landline %}{{obj.Landline}}{% else %}{% endif %}" />
                     </div>
                 </div>
             </div>
@@ -140,7 +146,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
                         </div>
-                        <input type="text" class="form-control" name="city" value="{% if obj.city %}{{obj.city}}{% else %}{% endif %}" />
+                        <input type="text" class="form-control" name="city"
+                            value="{% if obj.city %}{{obj.city}}{% else %}{% endif %}" />
                     </div>
                 </div>
                 <div class="col-md-3 col-lg-3">
@@ -150,7 +157,8 @@
                             <span class="input-group-text"><i class="fa fa-map-marker" aria-hidden="true"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" name="state" value="{% if obj.state %}{{obj.state}}{% else %}{% endif %}" />
+                        <input type="text" class="form-control" name="state"
+                            value="{% if obj.state %}{{obj.state}}{% else %}{% endif %}" />
                     </div>
                 </div>
                 <div class="col-md-3 col-lg-3">
@@ -159,7 +167,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-globe"></i></span>
                         </div>
-                        <input type="globe" class="form-control" name="country" value="{% if obj.country %}{{obj.country}}{% else %}{% endif %}" />
+                        <input type="globe" class="form-control" name="country"
+                            value="{% if obj.country %}{{obj.country}}{% else %}{% endif %}" />
                     </div>
                 </div>
                 <div class="col-md-3 col-lg-3">
@@ -168,7 +177,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
                         </div>
-                        <input type="text" class="form-control" name="land_mark" value="{% if obj.land_mark %}{{obj.land_mark}}{% else %}{% endif %}" />
+                        <input type="text" class="form-control" name="land_mark"
+                            value="{% if obj.land_mark %}{{obj.land_mark}}{% else %}{% endif %}" />
                     </div>
                 </div>
             </div>

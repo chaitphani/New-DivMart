@@ -1,6 +1,31 @@
 {% extends 'divmart_dashboard/index.html' %} {% load customtags %} {% load i18n %} {% load humanize %}{% load static %}
 {% block home%}
+<style>
+        .pagination {
+        float: right;
+        margin-right: 5%;
+        padding: 5px;
+    }
 
+    .pagination li {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .pagination li a {
+        color: white;
+    }
+
+    .pagination .active,
+    .pagination .disabled {
+        color: black;
+        background-color: #494d7c52;
+        cursor: auto;
+    }
+</style>
 <!-- Date Range Picker cdn -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -31,11 +56,7 @@
                     {% endfor %}
                 </select>
             </div>
-<<<<<<< HEAD
-        </div> {% endcomment %}
-=======
-        </div> -->
->>>>>>> 6405003d68cf18993f916aa3de868517d6e92a6c
+        
         <div class="row">
             <div class="col-lg-12 overflow-auto">
                 <table class="table table-condensed">
@@ -69,8 +90,9 @@
                     </tr>  -->
                     <tr>
                         <th>Total Sales</th>
-                        <td>₹ {% if sale_value_from_payments %}{{sale_value_from_payments|floatformat:2|intcomma}}{% else %}0.00{% endif %}</td>
-                    </tr> 
+                        <td>₹ {% if sale_value_from_payments %}{{sale_value_from_payments|floatformat:2|intcomma}}{%
+                            else %}0.00{% endif %}</td>
+                    </tr>
                     <br>
                     <tr class="bg-light-green">
                         <th>Total Refund</th>
@@ -85,27 +107,30 @@
                 </table>
                 <hr>
                 <div class="overflow-auto">
-                <table class="table table-condensed" id="count">
-                    <tr>
-                        <th>#</th>
-                        <th>Brand</th>
-                        <th>Quantity</th>
-                        <th>Total Amount</th>
-                    </tr>
-                    {% for dict in new_dict %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        <td>{{dict.brand}}</td>
-                        <td class="count-this">{% if dict.sold %}{{dict.sold|floatformat:3}}{% else %}0{% endif %}</td>
-                        <td>₹ {% if dict.sub_total %}{{dict.sub_total|floatformat:2|intcomma}}{% else %}0.00{% endif %}</td>
-                    </tr>
-                    {% endfor %}
-                    <tr class="bg-light-green">
-                        <th colspan="2"></th>
-                        <th id="add_here"></th>
-                        <th>Discount:0.00<br>Sales Total:₹ {% if total_sale_value %}{{total_sale_value|floatformat:2|intcomma}}{% else %}0.00{% endif %}</th>
-                    </tr>
-                </table>
+                    <table class="table table-condensed" id="count">
+                        <tr>
+                            <th>#</th>
+                            <th>Brand</th>
+                            <th>Quantity</th>
+                            <th>Total Amount</th>
+                        </tr>
+                        {% for dict in new_dict %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{dict.brand}}</td>
+                                <td class="count-this">{% if dict.sold %}{{dict.sold|floatformat:3}}{% else %}0{% endif %}
+                                </td>
+                                <td>₹ {% if dict.sub_total %}{{dict.sub_total|floatformat:2|intcomma}}{% else %}0.00
+                                    {% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr class="bg-light-green">
+                            <th colspan="2"></th>
+                            <th id="add_here"></th>
+                            <th>Discount:0.00<br>Sales Total:₹ 
+                                {% if total_sale_value %}{{total_sale_value|floatformat:2|intcomma}}{% else %}0.00{% endif %}</th>
+                        </tr>
+                    </table>
                 </div>
                 <b>User: </b>{{request.user.username}}<br>
                 <b>Email: </b>{{request.user.email}}
@@ -115,6 +140,27 @@
             </div>
         </div>
     </div>
+    {% if new_dict.has_other_pages %}
+    <ul class="pagination">
+        {% if new_dict.has_previous %}
+        <li><a href="?page={{ new_dict.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in new_dict.paginator.page_range %}
+        {% if new_dict.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if new_dict.has_next %}
+        <li><a href="?page={{ new_dict.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
 </div>
 <script language="javascript" type="text/javascript">
     var tds = document.getElementById('count').getElementsByTagName('td');

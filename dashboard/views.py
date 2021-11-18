@@ -2658,6 +2658,16 @@ def register_details(request):
 
         new_list.append(new_dict)
 
+    page = request.GET.get('page', 1)
+    paginator = Paginator(new_list, 5)
+    
+    try:
+        new_list = paginator.page(page)
+    except PageNotAnInteger:
+        new_list = paginator.page(1)
+    except EmptyPage:
+        new_list = paginator.page(paginator.num_pages)
+
     staff_users = StaffUser.objects.filter(is_deleted = 0)
     return render(request, 'divmart_dashboard/registerdetails.html', {
                                                 'cash':cash_trans['amount__sum'],
@@ -2693,7 +2703,6 @@ def list_sell_return(request):
 
 
 @login_required(login_url='/useraccount/common_login')
-# @group_required('Cashier')
 def customer_detail(request,id):
 
     items_sold_of_sales = ''
@@ -2733,7 +2742,6 @@ def customer_group_detail(request):
 
 
 @login_required(login_url='/useraccount/common_login')
-# @group_required('Cashier')
 def customer_edit(request, id):
 
     if request.method == 'POST':
@@ -2760,7 +2768,10 @@ def customer_edit(request, id):
 
     customer_obj = CustomerUser.objects.get(id=id)
     customer_group = CustomerGroups.objects.filter(is_deleted=0)
-    return render(request, 'divmart_dashboard/customer_edit.html', {'obj':customer_obj, 'customer_group':customer_group})
+    locations = BusinessLocation.objects.filter(status=True)
+
+    return render(request, 'divmart_dashboard/customer_edit.html', {'obj':customer_obj, 'customer_group':customer_group, 
+    'locations':locations})
 
 
 @login_required(login_url='/useraccount/common_login')

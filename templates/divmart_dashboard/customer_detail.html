@@ -4,48 +4,68 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 mb-2">
-            <a onclick="window.history.back()" class="btn btn-primary btn-sm text-white"><i class="fa fa-arrow-left"></i>&nbsp;Back</a>
+            <a onclick="window.history.back()" class="btn btn-primary btn-sm text-white"><i
+                    class="fa fa-arrow-left"></i>&nbsp;Back</a>
         </div>
         <div class="col-md-10 text-right">
-            <span class="text-dark font-weight-normal p-1 rounded btn btn-outline-success"><span class="text-capitalize">{{cust.first_name}}</span>'s Profile Details</span>
+            <span class="text-dark font-weight-normal p-1 rounded">
+                <span class="text-capitalize">{{cust.first_name}}</span>'s Profile Details
+            </span>
         </div>
     </div>
     <div class="section card p-3" style="border-top:3px solid green">
-        <h6> <i class="fa fa-user-circle"></i> Customer Info</h6><hr>
+        <h6 class="m-0 p-0"> <i class="fa fa-user-circle"></i> Customer Info</h6>
+        <hr>
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <div class="section card bg-light p-4">
-                    <div class="bg-success rounded p-2 mb-3"><b class="text-capitalize">{{cust.first_name}}</b></div>
-                   <hr>
-                    <small class="font-weight-bold"><i class="fa fa-map-marker"></i>&nbsp;Address:</small>
-                    <div class="pl-3"><small>{{cust.address}}</small></div>
-                    <hr>
-                    <small class="font-weight-bold"><i class="fa fa-mobile"></i>&nbsp;Mobile - {{cust.mobile}}</small><hr>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <small class="font-weight-bold">
+                                <i class="fa fa-user-circle"></i>&nbsp;
+                                <span class="text-capitalize text-primary">
+                                    <h6 class="m-0 p-0">{{cust.first_name}}</h6>
+                                </span>
+                            </small>
+                            <hr>
+                            <small class="font-weight-bold"><i class="fa fa-map-marker"></i>&nbsp;Address:</small>
+                            <div class=""><small>{{cust.address}}</small></div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <small class="font-weight-bold"><i class="fa fa-mobile"></i>&nbsp;Mobile</small>
+                            <div><small>{{cust.mobile}}</small></div>
+                            <hr>
+                            <small class="font-weight-bold"><i class="fa fa-envelope"></i>&nbsp;Email </small>
+                            <div> <small>{{cust.email}}</small></div>
+                        </div>
                     </div>
+                </div>
             </div>
-
             <div class="col-lg-6 col-md-6">
                 <div class="section card bg-light p-4">
-                    <h5>Total Sale</h5>
-                    <p><span><i class="fas fa-rupee-sign"></i></span>
-                        {% if sale_value %}{{sale_value}}{% else %}0.00{% endif %}
-                    </p>
-                    <h5>Total Sale Payment</h5>
-                    <p><span><i class="fas fa-rupee-sign"></i></span>
-                        {% if sale_payment %}{{sale_payment}}{% else %}0.00{% endif %}
-                    </p>
-                    <h5>Total Sale Due</h5>
-                    <p><span><i class="fas fa-rupee-sign"></i></span>
-                        {% if sale_due %}{{sale_due}}{% else %}0.00{% endif %}
-                    </p>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <h6>Total Sale</h6>
+                            <p><strong>&#8377; {% if sale_value %}{{sale_value}}{% else %}0.00{% endif %}</strong></p>
+                        </div>
+                        <div class="col-lg-6 col-md-6 text-right">
+                            <h6>Total Sale Payment</h6>
+                            <p class="text-success"><strong>&#8377; {% if sale_payment %}{{sale_payment}}{% else %}0.00{% endif %}</strong></p>
+                        </div>
+                        <div class="col-lg-12 col-md-12 text-center">
+                            <h6>Total Sale Due</h6>
+                            <p class="text-danger"><strong>&#8377; {% if sale_due %}{{sale_due}}{% else %}0.00{% endif %}</strong></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="section card p-3 bg-light" style="border-top:3px solid green">
-        <h6><i class="fa fa-money"></i> All sells related to this contact</h6><hr>
+        <h6><i class="fa fa-money"></i> All sales related to this customer</h6>
+        <hr>
         <div class="row table-responsive pl-3">
-            <table class="table table-bordered table-sm" id="supplier_detail_table">
+            <table class="table table-bordered table-sm supplier_detail_table" id="supplier_detail_table">
                 <thead>
                     <tr class="h6">
                         <th>Date</th>
@@ -85,9 +105,10 @@
         </div>
     </div>
     <div class="section card p-3" style="border-top:3px solid green">
-        <h6>Sell Return</h6><hr>
+        <h6>All sale Returns</h6>
+        <hr>
         <div class="row table-responsive pl-3">
-            <table class="table table-bordered table-sm" id="supplier_detail_tables">
+            <table class="table table-bordered table-sm supplier_detail_table" id="supplier_detail_tables">
                 <thead>
                     <tr class="h6">
                         <th>Date</th>
@@ -117,9 +138,10 @@
     </div>
 
     <div class="section card p-3 bg-light" style="border-top:3px solid green">
-        <h6>Opening Balance Payments</h6><hr>
+        <h6>All Payments</h6>
+        <hr>
         <div class="row table-responsive pl-3">
-            <table class="table table-bordered table-sm" id="supplier_detail_tablek">
+            <table class="table table-bordered table-sm supplier_detail_table" id="supplier_detail_tablek">
                 <thead>
                     <tr class="h6">
                         <th>Reference No.</th>
@@ -143,627 +165,13 @@
     </div>
 </div>
 
-<!-- Invoice modal start here -->
-<!-- <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="section">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-4 col-md-4 col-lg-4 pd-10 pl-5">
-                            <div class="row">
-                                <b>Ref No</b> : {{items_sold.sell.ref_no}}
-                            </div>
-                            <div class="row">
-                                <b>Status</b> : xxxx
-                            </div>
-                            <div class="row">
-                                <b>Payment Status</b> : xxxx
-                            </div>
-                        </div>
-                        <div class="col-sm-4 col-md-4 col-lg-4 pd-10">
-                            <div class="row">
-                                <b>Customer Name</b> : xxxx
-                            </div>
-                            <div class="row">
-                                <b>Walk In Customer</b> : xxxx
-                            </div>
-                        </div>
-                        <div class="col-sm-4 col-md-4 col-lg-4 pd-10">
-                            <div class="row">
-                                <b>Table</b> : xxxx
-                            </div>
-                            <div class="row">
-                                <b>Service Staff</b> : xxxx
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <h4 class="ml-3">Products:</h4>
-                    </div>
-                    <div class="row table-responsive pl-3 pr-3">
-                        <table class="table" id="customer_detail_tablek">
-                            <thead class="bg-info">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Product Quantity</th>
-                                    <th>Unit Price </th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for items in items_sold %}
-                                <tr>
-                                    <td>{{forloop.counter}}</td>
-                                    <td>{{items.quantity}}</td>
-                                    <td>{{items.price}}</td>
-                                    <td>{{items.sub_total}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row mt-2 ">
-                        <h4 class="ml-3">Payments Info:</h4>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 col-lg-6">
-                            <div class="section">
-                                <div class="row pl-3 pr-3">
-                                    <table class="table table-sm">
-                                        <thead class="bg-info">
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Date</th>
-                                                <th>Reference No</th>
-                                                <th>Amount</th>
-                                                <th>Payment Mode</th>
-                                                <th>Payment Note</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>xxxx</td>
-                                                <td>xxxx</td>
-                                                <td>xxxx</td>
-                                                <td>xxxx</td>
-                                                <td>xxxx</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6">
-                            <div class="section">
-                                <div class="row pl-3 pr-3">
-                                    <table class="table table-sm">
-                                        <tbody>
-                                            <tr class="bg-light">
-                                                <th>Total :</th>
-                                                <th></th>
-                                                <td>xxxxxx</td>
-                                            </tr>
-                                            <tr class="bg-light">
-                                                <th>Discount :</th>
-                                                <th>(-)</th>
-                                                <td>xxxxx</td>
-                                            </tr>
-                                            <tr class="bg-light">
-                                                <th>Order Tax :</th>
-                                                <th>+</th>
-                                                <td>xxxxx</td>
-                                            </tr>
-                                            <tr class="bg-light">
-                                                <th>Shipping :</th>
-                                                <th>(-)</th>
-                                                <td>xxxxx</td>
-                                            </tr>
-                                            <tr class="bg-light">
-                                                <th>Total Payble :</th>
-                                                <th>(-)</th>
-                                                <td>xxxxx</td>
-                                            </tr>
-                                            <tr class="bg-light">
-                                                <th>Total Paid :</th>
-                                                <th>(-)</th>
-                                                <td>xxxxx</td>
-                                            </tr>
-                                            <tr class="bg-light">
-                                                <th>Total Remaining :</th>
-                                                <th>(-)</th>
-                                                <td>xxxxx</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <div class="section">
-                                <div class="row pl-3 pr-3">
-                                    <table class="table table-sm">
-                                        <tbody>
-                                            <label>Sell Note</label>
-                                            <tr class="bg-light">
-                                                <th>-</th>
-                                                <th></th>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <div class="section">
-                                <div class="row pl-3 pr-3">
-                                    <table class="table table-sm">
-                                        <tbody>
-                                            <label>Staff Note</label>
-                                            <tr class="bg-light">
-                                                <th>-</th>
-                                                <th></th>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 mb-4">
-                            <a class="btn btn-primary text-white float-right" onclick="window.print()">
-                                <i class="fa fa-print"></i>&nbsp; Print
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-<!-- Invoice modal end here -->
-
-<!-- payment status start here  -->
-<div class="modal payment_status_mdl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">View Payments (Invoice No .)</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-4 col-md-4">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td>Customer :<br>
-                                    <b>Wal in Customers</b>
-                                </td>
-
-
-
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div class="col-lg-4 col-md-4">
-                        <table>
-                            <tr>
-                                <td>
-                                    <table>
-                                        <tr>
-                                            <td>Business :</td>
-
-                                        </tr>
-                                        <tr>
-                                            <th>Divmart</th>
-                                        </tr>
-                                        <tr>
-                                            <td> Manbhavan Restaurant Opp. Dawa Bazar, Chhoti Gwaltoli, Indore, Madhya
-                                                Pradesh indore,mp,india</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-
-                                                <table>
-                                                    <tr>
-                                                        <td>Mobile :</td>
-                                                        <td>xxxxxxxxx</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Email :</td>
-                                                        <td>xxxxx@yopmail.com</td>
-                                                    </tr>
-                                                </table>
-
-                                            </td>
-                                        </tr>
-
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="col-lg-4 col-md-4">
-                        <table>
-                            <tr>
-                                <td>
-                                    <table>
-                                        <tr>
-                                            <th>Invoice No :</th>
-                                            <td>xxx</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Date :</th>
-                                            <td>xxx</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Payment Status :</th>
-                                            <td>xxxx</td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <a class="btn btn-primary float-right text-white btn-sm"><i class="fa fa-envelope"></i>&nbsp;
-                            Send Payment Recieved Notification</a>
-                    </div>
-                </div>
-
-                <div class="section  pl-3 mt-3">
-                    <table class="table-sm w-100">
-                        <tr class="bg-light">
-                            <th class="th-sm">Date </th>
-                            <th class="th-sm">Reference No.</th>
-                            <th class="th-sm">Amount</th>
-                            <th class="th-sm">Payment Method</th>
-                            <th class="th-sm">Payment Note</th>
-                            <th class="th-sm">Payment Account</th>
-                            <th class="th-sm">Action</th>
-                        </tr>
-                        <tr>
-                            <td>xxxx</td>
-                            <td>xxxx</td>
-                            <td>xxxx</td>
-                            <td>xxxx</td>
-                            <td>xxxx</td>
-                            <td>xxxx</td>
-
-                            <td>
-                                <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                    <button type="button" class="btn btn-info" data-toggle="modal"
-                                        data-target="#editpymdl"><i class="fa fa-edit"></i></button>
-                                    <button type="button" class="btn btn-danger ml-1"><i
-                                            class="fa fa-trash"></i></button>
-                                    <button type="button" class="btn btn-primary ml-1" data-toggle="modal"
-                                        data-target="#pymmdl"><i class="fa fa-eye"></i></button>
-                                </div>
-
-                            </td>
-                        </tr>
-                    </table>
-                    <hr>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <a class="btn btn-primary float-right text-white"><i class="fa fa-print"></i>&nbsp;Print</a>
-                            <a class="btn btn-danger float-right text-white mr-2 "> Close</a>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
-<!-- payment status end here -->
-
-<!-- view payment start  modal here  -->
-<div class="modal" id="pymmdl">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">View Payment(Reference No :xxx)</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal body -->
-            <div class="modal-body">
-
-                <div class="row">
-                    <div class="col-lg-6 col-md-6">
-                        <table>
-                            <tr>
-                                <td>Customer :</td>
-
-                            </tr>
-                            <th>Walk In Customer</th>
-                        </table>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <table>
-                            <tr>
-                                <td>Business :</td>
-
-                            </tr>
-                            <tr>
-                                <th>Manbhavan Restaurant Manbhavan Restaurant
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>Opp. Dawa Bazar, Chhoti Gwaltoli, Indore, Madhya Pradesh indore,mp,india
-                                </td>
-                            </tr>
-                            <td>
-                                <table>
-                                    <tr>
-                                        <td>Mobile:</td>
-                                        <td>xxxxxxxxxx</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Email:</td>
-                                        <td>xxxx@yopmail.com</td>
-                                    </tr>
-
-                                </table>
-                            </td>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="row mt-5">
-                    <div class="col-lg-6 col-md-6">
-                        <table>
-                            <tr>
-                                <th>Amount :</th>
-                                <td>xxxx</td>
-
-                            </tr>
-                            <tr>
-                                <th>Payment Method:</th>
-                                <td>xxxxx</td>
-                            </tr>
-                            <tr>
-                                <th>Payment Note:</th>
-                                <td>xxxx</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <table>
-                            <tr>
-                                <th>Refrence No.</th>
-                                <td>xxxx</td>
-
-                            </tr>
-                            <tr>
-                                <th>Paid On</th>
-                                <td>xxxxx</td>
-                            </tr>
-
-                        </table>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <a class="btn btn-primary text-white float-right"><i class="fa fa-print"></i>&nbsp;Print</a>
-                        <a class="btn btn-danger text-white float-right mr-2">Close</a>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-
-        </div>
-    </div>
-</div>
-<!-- view payment modal end here -->
-
-<!-- edit payment modal start here  -->
-<div class="modal" id="editpymdl">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Edit Payment</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal body -->
-            <div class="modal-body">
-
-
-                <div class="row">
-                    <div class="col-lg-4 col-md-4">
-                        <div class="section card bg-light p-3">
-                            <div class="row pl-4">
-                                <table>
-                                    <tr>
-                                        <th>Supplier:</th>
-                                        <td>XXXXXX</td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Business:
-                                        </th>
-                                        <td>xxxxx</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
-                        <div class="section card bg-light p-3">
-                            <div class="row pl-4">
-                                <table>
-                                    <tr>
-                                        <th>Referenc No:</th>
-                                        <td>XXXXXX</td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Location:
-                                        </th>
-                                        <td>xxxxx</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
-                        <div class="section card bg-light p-3">
-                            <div class="row pl-4">
-                                <table>
-                                    <tr>
-                                        <th>Purchase Total:</th>
-                                        <td>XXXXXX</td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Payment Note:
-                                        </th>
-                                        <td>xxxxx</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-lg-4 col-md-4">
-                        <label>Amount</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">
-                                    <i class="fa fa-money"></i>
-                                </span>
-                            </div>
-                            <input type="text" class="form-control" aria-label="Username"
-                                aria-describedby="basic-addon1">
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
-                        <label>Paid On</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div>
-                            <input type="text" class="form-control" aria-label="Username"
-                                aria-describedby="basic-addon1">
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-4">
-                        <label>Pay Via</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">
-                                    <i class="fa fa-money"></i>
-                                </span>
-                            </div>
-                            <selct class="form-control">xxxxx</selct>
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-4 col-lg-4">
-                        <label>Attach Document:</label>
-                        <input type="file" class="form-control" style="border-style: none;" />
-                        <small>Previously uploaded file will be replaced</small>
-                    </div>
-                    <div class="col-md-6 col-lg-6">
-                        <label>Payment Account</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div>
-                            <input type="text" class="form-control" aria-label="Username"
-                                aria-describedby="basic-addon1">
-                        </div>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <label>Paymment Note</label>
-                        <textarea class="form-control" rows="4"></textarea>
-                    </div>
-
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <a class="btn btn-primary float-right text-white">Update</a>
-                        <a class="btn btn-danger float-right text-white mr-2">close</a>
-                    </div>
-                </div>
-
-            </div>
-
-
-
-        </div>
-    </div>
-</div>
-<!-- edit payment modal end here -->
-
 
 {% endblock %}
 
 {% block alljs %}
 <script>
     $(document).ready(function () {
-        $('#supplier_detail_table').DataTable();
-        // $('.dataTables_length').addClass('bs-select');
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#supplier_detail_tables').DataTable();
-        // $('.dataTables_length').addClass('bs-select');
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#supplier_detail_tablek').DataTable();
-        // $('.dataTables_length').addClass('bs-select');
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#customer_detail_tablek').DataTable();
+        $('.supplier_detail_table').DataTable();
         // $('.dataTables_length').addClass('bs-select');
     });
 </script>

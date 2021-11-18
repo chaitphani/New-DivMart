@@ -55,12 +55,12 @@
                         <option value="{{staff.id}}">{{staff.first_name}}</option>
                     {% endfor %}
                 </select>
-            </div>
+            </div>-->
         
         <div class="row">
             <div class="col-lg-12 overflow-auto">
                 <table class="table table-condensed">
-                    <tr>
+                  <!-- <tr>
                         <th>Cash in hand</th>
                         <td>₹ 0.00</td>
                     </tr>
@@ -84,14 +84,17 @@
                         <th>Other Payments</th>
                         <td>₹ {% if other %}{{other|floatformat:2|intcomma}}{% else %}0.00{% endif %}</td>
                     </tr>
-                    <!-- <tr>
+                    <tr>
                         <th>Total Payments</th>
                         <td>₹ 0.00</td>
                     </tr>  -->
+                    
                     <tr>
                         <th>Total Sales</th>
-                        <td>₹ {% if sale_value_from_payments %}{{sale_value_from_payments|floatformat:2|intcomma}}{%
-                            else %}0.00{% endif %}</td>
+                        <td>₹ {% if sale_value_from_payments != None %}
+                            {{sale_value_from_payments|floatformat:2|intcomma}}
+                            {% else %}0.00{% endif %}
+                        </td>
                     </tr>
                     <br>
                     <tr class="bg-light-green">

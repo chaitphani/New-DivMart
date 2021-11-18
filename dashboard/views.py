@@ -2075,7 +2075,7 @@ def members(request):
     member_app_list = RegisteredMembers.objects.filter(status=1)
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(member_app_list, 2)
+    paginator = Paginator(member_app_list, 10)
     try:
         member_app_list = paginator.page(page)
     except PageNotAnInteger:

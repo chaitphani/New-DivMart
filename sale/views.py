@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from dashboard.models import Product, Sell
 from useraccount.models import CustomerUser
@@ -9,7 +11,6 @@ from sale.models import *
 from datetime import datetime
 from dashboard.models import *
 from membership.crons import CreditedPointsSerializer
-from django.db.models import Q
 
 
 # from my side...
@@ -47,7 +48,7 @@ def sale_list(request):
                     sell_list = Sell.objects.filter(sale_date__year = year, sale_date__month = month, sale_date__day = day).filter(status='F', business_location=StaffUser.objects.get(user=request.user).business_location)
               
         except Exception as e:
-            print('---error----', e)
+            # print('---error----', e)
             if request.user.is_superuser:
                 sell_list = Sell.objects.filter(business_location__name__icontains = location).filter(status='F', is_deleted=False)
             else:
@@ -59,9 +60,17 @@ def sale_list(request):
         else:
             sell_list = Sell.objects.filter(status="F", business_location=StaffUser.objects.get(user=request.user).business_location, is_deleted=False)
 
-
     customers = CustomerUser.objects.filter(is_deleted=0)
     business_locations = BusinessLocation.objects.filter(status=True)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(sell_list, 5)
+    try:
+        sell_list = paginator.page(page)
+    except PageNotAnInteger:
+        sell_list = paginator.page(1)
+    except EmptyPage:
+        sell_list = paginator.page(paginator.num_pages)
 
     return render(request,'divmart_dashboard/all_sales_list.html', {'lists':sell_list, 'locations':business_locations, 'customers':customers})
 

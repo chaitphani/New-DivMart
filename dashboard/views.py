@@ -9,6 +9,7 @@ from django.db.models import Sum, F, Q
 from django.http import HttpResponse,JsonResponse
 from django.utils.decorators import method_decorator
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from rest_framework import serializers
 from rest_framework.response import Response
@@ -424,18 +425,6 @@ def add_new_product(request):
         prod_obj.prod_mrp = prod_obj.purchase_price_exc_tax
         prod_obj.save()
         return redirect('list_products')
-        
-    #     form = Produ  ctForm(request.POST)
-    #     if form.is_valid():
-    #         form_save = form.save(commit=False)
-    #         form_save.status=True
-    #         form_save.barcode_type = 'EAN13'
-    #         form_save.selling_price = form_save.selling_price_exc_tax
-    #         form_save.purchase_price = form_save.purchase_price_inc_tax
-    #         form_save.save()
-    #         return redirect('list_products')
-    # else:
-    #     form = ProductForm()
     
     return render(request,'divmart_dashboard/add_new_product.html',{'unit':unit,'brand':brand,'cat':cat,'sub_cat': sub_cat, 'rates':tax_rates,'business_location':business_location})  
 
@@ -505,12 +494,21 @@ def supplier_delete(request,id):
 
 @login_required(login_url='/useraccount/common_login')
 def customer_list(request):
-    try:
+
+    if not request.user.is_superuser:
         staff_user = StaffUser.objects.get(user=request.user)
         customer_user = CustomerUser.objects.filter(is_deleted=0, business_location=staff_user.business_location)
-    except:
-        staff_user = ''
+    else:
         customer_user = CustomerUser.objects.filter(is_deleted=0)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(customer_user, 10)
+    try:
+        customer_user = paginator.page(page)
+    except PageNotAnInteger:
+        customer_user = paginator.page(1)
+    except EmptyPage:
+        customer_user = paginator.page(paginator.num_pages)
 
     customer_group = CustomerGroups.objects.filter(is_deleted=0)
     business_location = BusinessLocation.objects.filter(status=True)
@@ -528,30 +526,30 @@ def delete_customer_group(request,id):
 
 @login_required(login_url='/useraccount/common_login')
 def import_contact(request):
-    if request.method == "POST":
-        csv_file = request.FILES.get("csv_file")
 
-        # result_list = []
-        # title_headers = []
-        # int_blacklist = ['id']
-        # float_blacklist = []
-        with open(csv_file, "r") as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=',')
-    #         line_count = 0
-            for row in csv_reader:
-                print(row)
-#             temp = {}
-    #             if line_count == 0:
-    #                 title_headers = row
-    #             else:
-    #                 for i in range(len(row)):
-    #                     if title_headers[i] in int_blacklist:
-    #                         temp[title_headers[i]] = int(row[i])
-    #                     else:
-    #                         temp[title_headers[i]] = row[i]
-    #             line_count += 1
-    #             result_list.append(temp)
-    # return result_list
+    if request.method == 'POST':
+        file = request.FILES.get('customers')
+        try:
+            data_set = file.read().decode('UTF-8')
+            io_string = io.StringIO(data_set)
+            csv_reader = csv.reader(io_string)
+            next(csv_reader)
+
+            for values in csv_reader:
+                try:
+                    city = values[3].split(',')[0]
+                    state = values[3].split(',')[1]
+                    country = values[3].split(',')[2]
+                except Exception as e:
+                    city = ''
+                    state = ''
+                    country = ''
+
+                conatct_obj = CustomerUser(contact_id=values[0], first_name=values[1], city=city, state=state, country=country, mobile=values[4], total_sales_due=values[5], total_sales_return_due=values[6])
+                conatct_obj.save()
+
+        except Exception as e:
+            messages.error(request, e)
     return render(request,'divmart_dashboard/import_contact.html')
 
 
@@ -1192,6 +1190,15 @@ def list_expenses(request):
     else:
         list_expense = Expenses.objects.filter(status=True)
 
+    page = request.GET.get('page', 1)
+    paginator = Paginator(list_expense, 10)
+    try:
+        list_expense = paginator.page(page)
+    except PageNotAnInteger:
+        list_expense = paginator.page(1)
+    except EmptyPage:
+        list_expense = paginator.page(paginator.num_pages)
+
     locations = BusinessLocation.objects.filter(status=True)
     category = Expenses_category.objects.filter(status=True)
 
@@ -1292,7 +1299,6 @@ def print_label(request):
     return render(request,'divmart_dashboard/print_label.html', {'images':images}) 
 
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 @login_required(login_url='/useraccount/common_login')
 def list_products(request):
 
@@ -1470,6 +1476,16 @@ def categories(request):
 
     category_list = Category.objects.filter(status=True)
     sub_category_list = SubCategory.objects.filter(status=True)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(category_list, 2)
+    try:
+        category_list = paginator.page(page)
+    except PageNotAnInteger:
+        category_list = paginator.page(1)
+    except EmptyPage:
+        category_list = paginator.page(paginator.num_pages)
+
     return render(request,'divmart_dashboard/categories.html',{"category_list":category_list, 'sub_category_list':sub_category_list, "form":form})
 
 
@@ -1549,6 +1565,16 @@ def sub_category(request):
         form = SubCategoryForm()
     
     sub_categories = SubCategory.objects.filter(status=True)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(sub_categories, 2)
+    try:
+        sub_categories = paginator.page(page)
+    except PageNotAnInteger:
+        sub_categories = paginator.page(1)
+    except EmptyPage:
+        sub_categories = paginator.page(paginator.num_pages)
+
     return render(request, 'divmart_dashboard/subcategory.html', {'form':form, 'sub_categories':sub_categories})
 
 
@@ -1898,6 +1924,15 @@ def list_purchase(request):
     business_location_list = BusinessLocation.objects.filter(status=True)
     supplier_users = SupplierUser.objects.filter(is_deleted=0)
 
+    page = request.GET.get('page', 1)
+    paginator = Paginator(pur_info, 2)
+    try:
+        pur_info = paginator.page(page)
+    except PageNotAnInteger:
+        pur_info = paginator.page(1)
+    except EmptyPage:
+        pur_info = paginator.page(paginator.num_pages)
+
     return render(request,'divmart_dashboard/list_purchase.html',
     {'pur_info':pur_info,'pay_obj':pay_obj, 'business_location_list':business_location_list, 'supplier_users':supplier_users}) 
 
@@ -1988,11 +2023,12 @@ def edit_purchase(request, id):
         return render(request,'divmart_dashboard/edit_purchase.html',{'per_info':per_info,'payment_obj':payment_obj,'purchase_obj':purchase_obj,'sup_obj':sup_obj,'prod_obj':prod_obj, 'accounts':payment_accounts, 'users':supplier_users, 'locations':business_location_list}) 
     except:
         messages.error(request, 'No data found with provided id')
-        return HttpResponse('No data found with provided id')
+        # return HttpResponse('No data found with provided id')
 
 
 def new_members(request):
     new_member_objs = RegisteredMembers.objects.filter(status=0)
+
     return render(request,'divmart_dashboard/new_members.html',{'data':new_member_objs})  
 
 
@@ -2037,6 +2073,15 @@ def view_members(request, id):
 
 def members(request):
     member_app_list = RegisteredMembers.objects.filter(status=1)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(member_app_list, 2)
+    try:
+        member_app_list = paginator.page(page)
+    except PageNotAnInteger:
+        member_app_list = paginator.page(1)
+    except EmptyPage:
+        member_app_list = paginator.page(paginator.num_pages)
     return render(request,'divmart_dashboard/members.html', {'lists':member_app_list}) 
 
 

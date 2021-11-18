@@ -1,5 +1,30 @@
 {% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<style>
+        .pagination {
+        float: right;
+        margin-right: 5%;
+        padding: 5px;
+    }
 
+    .pagination li {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .pagination li a {
+        color: white;
+    }
+
+    .pagination .active,
+    .pagination .disabled {
+        color: black;
+        background-color: #494d7c52;
+        cursor: auto;
+    }
+</style>
 <div class="container-fluid">
     <h5>All Sales</h5>
 
@@ -155,374 +180,42 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <!-- Invoice modal start here -->
-
-    <div class="modal fade invoice_mdl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-
-                <div class="section">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-4 col-md-4 col-lg-4 pd-10 pl-5">
-                                <div class="row">
-                                    <b>Invoice No</b> : xxxx
-                                </div>
-                                <div class="row">
-                                    <b>Status</b> : xxxx
-                                </div>
-                                <div class="row">
-                                    <b>Payment Status</b> : xxxx
-                                </div>
-                            </div>
-                            <div class="col-sm-4 col-md-4 col-lg-4 pd-10">
-                                <div class="row">
-                                    <b>Customer Name</b> : xxxx
-                                </div>
-                                <div class="row">
-                                    <b>Walk In Customer</b> : xxxx
-                                </div>
-
-                            </div>
-                            <div class="col-sm-4 col-md-4 col-lg-4 pd-10">
-                                <div class="row">
-                                    <b>Table</b> : xxxx
-                                </div>
-                                <div class="row">
-                                    <b>Service Staff</b> : xxxx
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="row mt-2">
-                            <h4 class="ml-3">Products:</h4>
-                        </div>
-
-                        <div class="row table-responsive overflow-auto pl-3 pr-3">
-                            <table class="table" id="customer_detail_tablek">
-                                <thead class="bg-info">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Product Quantity</th>
-                                        <th>Unit Price </th>
-                                        <th>Discount</th>
-                                        <th>Tax</th>
-                                        <th>Price inc. tax</th>
-                                        <th>Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>xxxx</td>
-                                        <td>xxxx</td>
-                                        <td>xxxx</td>
-                                        <td>xxxx</td>
-                                        <td>xxxx</td>
-                                        <td>xxxx</td>
-                                    </tr>
-
-
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="row mt-2 ">
-                            <h4 class="ml-3">Payments Info:</h4>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-lg-6">
-                                <div class="section">
-                                    <div class="row pl-3 pr-3 overflow-auto">
-                                        <table class="table table-sm">
-                                            <thead class="bg-info">
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Date</th>
-                                                    <th>Reference No</th>
-                                                    <th>Amount</th>
-                                                    <th>Payment Mode</th>
-                                                    <th>Payment Note</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>xxxx</td>
-                                                    <td>xxxx</td>
-                                                    <td>xxxx</td>
-                                                    <td>xxxx</td>
-                                                    <td>xxxx</td>
-
-                                                </tr>
-
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 col-lg-6">
-                                <div class="section">
-                                    <div class="row pl-3 pr-3 overflow-auto">
-                                        <table class="table table-sm">
-
-                                            <tbody>
-                                                <tr class="bg-light">
-                                                    <th>Total :</th>
-                                                    <th></th>
-                                                    <td>xxxxxx</td>
-                                                </tr>
-                                                <tr class="bg-light">
-                                                    <th>Discount :</th>
-                                                    <th>(-)</th>
-                                                    <td>xxxxx</td>
-                                                </tr>
-                                                <tr class="bg-light">
-                                                    <th>Order Tax :</th>
-                                                    <th>+</th>
-                                                    <td>xxxxx</td>
-                                                </tr>
-                                                <tr class="bg-light">
-                                                    <th>Shipping :</th>
-                                                    <th>(-)</th>
-                                                    <td>xxxxx</td>
-                                                </tr>
-                                                <tr class="bg-light">
-                                                    <th>Total Payble :</th>
-                                                    <th>(-)</th>
-                                                    <td>xxxxx</td>
-                                                </tr>
-                                                <tr class="bg-light">
-                                                    <th>Total Paid :</th>
-                                                    <th>(-)</th>
-                                                    <td>xxxxx</td>
-                                                </tr>
-                                                <tr class="bg-light">
-                                                    <th>Total Remaining :</th>
-                                                    <th>(-)</th>
-                                                    <td>xxxxx</td>
-                                                </tr>
-
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6">
-                                <div class="section">
-                                    <div class="row pl-3 pr-3 overflow-auto">
-                                        <table class="table table-sm">
-                                            <tbody>
-                                                <label>Sell Note</label>
-                                                <tr class="bg-light">
-                                                    <th>-</th>
-                                                    <th></th>
-
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6">
-                                <div class="section">
-                                    <div class="row pl-3 pr-3 pverflow-auto">
-                                        <table class="table table-sm">
-
-                                            <tbody>
-                                                <label>Staff Note</label>
-                                                <tr class="bg-light">
-                                                    <th>-</th>
-                                                    <th></th>
-
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 mb-4">
-                                <a class="btn btn-primary text-white float-right"><i class="fa fa-faprint"></i>&nbsp;
-                                    Print</a>
-                                <a class="btn btn-danger text-white float-right mr-3">Close</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
+        {% if lists.has_other_pages %}
+        <nav aria-label="Page navigation example"></nav>
+        <ul class="pagination justify-content-end">
+            {% if lists.has_previous %}
+            <li><a href="?page={{ lists.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in lists.paginator.page_range %}
+            {% if lists.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+            <li class="to_select"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if lists.has_next %}
+            <li>
+                <a href="?page={{ lists.next_page_number }}">&raquo;</a>
+            </li>
+            {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+        {% endif %}
     </div>
 </div>
 
-<!-- Invoice modal end here -->
 
-<!-- payment status start here  -->
-<div class="modal payment_status_mdl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">View Payments (Invoice No .)</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-4 col-md-4">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <td>Customer :<br>
-                                    <b>Wal in Customers</b>
-                                </td>
-
-
-
-                            </tr>
-
-                        </table>
-                    </div>
-
-                    <div class="col-lg-4 col-md-4">
-                        <table>
-                            <tr>
-                                <td>
-                                    <table>
-                                        <tr>
-                                            <td>Business :</td>
-
-                                        </tr>
-                                        <tr>
-                                            <th>Divmart</th>
-                                        </tr>
-                                        <tr>
-                                            <td> Manbhavan Restaurant Opp. Dawa Bazar, Chhoti Gwaltoli, Indore, Madhya
-                                                Pradesh indore,mp,india</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-
-                                                <table>
-                                                    <tr>
-                                                        <td>Mobile :</td>
-                                                        <td>xxxxxxxxx</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Email :</td>
-                                                        <td>xxxxx@yopmail.com</td>
-                                                    </tr>
-                                                </table>
-
-                                            </td>
-                                        </tr>
-
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="col-lg-4 col-md-4">
-                        <table>
-                            <tr>
-                                <td>
-                                    <table>
-                                        <tr>
-                                            <th>Invoice No :</th>
-                                            <td>xxx</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Date :</th>
-                                            <td>xxx</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Payment Status :</th>
-                                            <td>xxxx</td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <a class="btn btn-primary float-right text-white btn-sm"><i class="fa fa-envelope"></i>&nbsp;
-                            Send Payment Recieved Notification</a>
-                    </div>
-                </div>
-
-                <div class="section  pl-3 mt-3">
-                    <table class="table-sm w-100">
-                        <tr class="bg-light">
-                            <th class="th-sm">Date </th>
-                            <th class="th-sm">Reference No.</th>
-                            <th class="th-sm">Amount</th>
-                            <th class="th-sm">Payment Method</th>
-                            <th class="th-sm">Payment Note</th>
-                            <th class="th-sm">Payment Account</th>
-                            <th class="th-sm">Action</th>
-                        </tr>
-                        <tr>
-                            <td>xxxx</td>
-                            <td>xxxx</td>
-                            <td>xxxx</td>
-                            <td>xxxx</td>
-                            <td>xxxx</td>
-                            <td>xxxx</td>
-
-                            <td>
-                                <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                    <button type="button" class="btn btn-info" data-toggle="modal"
-                                        data-target="#editpymdl"><i class="fa fa-edit"></i></button>
-                                    <button type="button" class="btn btn-danger ml-1"><i
-                                            class="fa fa-trash"></i></button>
-                                    <button type="button" class="btn btn-primary ml-1" data-toggle="modal"
-                                        data-target="#pymmdl"><i class="fa fa-eye"></i></button>
-                                </div>
-
-                            </td>
-                        </tr>
-                    </table>
-                    <hr>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <a class="btn btn-primary float-right text-white"><i class="fa fa-print"></i>&nbsp;Print</a>
-                            <a class="btn btn-danger float-right text-white mr-2 "> Close</a>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
-<!-- payment status end here -->
 </div>
 {%endblock%} {% block alljs %}
 
 <script>
     $(document).ready(function () {
         $('#sales_table').dataTable({
+            "bPaginate": false,
             columnDefs: [{
                 orderable: false,
                 className: 'select-checkbox',
@@ -535,6 +228,7 @@
         });
     });
 </script>
+
 <script>
     $('.del_btn').click(function (e) {
         var action = confirm('Are you sure to remove..?');

@@ -1,5 +1,8 @@
 {% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<style>
 
+
+</style>
 <div class="container-fluid">
     <h5>Manage your Categories</h5>
 </div>
@@ -74,6 +77,31 @@
         </tbody>
     </table>
     </div>
+    {% if category_list.has_other_pages %}
+    <nav aria-label="Page navigation example"></nav>
+    <ul class="pagination justify-content-end">
+        {% if category_list.has_previous %}
+        <li><a href="?page={{ category_list.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in category_list.paginator.page_range %}
+        {% if category_list.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li class="to_select"><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if category_list.has_next %}
+        <li>
+            <a href="?page={{ category_list.next_page_number }}">&raquo;</a>
+        </li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+</nav>
+    {% endif %}
 </div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -148,8 +176,9 @@
 {%endblock%} {% block alljs %}
 <script>
     $(document).ready(function() {
-        $('#variation').DataTable();
-        $('.dataTables_length').addClass('bs-select');
+        $('#variation').DataTable({
+            "bPaginate": false,
+        });
     });
 </script>
 <script>

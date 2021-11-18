@@ -199,12 +199,13 @@
     src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
 
 <script>
-    // $(document).ready(function () {
-    //     $('#list_product_table').dataTable({
-    //         order: [[1, 'asc']]
-    //     });
-    //     $('#stock_report_table').DataTable();
-    // });
+    $(document).ready(function () {
+        $('#list_product_table').dataTable({
+            "bPaginate": false,
+            order: [[1, 'asc']]
+        });
+        $('#stock_report_table').DataTable();
+    });
 
 
     $('#all_check').click(function () {

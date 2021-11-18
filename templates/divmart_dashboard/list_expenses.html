@@ -1,5 +1,30 @@
 {% extends 'divmart_dashboard/index.html' %} {% load customtags %} {% load i18n %} {% load static %} {% block home%}
+<style>
+        .pagination {
+        float: right;
+        margin-right: 5%;
+        padding: 5px;
+    }
 
+    .pagination li {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .pagination li a {
+        color: white;
+    }
+
+    .pagination .active,
+    .pagination .disabled {
+        color: black;
+        background-color: #494d7c52;
+        cursor: auto;
+    }
+</style>
 <div class="container-fluid">
     <h4>Expenses</h4>
     <div clas="section card accordion p-3" id="accordionExample" style="border-top:3px solid green">
@@ -87,6 +112,31 @@
             </tbody>
         </table>
         </div>
+        {% if new_prod.has_other_pages %}
+        <nav aria-label="Page navigation example"></nav>
+        <ul class="pagination justify-content-end">
+            {% if new_prod.has_previous %}
+            <li><a href="?page={{ new_prod.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in new_prod.paginator.page_range %}
+            {% if new_prod.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+            <li class="to_select"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if new_prod.has_next %}
+            <li>
+                <a href="?page={{ new_prod.next_page_number }}">&raquo;</a>
+            </li>
+            {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+        {% endif %}
     </div>
 </div>
 {%endblock%}{% block alljs %}
@@ -94,6 +144,7 @@
 <script>
     $(document).ready(function () {
         $('#list_product_table').dataTable({
+            "bPaginate": false,
             columnDefs: [{
                 orderable: false,
                 className: 'select-checkbox',

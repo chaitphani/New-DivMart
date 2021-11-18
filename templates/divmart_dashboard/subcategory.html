@@ -1,8 +1,32 @@
 {% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<style>
+        .pagination {
+        float: right;
+        margin-right: 5%;
+        padding: 5px;
+    }
 
+    .pagination li {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .pagination li a {
+        color: white;
+    }
+
+    .pagination .active,
+    .pagination .disabled {
+        color: black;
+        background-color: #494d7c52;
+        cursor: auto;
+    }
+</style>
 <div class="container-fluid">
     <h5>Manage your Sub-Categories</h5>
-
 
 <div class="section card p-3" style="border-top:2px solid green">
     <div class="row">
@@ -68,6 +92,31 @@
         </tbody>
     </table>
     </div>
+    {% if sub_categories.has_other_pages %}
+    <nav aria-label="Page navigation example"></nav>
+    <ul class="pagination justify-content-end">
+        {% if sub_categories.has_previous %}
+        <li><a href="?page={{ sub_categories.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in sub_categories.paginator.page_range %}
+        {% if sub_categories.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li class="to_select"><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if sub_categories.has_next %}
+        <li>
+            <a href="?page={{ sub_categories.next_page_number }}">&raquo;</a>
+        </li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+</nav>
+    {% endif %}
 </div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -95,12 +144,13 @@
         </div>
     </div>
 </div>
-</div>
+
 {%endblock%} {% block alljs %}
 <script>
     $(document).ready(function() {
-        $('#variation').DataTable();
-        $('.dataTables_length').addClass('bs-select');
+        $('#variation').DataTable({
+            "bPaginate": false,
+        });
     });
 </script>
 <script>

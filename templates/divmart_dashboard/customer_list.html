@@ -1,9 +1,35 @@
 {% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<style>
+    .pagination {
+        float: right;
+        margin-right: 5%;
+        padding: 5px;
+    }
 
+    .pagination li {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .pagination li a {
+        color: white;
+    }
+
+    .pagination .active,
+    .pagination .disabled {
+        color: black;
+        background-color: #494d7c52;
+        cursor: auto;
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 col-sm-2">
-            <a href="{% url 'dashboard_pos' %}" class="btn btn-primary btn-sm text-white mb-3"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp; Move to POS</a>
+            <a href="{% url 'dashboard_pos' %}" class="btn btn-primary btn-sm text-white mb-3"><i
+                    class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp; Move to POS</a>
         </div>
         <div class="col-md-7 co-sm-7">
             <h5 class="text-center">Manage your Customers</h5>
@@ -48,17 +74,18 @@
                         <td class="text-danger">{{ cust.total_sales_due }}</td>
                         <td>
                             <div class="btn-group dropleft">
-                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false"> Action</button>
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Action</button>
                                 <div class="dropdown-menu bg-primary">
-                                    <a class="dropdown-item" href="{% url 'customer_detail' cust.id %}"> 
+                                    <a class="dropdown-item" href="{% url 'customer_detail' cust.id %}">
                                         <i class="fa fa-eye" aria-hidden="true"></i>&nbsp; View
                                     </a>
-                                    <a class="dropdown-item" href="{% url 'customer_edit' cust.id %}"> <i class="fa fa-external-link"
-                                            aria-hidden="true"></i> &nbsp;Edit
+                                    <a class="dropdown-item" href="{% url 'customer_edit' cust.id %}"> <i
+                                            class="fa fa-external-link" aria-hidden="true"></i> &nbsp;Edit
                                     </a>
                                     {% if request.user.is_superuser %}
-                                    <a class="dropdown-item del_cust" href="{% url 'customer_delete' cust.id %}}" > <i class="fa fa-trash" aria-hidden="true"></i>
+                                    <a class="dropdown-item del_cust" href="{% url 'customer_delete' cust.id %}}"> <i
+                                            class="fa fa-trash" aria-hidden="true"></i>
                                         &nbsp;Delete
                                     </a>
                                     {% endif %}
@@ -70,6 +97,29 @@
                 </tbody>
             </table>
         </div>
+        {% if customer_user.has_other_pages %}
+            <nav aria-label="Page navigation example"></nav>
+                <ul class="pagination justify-content-end">
+                    {% if customer_user.has_previous %}
+                        <li><a href="?page={{ customer_user.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="disabled"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in customer_user.paginator.page_range %}
+                        {% if customer_user.number == i %}
+                            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="to_select"><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if customer_user.has_next %}
+                        <li><a href="?page={{ customer_user.next_page_number }}">&raquo;</a></li>
+                    {% else %}
+                        <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
 
         <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
             aria-hidden="true">
@@ -102,7 +152,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                                         </div>
-                                        <input type="text" placeholder="Customer name here" class="form-control" name="first_name" required />
+                                        <input type="text" placeholder="Customer name here" class="form-control"
+                                            name="first_name" required />
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +196,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                                         </div>
-                                        <input type="text" value="0" class="form-control" name="opening_balance" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                        <input type="text" value="0" class="form-control" name="opening_balance"
+                                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4">
@@ -165,12 +217,12 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-map"></i></span>
                                         </div>
-                                       <select class="form-control" name="business_location" required>
-                                           <option value="">Please select</option>
-                                           {% for location in locations %}
-                                                <option value="{{location.id}}">{{location.name}}</option>
-                                           {% endfor %}
-                                       </select>
+                                        <select class="form-control" name="business_location" required>
+                                            <option value="">Please select</option>
+                                            {% for location in locations %}
+                                            <option value="{{location.id}}">{{location.name}}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -182,9 +234,9 @@
                                             <span class="input-group-text"><i class="fa fa-users"></i></span>
                                         </div>
                                         <select class="form-control" name="customer_group" required>
-                                        <option value="">Please select</option>
+                                            <option value="">Please select</option>
                                             {% for cg in customer_group %}
-                                                <option value="{{ cg.id }}">{{ cg.name }}</option>
+                                            <option value="{{ cg.id }}">{{ cg.name }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -195,7 +247,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
                                         </div>
-                                        <input type="email" placeholder="abc@mail.com" class="form-control" name="email" required />
+                                        <input type="email" placeholder="abc@mail.com" class="form-control" name="email"
+                                            required />
                                     </div>
                                 </div>
                             </div>
@@ -208,7 +261,9 @@
                                                     aria-hidden="true"></i>
                                             </span>
                                         </div>
-                                        <input type="text" placeholder="95012345678" class="form-control" name="mobile" required oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                        <input type="text" placeholder="95012345678" class="form-control" name="mobile"
+                                            required
+                                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4">
@@ -217,7 +272,9 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-mobile"></i></span>
                                         </div>
-                                        <input type="text" placeholder="95012345678" class="form-control" name="alternative_contact" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                        <input type="text" placeholder="95012345678" class="form-control"
+                                            name="alternative_contact"
+                                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4">
@@ -226,7 +283,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-phone"></i></span>
                                         </div>
-                                        <input type="text" class="form-control" name="Landline" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                        <input type="text" class="form-control" name="Landline"
+                                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
                                     </div>
                                 </div>
                             </div>
@@ -249,7 +307,8 @@
                                                     aria-hidden="true"></i>
                                             </span>
                                         </div>
-                                        <input type="text" placeholder="Uttar-Pradesh" class="form-control" name="state" />
+                                        <input type="text" placeholder="Uttar-Pradesh" class="form-control"
+                                            name="state" />
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-lg-3">
@@ -267,7 +326,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
                                         </div>
-                                        <input type="text" placeholder="Opposite to DivMart departmental store" class="form-control" name="land_mark" />
+                                        <input type="text" placeholder="Opposite to DivMart departmental store"
+                                            class="form-control" name="land_mark" />
                                     </div>
                                 </div>
                             </div>
@@ -284,18 +344,20 @@
 {%endblock%}{% block alljs %}
 <script>
     $(document).ready(function () {
-        $('#role_table').DataTable();
+        $('#role_table').DataTable({
+            "bPaginate": false,
+        });
         // $('.dataTables_length').addClass('bs-select');
     });
 </script>
 
 <script>
-    $('.del_cust').click(function(e){
+    $('.del_cust').click(function (e) {
         e.preventDefault();
         var action = confirm('Are you sure to remove..?');
-        if (action == false){
+        if (action == false) {
             e.preventDefault();
-        }else{
+        } else {
             location.reload();
         }
     })

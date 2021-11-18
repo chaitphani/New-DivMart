@@ -6,6 +6,30 @@
         text-decoration: none;
         background-color: #ffc107;
     }
+    .pagination {
+        float: right;
+        margin-right: 5%;
+        padding: 5px;
+    }
+
+    .pagination li {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .pagination li a {
+        color: white;
+    }
+
+    .pagination .active,
+    .pagination .disabled {
+        color: black;
+        background-color: #494d7c52;
+        cursor: auto;
+    }
 </style>
 
 <div class="container-fluid">
@@ -134,323 +158,34 @@
                     </tr>
             </table>
         </div>
+        {% if pur_info.has_other_pages %}
+        <nav aria-label="Page navigation example"></nav>
+        <ul class="pagination justify-content-end">
+            {% if pur_info.has_previous %}
+            <li><a href="?page={{ pur_info.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in pur_info.paginator.page_range %}
+            {% if pur_info.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+            <li class="to_select"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if pur_info.has_next %}
+            <li>
+                <a href="?page={{ pur_info.next_page_number }}">&raquo;</a>
+            </li>
+            {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+        {% endif %}
     </div>
 
-    <!-- view purchase modal start here  -->
-    <div class="modal fade purchase_mdl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-        aria-hidden="true" id="purchse_print">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header bg-light">
-                    <h5 class="modal-title" id="exampleModalLabel">Purchase Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="section">
-                    <div class="container-fluid">
-                        <div class="row p-3">
-                            <div class="col-sm-4 col-md-4 col-lg-4">
-                                <div class="row">
-                                
-                                <h6> Supplier Detail:</h6><hr>
-                                </div>
-                                <div class="row">
-                                    <label>Supplier Name: <span id="ele1">{% if val.supplier.business_name %}{{val.supplier.business_name}}{% else %}NP{% endif %}</span></label>
-                                </div>
-                                <div class="row">
-                                    <label>City: <span id="ele2">{% if val.supplier.city %}{{val.supplier.city}}{% else %}NP{% endif %}</span></label>
-                                </div>
-                                <!-- <div class="row">
-                                    <label>Address: <span id="ele3"></span></label>
-                                </div> -->
-                                <div class="row">
-                                    <label>Tax Number : <span id="ele4">{% if val.supplier.tax_number %}{{val.supplier.tax_number}}{% else %}NP{% endif %}</span></label>
-                                </div>
-                                <div class="row">
-                                    <label>Mobile : <span id="ele5">{% if val.supplier.mobile %}{{val.supplier.mobile}}{% else %}NP{% endif %}</span></label>
-                                </div>
-                                <div class="row">
-                                   <label> Email : <span id="ele6">{% if pur_info.supplier.email %}{{pur_info.supplier.email}}{% else %}NP{% endif %}</span></label>
-                                </div>
-                            </div>
-                            <div class="col-sm-4 col-md-4 col-lg-4 pd-10 float-right">
-                                {% if pur_info.ref_no %}
-                                <div class="row">
-                                    <label>Reference No : <span id="ele11">{{pur_info.ref_no}}</span></label>
-                                </div>
-                                {% endif %}
-                                <div class="row">
-                                    <label>Date : <span id="ele12">{{pur_info.purchase_date|date:'d-M-Y'}}</span></label>
-                                </div>
-                                <!-- <div class="row">
-                                    <label>Purchase Status : <span id="ele13"></span></label>
-                                </div> -->
-                                <div class="row">
-                                    <label>Payment Status : <span id="ele14">{% if pur_info.payment_info.payment_status == 'True' %}Paid{% else %}Unpaid{% endif %}</span></label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <h6 class="ml-3">Products:</h6>
-                        </div>
-                        <div class="table-responsive overflow-auto">
-                            <table class="table" id="customer_detail_tablek">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <th>Product Name</th>
-                                        <th>Product Quantity</th>
-                                        <th>Unit Cost (Before Discount)</th>
-                                        <th>Discount Percent</th>
-                                        <th>Unit Cost (Before Tax)</th>
-                                        <th>Subtotal (Before Tax)</th>
-                                        <th>Tax</th>
-                                        <th>Unit Cost Price (After Tax)</th>
-                                        <th>Unit Selling Price</th>
-                                        <th>Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="bala">
-                                    
-                                    <tr>
-
-                                    </tr>
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="row mt-2 ">
-                            <h6 class="ml-3">Payments Info:</h6>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-lg-6">
-                                <div class="section">
-                                    <div class="row pl-3 overflow-auto pr-3">
-                                        <table class="table table-sm">
-                                            <thead class="bg-light">
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Date</th>
-                                                    <th>Reference No</th>
-                                                    <th>Amount</th>
-                                                    <th>Payment Mode</th>
-                                                    <th>Payment Note</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr id="san">
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 col-lg-6">
-                                <div class="section">
-                                    <div class="row overflow-auto pl-3 pr-3">
-                                        <table class="table table-sm">
-                                            <tbody>
-                                                <tr class="bg-light">
-                                                    <th>Net Total Amount :</th>
-                                                    <th></th>
-                                                    <td id="nm1">xxxxxx</td>
-                                                </tr>
-                                                <tr class="bg-light">
-                                                    <th>Discount :</th>
-                                                    <th>(-)</th>
-                                                    <td id="nm2">xxxxx</td>
-                                                </tr>
-                                                <tr class="bg-light">
-                                                    <th>Purchase Tax :</th>
-                                                    <th>(+)</th>
-                                                    <td id="nm3">xxxxx</td>
-                                                </tr>
-                                                <tr class="bg-light">
-                                                    <th>Additional Shipping Charges :</th>
-                                                    <th>(+)</th>
-                                                    <td id="nm4">xxxxx</td>
-                                                </tr>
-                                                <tr class="bg-light">
-                                                    <th>Purchase Total :</th>
-                                                    <th></th>
-                                                    <td id="nm5">xxxxx</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6">
-                                <div class="section">
-                                    <div class="row pl-3 overflow-autto pr-3">
-                                        <table class="table table-sm">
-                                            <tbody>
-                                                <label>Shipping Details -</label>
-                                                <tr class="bg-light">
-                                                    <td id="nm6"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6">
-                                <div class="section">
-                                    <div class="row pl-3 pr-3 overflow-auto">
-                                        <table class="table table-sm">
-                                            <tbody>
-                                                <label>Additional Note -</label>
-                                                <tr class="bg-light">
-                                                    <td id="nm7"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12 float-right">
-                                <a onclick="printDiv()"
-                                    class="float-right btn btn-primary text-white mb-3"><i
-                                        class="fa fa-print"></i>&nbsp; Print</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-<!-- view purchase modal end here -->
-<!-- payment status start here  -->
-
-<div class="modal payment_status_mdl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">View Payments (Invoice No .)</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-4 col-md-4 overflow-auto">
-                        <table class="table table-sm table-borderless">
-                            <tr>
-                                <div class="row">
-                                    <b> Supplier :</b>
-                                </div>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-lg-4 col-md-4 overflow-auto">
-                        <table>
-                            <tr>
-                                <td>
-                                    <table>
-                                        <tr>
-                                            <td>Business :</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Divmart</th>
-                                        </tr>
-                                        <tr>
-                                            <td> Manbhavan Restaurant Opp. Dawa Bazar, Chhoti Gwaltoli, Indore, Madhya
-                                                Pradesh indore,mp,india</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <table>
-                                                    <tr>
-                                                        <td>Mobile :</td>
-                                                        <td>xxxxxxxxx</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Email :</td>
-                                                        <td>xxxxx@yopmail.com</td>
-                                                    </tr>
-                                                </table>
-
-                                            </td>
-                                        </tr>
-
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="col-lg-4 col-md-4 overflow-auto">
-                        <table>
-                            <tr>
-                                <td>
-                                    <table>
-                                        <tr>
-                                            <th>Invoice No :</th>
-                                            <td>xxx</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Date :</th>
-                                            <td id="dt">xxx</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Payment Status :</th>
-                                            <td id="ps"></td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <a class="btn btn-primary float-right text-white btn-sm"><i class="fa fa-envelope"></i>&nbsp;
-                            Send Payment Recieved Notification</a>
-                    </div>
-                </div>
-
-                <div class="section overflow-auto pl-3 mt-3">
-                    <table class="table-sm w-100">
-                        <tr class="bg-light">
-                            <th class="th-sm">Date </th>
-                            <th class="th-sm">Reference No.</th>
-                            <th class="th-sm">Amount</th>
-                            <th class="th-sm">Payment Method</th>
-                            <th class="th-sm">Payment Note</th>
-                            <th class="th-sm">Payment Account</th>
-                            <!-- <th class="th-sm">Action</th> -->
-                        </tr>
-                        <tr id="paymod">
-                            <!-- <td>
-                                <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editpymdl"><i class="fa fa-edit"></i></button>
-                                    <button type="button" class="btn btn-danger ml-1"><i class="fa fa-trash"></i></button>
-                                    <button type="button" class="btn btn-primary ml-1" data-toggle="modal" data-target="#pymmdl"><i class="fa fa-eye"></i></button>
-                                </div>
-                            </td> -->
-                        </tr>
-                    </table>
-                    <hr>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <a class="btn btn-primary float-right text-white"><i class="fa fa-print"></i>&nbsp;Print</a>
-                            <a class="btn btn-danger float-right text-white mr-2 "> Close</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- payment status end here -->
 
 <script>
     const paid = document.querySelectorAll(".paid-pt");
@@ -714,8 +449,9 @@
 
 <script>
     $(document).ready(function () {
-        $('#list_purchase_table').DataTable();
-        $('.dataTables_length').addClass('bs-select');
+        $('#list_purchase_table').DataTable({
+            "bPaginate": false,
+        });
     });
 </script>
 
@@ -728,6 +464,7 @@
         });
     });
 </script>
+
 <script>
     function printDiv() {
         var divToPrint = document.getElementById('purchse_print');
@@ -738,6 +475,7 @@
         setTimeout(function () { newWin.close(); }, 10);
     }
 </script>
+
 <script>
     $(function() {
         var TotalValue = 0;
@@ -751,7 +489,6 @@
     $(function() {
         var TotalValue = 0;
         $(".due").each(function(index,value){
-            console.log('----index, ,value', index, value)
         currentRow = parseFloat($(this).text());
         TotalValue += currentRow
         });

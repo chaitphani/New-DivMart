@@ -1,20 +1,45 @@
 {% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<style>
+        .pagination {
+        float: right;
+        margin-right: 5%;
+        padding: 5px;
+    }
 
-    <div class="container-fluid"> 
-        <h5>Members</h5>
-        <div class="section card p-3" style="border-top:3px solid green">
-            <p>All Members</p>
-            {% if messages %}
-                <ul class="messages list-unstyled">
-                    {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }} text-center font-weight-bold p-2 m-0"{% endif %}>
-                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-                            {{ message }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            <div class="overflow-auto">
+    .pagination li {
+        background-color: #007bff;
+        color: white;
+        padding: 4px 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    .pagination li a {
+        color: white;
+    }
+
+    .pagination .active,
+    .pagination .disabled {
+        color: black;
+        background-color: #494d7c52;
+        cursor: auto;
+    }
+</style>
+<div class="container-fluid">
+    <h5>Members</h5>
+    <div class="section card p-3" style="border-top:3px solid green">
+        <p>All Members</p>
+        {% if messages %}
+        <ul class="messages list-unstyled">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }} text-center font-weight-bold p-2 m-0" {% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+                </li>
+                {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="overflow-auto">
             <table class="table table-sm w-100" id="membertable">
                 <thead>
                     <tr>
@@ -41,8 +66,8 @@
                         <td>{% if list.status == 1 %}Active{% else %}Inactive{% endif %}</td>
                         <td>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action
                                 </button>
                                 <div class="dropdown-menu bg-primary">
@@ -62,23 +87,51 @@
                     {% endfor %}
                 </tbody>
             </table>
-            </div>
         </div>
+        {% if new_prod.has_other_pages %}
+        <nav aria-label="Page navigation example"></nav>
+        <ul class="pagination justify-content-end">
+            {% if new_prod.has_previous %}
+            <li><a href="?page={{ new_prod.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in new_prod.paginator.page_range %}
+            {% if new_prod.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+            <li class="to_select"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if new_prod.has_next %}
+            <li>
+                <a href="?page={{ new_prod.next_page_number }}">&raquo;</a>
+            </li>
+            {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+        </nav>
+        {% endif %}
     </div>
-    
-    {%endblock%} {% block alljs %}
-    <script>
-        $(document).ready(function () {
-            $('#membertable').DataTable();
-            $('.dataTables_length').addClass('bs-select');
+</div>
+
+{%endblock%} {% block alljs %}
+<script>
+    $(document).ready(function () {
+        $('#membertable').DataTable({
+            "bPaginate": false,
+
         });
-    </script>
-    <script>
-        $('.btnClickRem').click(function (e) {
-            var action = confirm('Are you sure to remove member from this list...?');
-            if (action == false) {
-                e.preventDefault();
-            } else { location.reload(); }
-        })
-    </script>
-    {%endblock%}
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+<script>
+    $('.btnClickRem').click(function (e) {
+        var action = confirm('Are you sure to remove member from this list...?');
+        if (action == false) {
+            e.preventDefault();
+        } else { location.reload(); }
+    })
+</script>
+{%endblock%}

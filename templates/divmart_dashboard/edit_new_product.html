@@ -87,13 +87,14 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-sm-4 col-md-4">
+                <div class="col-sm-6 col-md-6">
                     <label>Product Description(optional)</label>
                     <textarea class="form-control rounded-0" name="Product_description" 
-                        id="exampleFormControlTextarea1" rows="1">{% if prod.Product_description %}{{ prod.Product_description }}{% endif %}
+                        id="exampleFormControlTextarea1" rows="1">
+                        {% if prod.Product_description %}{{ prod.Product_description }}{% endif %}
                     </textarea>
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
+                <!-- <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Upload Image(optional)</label>
                     <div class="input-group">
                         <input type="text" class="form-control" readonly>
@@ -104,8 +105,8 @@
                             </span>
                         </span>
                     </div>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
+                </div> -->
+                <div class="col-sm-6 col-md-6 col-lg-6">
                     <label>Weight(optional)</label>
                     <input type="number" class="form-control" name="weight" value="{% if prod.weight %}{{ prod.weight }}{% else %}0{% endif %}">
                 </div>
@@ -118,7 +119,7 @@
                     <select id="tax" class="form-control" name="applicable_tax" onchange="pricecal()">
                         <option value="">Please select</option>
                         {% for rate in rates %}
-                            <option value="{{rate.id}}" {% if rate.id == prod.applicable_tax.id %}selected{% endif %}>{{rate.name}}-{{rate.rate}}</option>
+                            <option value="{{rate.rate}}" {% if rate.id == prod.applicable_tax.id %}selected{% endif %}>{{rate.name}}-{{rate.rate}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -202,32 +203,46 @@
         let tax = document.getElementById("tax").value;
         let margin = document.getElementById("margin").value;
 
-        var cal_tax = parseFloat(price) * parseFloat(tax / 100)
-        var inc = parseFloat(price) + parseFloat(cal_tax)
+        if (tax >= 0.0){
+            var cal_tax = parseFloat(price) * parseFloat(tax / 100)
+            var inc = parseFloat(price) + parseFloat(cal_tax)
 
-        var cal_margin = (parseFloat(price) * parseFloat(margin/100))
-        var selling_price = parseFloat(cal_margin) + parseFloat(price)
+            var cal_margin = (parseFloat(price) * parseFloat(margin/100))
+            var selling_price = parseFloat(cal_margin) + parseFloat(price)
 
-        if (tax.value != '') {
-            if (price.length != '') {
-                document.getElementById("inc").value = inc.toFixed(2)
-                document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+            if (tax.value != '') {
+                if (price.length != '') {
+                    document.getElementById("inc").value = inc.toFixed(2)
+                    document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+                }
+                else {
+                    document.getElementById("inc").value = price.toFixed(2)
+                    document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+                }
             }
-            else {
-                document.getElementById("inc").value = price.toFixed(2)
-                document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
-            }
-        }
+        }else{
+            var cal_margin = (parseFloat(price) * parseFloat(margin/100))
+            var selling_price = parseFloat(cal_margin) + parseFloat(price)
+
+            if (tax.value != '') {
+                if (price.length != '') {
+                    document.getElementById("inc").value = price.toFixed(2)
+                    document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+                }
+                else {
+                    document.getElementById("inc").value = price.toFixed(2)
+                    document.getElementById("selling_price_exc_tax").value = selling_price.toFixed(2);
+                }
+            }}
     }
 </script>
 <script>
     function marginCal(){
         let price = document.getElementById("base_price").value;
         let selling_price_value = document.getElementById('selling_price_exc_tax').value;
-
         var sp_val = ((parseFloat(selling_price_value)-parseFloat(price))/parseFloat(price))*100
 
-        if (selling_price_value.value != '') {
+        if (selling_price_value != '') {
             if (price.length != '') {
                 document.getElementById("margin").value = sp_val.toFixed(2);
             }

@@ -89,4 +89,3 @@ admin.site.register(RegisteredMembers, RegisteredMembersAdmin)
 admin.site.register(PointsTransactionRequests)
 admin.site.register(WithdrawlTransactionRequests, WithdrawlTransactionRequestsAdmin)
 admin.site.register(CreditedPoints)
-

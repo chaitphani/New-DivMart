@@ -408,28 +408,6 @@ def role_deletion(request,id):
 
 
 @login_required(login_url='/useraccount/common_login')
-def add_new_product(request):
-    
-    unit = Units.objects.filter(status=True)
-    brand = Brand.objects.filter(status=True)
-    cat = Category.objects.filter(status=True)
-    sub_cat = SubCategory.objects.filter(status=True)
-    tax_rates = TaxRate.objects.filter(status=True)
-    business_location = BusinessLocation.objects.filter(status=True)
-
-    if request.method == 'POST':
-        prod_obj = Product.objects.create(product_name=request.POST.get('product_name', ''), business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), brand=Brand.objects.get(id=request.POST.get('brand', '')), unit=Units.objects.get(id=request.POST.get('unit', '')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), barcode_type='EAN13', alert_quantity=request.POST.get('alert_quantity', 0), Product_description=request.POST.get('Product_description', ''), product_image=request.FILES.get('product_image', ''), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax', 0)), product_type=request.POST.get('product_type', ''), sale_mrp=request.POST.get('sale_mrp', 0), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax', 0), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax', 0), margin=request.POST.get('margin', 0), status=True, selling_price_exc_tax=request.POST.get('selling_price_exc_tax', 0))
-
-        prod_obj.selling_price = prod_obj.selling_price_exc_tax
-        prod_obj.purchase_price = prod_obj.purchase_price_inc_tax
-        prod_obj.prod_mrp = prod_obj.purchase_price_exc_tax
-        prod_obj.save()
-        return redirect('list_products')
-    
-    return render(request,'divmart_dashboard/add_new_product.html',{'unit':unit,'brand':brand,'cat':cat,'sub_cat': sub_cat, 'rates':tax_rates,'business_location':business_location})  
-
-
-@login_required(login_url='/useraccount/common_login')
 def purchase_return_api(request,product_name):
     purhase_item = Purchase.objects.filter(product_name__product_name=product_name)
     data = {'x':0}
@@ -1378,6 +1356,28 @@ def list_products(request):
 
 
 @login_required(login_url='/useraccount/common_login')
+def add_new_product(request):
+    
+    unit = Units.objects.filter(status=True)
+    brand = Brand.objects.filter(status=True)
+    cat = Category.objects.filter(status=True)
+    sub_cat = SubCategory.objects.filter(status=True)
+    tax_rates = TaxRate.objects.filter(status=True)
+    business_location = BusinessLocation.objects.filter(status=True)
+
+    if request.method == 'POST':
+        prod_obj = Product.objects.create(product_name=request.POST.get('product_name', ''), business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), brand=Brand.objects.get(id=request.POST.get('brand', '')), unit=Units.objects.get(id=request.POST.get('unit', '')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), barcode_type='EAN13', alert_quantity=request.POST.get('alert_quantity', 0), Product_description=request.POST.get('Product_description', ''), product_image=request.FILES.get('product_image', ''), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax', 0)), product_type=request.POST.get('product_type', ''), sale_mrp=request.POST.get('sale_mrp', 0), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax', 0), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax', 0), margin=request.POST.get('margin', 0), status=True, selling_price_exc_tax=request.POST.get('selling_price_exc_tax', 0))
+
+        prod_obj.selling_price = prod_obj.selling_price_exc_tax
+        prod_obj.purchase_price = prod_obj.purchase_price_inc_tax
+        prod_obj.prod_mrp = prod_obj.purchase_price_exc_tax
+        prod_obj.save()
+        return redirect('list_products')
+    
+    return render(request,'divmart_dashboard/add_new_product.html',{'unit':unit,'brand':brand,'cat':cat,'sub_cat': sub_cat, 'rates':tax_rates,'business_location':business_location})  
+
+
+@login_required(login_url='/useraccount/common_login')
 def edit_new_product(request, id):
 
     prod_obj = Product.objects.get(id=id)
@@ -1390,29 +1390,7 @@ def edit_new_product(request, id):
 
     if request.method == "POST":
 
-        p_name = request.POST.get('product_name')
-        brand = request.POST.get('brand')
-        unit = request.POST.get('unit')
-        location = request.POST.get('business_location')
-        category = request.POST.get('category')
-        sub_category = request.POST.get('sub_category')
-        sku = request.POST.get('SKU')
-        b_type = request.POST.get('barcode_type')
-        alert_quantity = request.POST.get('alert_quantity')
-        p_discription = request.POST.get('Product_description')
-        p_image = request.POST.get('product_image')
-        p_weight = request.POST.get('weight')
-        applicable_tax = request.POST.get('applicable_tax')
-        product_type = request.POST.get('product_type')
-        prod_mrp = request.POST.get('prod_mrp')
-        sp_tax_type = request.POST.get('selling_price_tax_type')
-        ppe_tax = request.POST.get('purchase_price_exc_tax')
-        ppi_tax = request.POST.get('purchase_price_inc_tax')
-        margin = request.POST.get('margin')
-        spe_tax = request.POST.get('selling_price_exc_tax')
-        
-        Product.objects.filter(id=id).update(product_name=p_name, brand=brand, unit=unit, category=category, sub_category=sub_category, SKU=sku, barcode_type=b_type, alert_quantity=alert_quantity, Product_description=p_discription, product_image=p_image, weight=p_weight, applicable_tax=applicable_tax, product_type=product_type, selling_price_tax_type=sp_tax_type, purchase_price_exc_tax=ppe_tax, purchase_price_inc_tax=ppi_tax, margin=margin, selling_price_exc_tax=spe_tax, selling_price=prod_obj.selling_price, purchase_price=prod_obj.purchase_price, current_stock=prod_obj.current_stock, status=True,
-        prod_mrp=prod_mrp, business_location=location)
+        Product.objects.filter(id=id).update(product_name=request.POST.get('product_name'), brand=Brand.objects.get(id=request.POST.get('brand')), unit=Units.objects.get(id=request.POST.get('unit')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), alert_quantity=request.POST.get('alert_quantity'), Product_description=request.POST.get('Product_description'), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax')), product_type=request.POST.get('product_type'), selling_price_tax_type=request.POST.get('selling_price_tax_type'), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax'), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax'), margin=request.POST.get('margin'), selling_price_exc_tax=request.POST.get('selling_price_exc_tax'), selling_price=prod_obj.selling_price_exc_tax, purchase_price=prod_obj.purchase_price_inc_tax, current_stock=prod_obj.current_stock, status=True, prod_mrp=prod_obj.purchase_price_exc_tax, business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), sale_mrp=request.POST.get('sale_mrp'))
 
         messages.success(request, 'Product ' + str(prod_obj.product_name) + ' update success...!')
         return redirect('list_products')

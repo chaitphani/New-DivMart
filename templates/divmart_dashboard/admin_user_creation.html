@@ -2,6 +2,16 @@
 
 <div class="container-fluid">
     <h5>Add User</h5>
+    {% if messages %}
+    <ul class="messages list-unstyled">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }} p-2 font-weight-bold text-center" {% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <form id="myForm" method="POST" enctype="multipart/form-data">
         <div class="section card p-3" style="border-top:3px solid green">
             {% csrf_token %}
@@ -21,22 +31,30 @@
             </div>
             <div class="form-group row ">
                 <div class="col-sm-6 col-md-6 col-lg-6">
-                    <label>Email*</label>
+                    <label>Email* <span class="text-danger font-weight-bold m-1">{% if errore %}Note-{{errore}}{% endif %}</span></label>
                     <input type="email" class="form-control" name="email" placeholder="email" required>
+                    
                 </div>
                 <div class="col-sm-6 col-md-6 col-lg-6">
-                    <label>Business Location*</label>
-                   <select class="form-control" name="business_location" required>
-                       <option value="">Please select</option>
-                       {% for location in locations %}
-                            <option value="{{location.id}}">{{location.name}}</option>
-                       {% endfor %}
-                   </select>
+                    <label>Username* <span class="text-danger font-weight-bold ml-1">{% if erroru %}Note-{{erroru}}{% endif %}</span></label>
+                    <input type="text" class="form-control" name="username" placeholder="Username" required>
                 </div>
             </div>
-            <span style="color: red;">{{error}}</span>
-            <div class="form-group row ">
+            <div class="form-group row">
                 <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Password*</label>
+                    <span class="text-danger"><small id="match_password" class="font-weight-bold ml-1"></small></span>
+                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password"
+                        required>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <label>Confirm Password*</label>
+                    <input type="password" onkeyup="checkPasswordMatch();" class="form-control" id="password2"
+                        name="password2" placeholder="Confirm Password" required>
+                </div>
+            </div>
+            <div class="form-group row ">
+                <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Role*</label>
                     <select class="form-control" id="role" name="role" required="required">
                         <option value="">Please select</option>
@@ -45,22 +63,14 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-sm-6 col-md-6 col-lg-6">
-                    <label>Username*</label>
-                    <input type="text" class="form-control" name="username" placeholder="Username" required>
-                </div>
-                <span style="color: red;">{{errore}}</span>
-            </div>
-            <div class="form-group row ">
                 <div class="col-sm-4 col-md-4 col-lg-4">
-                    <label>Password*</label>
-                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password"
-                        required>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
-                    <label>Confirm Password*</label>
-                    <input type="password" onkeyup="checkPasswordMatch();" class="form-control" id="password2"
-                        name="password" placeholder="Confirm Password" required>
+                    <label>Business Location*</label>
+                   <select class="form-control" name="business_location" required>
+                       <option value="">Please select</option>
+                       {% for location in locations %}
+                            <option value="{{location.id}}">{{location.name}}</option>
+                       {% endfor %}
+                   </select>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Sales Commission Percentage(%)&nbsp;
@@ -73,7 +83,6 @@
                         value="{{ usr.sales_commision_percentage }}" placeholder="Sales Commission Percentage(%)">
                 </div>
             </div>
-            <div style="color: red;" class="pl-3" id="divCheckPasswordMatch"></div>
             <!-- <div class="form-group row"> -->
                 <!-- <div class="col-sm-4 col-md-6 col-lg-4">
                     <label>Sales Commission Percentage(%)&nbsp;
@@ -216,9 +225,9 @@
         var confirmPassword = $("#password2").val();
 
         if (password != confirmPassword)
-            $("#divCheckPasswordMatch").html("Passwords do not match!");
+            $("#match_password").html("Note: Passwords should not match!");
         else
-            $("#divCheckPasswordMatch").html("Passwords match.");
+            $("#match_password").html("Note: Passwords matched.");
     }
 </script>
 

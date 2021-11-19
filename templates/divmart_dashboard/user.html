@@ -5,8 +5,8 @@
         <div class="col-lg-12">
             <h5>STAFF USERS<small>&nbsp;(Manage users)</small>
                 <span class="float-right">
-                    <a class="btn btn-primary btn-sm mb-2" href="{% url 'admin_user_creation' %}"> 
-                        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp; Add 
+                    <a class="btn btn-primary btn-sm mb-2" href="{% url 'admin_user_creation' %}">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp; Add
                     </a>
                 </span>
             </h5>
@@ -14,59 +14,86 @@
     </div>
     <div class="section card p-3" style="border-top:3px solid green">
         {% if messages %}
-            <ul class="messages list-unstyled p-2 text-center">
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }} p-2 text-center" {% endif %}>
-                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-                        {{ message }}
-                    </li>
+        <ul class="messages list-unstyled p-2 text-center">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }} p-2 text-center" {% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+                </li>
                 {% endfor %}
-            </ul>
+        </ul>
         {% endif %}
         <div class="overflow-auto">
-        <table class="table table-sm" id="usertable">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for val in users %}
-                    {% if val.is_deleted == 0 %}
-                        <tr>
-                            <th class="text-capitalize" title="click to view details"><a href="{% url 'user_detail' val.id %}">
-                                    {{ val.username }}</a></th>
-                            <td>{{ val.first_name }} {{ val.last_name }}</td>
-                            <td>{{ val.role }}</td>
-                            <td>{{ val.email }}</td>
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Action
-                                    </button>
+            <table class="table table-sm" id="usertable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for val in admin_users %}
+                    <tr>
+                        <th class="text-capitalize" title="click to view details"><a
+                                href="{% url 'user_detail' val.id %}">
+                                {{ val.username }}</a></th>
+                        <td>{{ val.first_name }} {{ val.last_name }}</td>
+                        <td>{{ val.role }}</td>
+                        <td>{{ val.email }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Action
+                                </button>
 
-                                    <div class="dropdown-menu bg-primary">
-                                
-                                        <a href="{% url 'user_edit' val.id %}" class="dropdown-item">
-                                            <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; Edit
-                                        </a>
-                                       
-                                        <a href="{% url 'user_delete' val.id %}" class="dropdown-item del_btn">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete
-                                        </a>
-                                    </div>
+                                <div class="dropdown-menu bg-primary">
+
+                                    <a href="{% url 'user_edit' val.id %}" class="dropdown-item">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; Edit
+                                    </a>
+
+                                    <a href="{% url 'user_delete' val.id %}" class="dropdown-item del_btn">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete
+                                    </a>
                                 </div>
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tbody>
+                    {% for val in staff_users %}
+                    <tr>
+                        <th class="text-capitalize" title="click to view details"><a
+                                href="{% url 'user_detail' val.id %}">
+                                {{ val.username }}</a></th>
+                        <td>{{ val.first_name }} {{ val.last_name }}</td>
+                        <td>{{ val.role }}</td>
+                        <td>{{ val.email }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Action
+                                </button>
+                                <div class="dropdown-menu bg-primary">
+                                    <a href="{% url 'user_edit' val.id %}" class="dropdown-item">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; Edit
+                                    </a>
+                                    <a href="{% url 'user_delete' val.id %}" class="dropdown-item del_btn">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

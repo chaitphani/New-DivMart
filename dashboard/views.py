@@ -477,6 +477,15 @@ def customer_list(request):
         staff_user = ''
         customer_user = CustomerUser.objects.filter(is_deleted=0)
 
+    page = request.GET.get('page', 1)
+    paginator = Paginator(customer_user, 10)
+    try:
+        customer_user = paginator.page(page)
+    except PageNotAnInteger:
+        customer_user = paginator.page(1)
+    except EmptyPage:
+        customer_user = paginator.page(paginator.num_pages)
+
     customer_group = CustomerGroups.objects.filter(is_deleted=0)
     business_location = BusinessLocation.objects.filter(status=True)
     return render(request,'divmart_dashboard/customer_list.html',{'customer_user':customer_user,'customer_group': customer_group, 'locations':business_location})

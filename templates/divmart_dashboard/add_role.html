@@ -92,7 +92,7 @@
                 {% endfor %}
             {% endif %}
 
-            <input type="submit" class="btn btn-primary w-100 mb-3 mt-4" value="Assign Role">
+            <input type="submit" class="btn btn-primary w-100 mb-3 mt-4" value="{% if r %}Update{% else %}Assign{% endif %} Role">
         </form>
     </div>
 </div>

@@ -184,22 +184,8 @@ def sales_commission_agent(request):
 
 
 def admin_user_creation(request):
-    main_role = Role.objects.all()
+
     if request.method == 'POST':
-
-        try:
-            usr = User.objects.get(username=request.POST.get('username'))
-            return render(request,'divmart_dashboard/admin_user_creation.html',{'error':"Username has been already taken"})
-        except User.DoesNotExist:
-            email = request.POST.get('email')
-
-        try:
-            usr_email = AdminUser.objects.get(email=request.POST.get('email'))
-            return render(request,'divmart_dashboard/admin_user_creation.html',{'errore':"email already exists"})
-        except:
-            pass
-
-        entered_role = request.POST.get("role")
         prefix = request.POST.get('prefix')
         username = request.POST.get('username')
         fname = request.POST.get('first_name')
@@ -208,12 +194,9 @@ def admin_user_creation(request):
         password  = request.POST.get('password1')
         conform_password = request.POST.get('password2')
         mobile = request.POST.get('mobile')
-        contact = request.POST.get('contact')
         id_proof_front = request.FILES.get('id_proof_front')
         id_proof_back = request.FILES.get('id_proof_back')
         guardain_name= request.POST.get('guardian_name')
-        b_day =  request.POST.get('birth_date')
-        location = request.POST.get('business_location')
         per_address = request.POST.get("permanent_address")
         curr_address = request.POST.get("current_address")
         acc_holder_name = request.POST.get("account_holder_name")
@@ -222,32 +205,49 @@ def admin_user_creation(request):
         branch = request.POST.get("branch")
         taxpid = request.POST.get("tax_payer_id")   
         bank_identifier_code = request.POST.get("bank_identifier_code")
-        location = BusinessLocation.objects.get(id=location)
 
-        r_obj = Role.objects.get(title=entered_role)
-        if entered_role == "Admin":
-            try:
-                user = User.objects.create_user(username=request.POST['username'],password=request.POST['password1'],email= request.POST.get('email'),is_superuser=True,is_staff=True)
+        location = BusinessLocation.objects.get(id=request.POST.get('business_location'))
+        r_obj = Role.objects.get(id=request.POST.get("role"))
 
-                user_obj = AdminUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile,role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code, business_location=location)
+        usr = User.objects.filter(Q(username=username) | Q(email=email))
+        if len(usr) > 0:
+            messages.error(request, 'User with the details already exist...')
+
+        # try:
+        #     usr_email = AdminUser.objects.get(email=request.POST.get('email'))
+        #     return render(request,'divmart_dashboard/admin_user_creation.html',{'errore':"email already exists"})
+        # except:
+        #     pass
+
+        if password == conform_password:
+            user = User.objects.create_user(first_name=fname, last_name=lname, username=username,password=password,email=email, is_staff=True)
+
+            if r_obj.title != "cashier" or r_obj.title != 'CASHIER' or r_obj.title != 'Cashier':
+                user.is_superuser = True
+                # try:
+                user_obj = AdminUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile,role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code)
                 user_obj.save()
-            except Exception as e:
-                usercreated = User.objects.last()
-                usercreated.delete()
+                # except Exception as e:
+                #     usercreated = User.objects.last()
+                #     usercreated.delete()
+            else:
+                if request.POST.get('business_location') != '' or request.POST.get('business_location') != None:
+                    # try:
+                    user_obj = StaffUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile, role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code,business_location=location)
+                    user_obj.save()
+                    # except Exception as e:
+                    #     usercreated = User.objects.last()
+                    #     usercreated.delete()
+                else:
+                    messages.error(request, 'Should provide location...')
         else:
-            try:
-                user = User.objects.create_user(username=request.POST['username'],password=request.POST['password1'],email= request.POST.get('email'),is_staff=True)
-
-                user_obj = StaffUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile, role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code,business_location=location)
-                user_obj.save()
-            except Exception as e:
-                usercreated = User.objects.last()
-                usercreated.delete()
+            messages.error(request, 'Both passwords should match...')
 
         messages.success(request, 'User create success...')
         return redirect('user')
     
     business_location = BusinessLocation.objects.filter(status=True)
+    main_role = Role.objects.filter(is_deleted=0)
     return render(request,'divmart_dashboard/admin_user_creation.html',{'main_role':main_role, 'locations':business_location})  
 
 

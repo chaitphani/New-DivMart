@@ -76,7 +76,7 @@ admin.site.register(SupplierUser, SupplierUserAdmin)
 
 
 class RegisteredMembersAdmin(admin.ModelAdmin):
-    list_display = ('fname', 'self_ref_id', 'sponser_id', 'commission', 'status')
+    list_display = ('fname', 'self_ref_id', 'sponser_id', 'commission', 'status', 'member_amount')
     list_filter = ('status',)
 
 class WithdrawlTransactionRequestsAdmin(admin.ModelAdmin):

@@ -115,8 +115,9 @@ def home(request):
 ######### for user listing (admin and cashier) ###########################
 @login_required(login_url='/useraccount/common_login')
 def user(request):
-    staff_users = StaffUser.objects.all()
-    return render(request, 'divmart_dashboard/user.html',{"users":staff_users})
+    staff_users = StaffUser.objects.filter(is_deleted=0)
+    admin_users = AdminUser.objects.filter(is_deleted=0)
+    return render(request, 'divmart_dashboard/user.html',{"staff_users":staff_users, 'admin_users':admin_users})
 
 
 @login_required(login_url='/useraccount/common_login')
@@ -185,6 +186,7 @@ def sales_commission_agent(request):
 def admin_user_creation(request):
 
     if request.method == 'POST':
+
         prefix = request.POST.get('prefix')
         username = request.POST.get('username')
         fname = request.POST.get('first_name')
@@ -207,47 +209,41 @@ def admin_user_creation(request):
 
         location = BusinessLocation.objects.get(id=request.POST.get('business_location'))
         r_obj = Role.objects.get(id=request.POST.get("role"))
-
+        
         try:
-            usr = User.objects.get(username=username) | User.objects.get(email=email)
-            return render(request,'divmart_dashboard/admin_user_creation.html',{'errore':"email or username already exists"})
+            usr = User.objects.get(username=username) 
+            return render(request,'divmart_dashboard/admin_user_creation.html', {'erroru':"Username has been already taken"})
         except:
-            # messages.error(request, 'User with the details already exist...')
             pass
 
-        # try:
-        #     usr_email = AdminUser.objects.get(email=request.POST.get('email'))
-        #     return render(request,'divmart_dashboard/admin_user_creation.html',{'errore':"email already exists"})
-        # except:
-        #     pass
+        try:
+            usr = User.objects.get(email=email)
+            return render(request,'divmart_dashboard/admin_user_creation.html', {'errore':"Email has been already taken"})
+        except:
+            pass
 
         if password == conform_password:
-            user = User.objects.create_user(first_name=fname, last_name=lname, username=username,password=password,email=email, is_staff=True)
+            if not r_obj.title == "cashier" or not r_obj.title == "CASHIER" or not r_obj.title == "Cashier":
+                user = User.objects.create_user(first_name=fname, last_name=lname, username=username,password=password,email=email, is_staff=True, is_superuser=True)
 
-            if r_obj.title != "cashier" or r_obj.title != 'CASHIER' or r_obj.title != 'Cashier':
-                user.is_superuser = True
-                # try:
                 user_obj = AdminUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile,role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code)
                 user_obj.save()
-                # except Exception as e:
-                #     usercreated = User.objects.last()
-                #     usercreated.delete()
+                messages.success(request, 'User create success...')
+                return redirect('user')
+
             else:
-                if request.POST.get('business_location') != '' or request.POST.get('business_location') != None:
-                    # try:
-                    user_obj = StaffUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile, role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code,business_location=location)
-                    user_obj.save()
-                    # except Exception as e:
-                    #     usercreated = User.objects.last()
-                    #     usercreated.delete()
-                else:
-                    messages.error(request, 'Should provide location...')
+                user = User.objects.create_user(first_name=fname, last_name=lname, username=username,password=password,email=email, is_staff=True)
+
+                user_obj = StaffUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile, role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code,business_location=location)
+                user_obj.save()
+
+                messages.success(request, 'User create success...')
+                return redirect('user')
+
         else:
             messages.error(request, 'Both passwords should match...')
+            return redirect('admin_user_creation')
 
-        messages.success(request, 'User create success...')
-        return redirect('user')
-    
     business_location = BusinessLocation.objects.filter(status=True)
     main_role = Role.objects.filter(is_deleted=0)
     return render(request,'divmart_dashboard/admin_user_creation.html',{'main_role':main_role, 'locations':business_location})  
@@ -407,40 +403,6 @@ def role_deletion(request,id):
 #     #         if v == "on":
                 
 #     return render(request,'divmart_dashboard/add_role.html',{'r':r,'per_obj':per_obj,'list_per':list_per, 'final_list': final_list})
-
-
-@login_required(login_url='/useraccount/common_login')
-def add_new_product(request):
-    
-    unit = Units.objects.filter(status=True)
-    brand = Brand.objects.filter(status=True)
-    cat = Category.objects.filter(status=True)
-    sub_cat = SubCategory.objects.filter(status=True)
-    tax_rates = TaxRate.objects.filter(status=True)
-    business_location = BusinessLocation.objects.filter(status=True)
-
-    if request.method == 'POST':
-        prod_obj = Product.objects.create(product_name=request.POST.get('product_name', ''), business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), brand=Brand.objects.get(id=request.POST.get('brand', '')), unit=Units.objects.get(id=request.POST.get('unit', '')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), barcode_type='EAN13', alert_quantity=request.POST.get('alert_quantity', 0), Product_description=request.POST.get('Product_description', ''), product_image=request.FILES.get('product_image', ''), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax', 0)), product_type=request.POST.get('product_type', ''), sale_mrp=request.POST.get('sale_mrp', 0), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax', 0), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax', 0), margin=request.POST.get('margin', 0), status=True, selling_price_exc_tax=request.POST.get('selling_price_exc_tax', 0))
-
-        prod_obj.selling_price = prod_obj.selling_price_exc_tax
-        prod_obj.purchase_price = prod_obj.purchase_price_inc_tax
-        prod_obj.prod_mrp = prod_obj.purchase_price_exc_tax
-        prod_obj.save()
-        return redirect('list_products')
-        
-    #     form = Produ  ctForm(request.POST)
-    #     if form.is_valid():
-    #         form_save = form.save(commit=False)
-    #         form_save.status=True
-    #         form_save.barcode_type = 'EAN13'
-    #         form_save.selling_price = form_save.selling_price_exc_tax
-    #         form_save.purchase_price = form_save.purchase_price_inc_tax
-    #         form_save.save()
-    #         return redirect('list_products')
-    # else:
-    #     form = ProductForm()
-    
-    return render(request,'divmart_dashboard/add_new_product.html',{'unit':unit,'brand':brand,'cat':cat,'sub_cat': sub_cat, 'rates':tax_rates,'business_location':business_location})  
 
 
 @login_required(login_url='/useraccount/common_login')
@@ -1409,31 +1371,7 @@ def edit_new_product(request, id):
 
     if request.method == "POST":
 
-        p_name = request.POST.get('product_name')
-        brand = request.POST.get('brand')
-        unit = request.POST.get('unit')
-        location = request.POST.get('business_location')
-        category = request.POST.get('category')
-        sub_category = request.POST.get('sub_category')
-        sku = request.POST.get('SKU')
-        b_type = request.POST.get('barcode_type')
-        alert_quantity = request.POST.get('alert_quantity')
-        p_discription = request.POST.get('Product_description')
-        p_image = request.POST.get('product_image')
-        p_weight = request.POST.get('weight')
-        applicable_tax = request.POST.get('applicable_tax')
-        product_type = request.POST.get('product_type')
-        prod_mrp = request.POST.get('prod_mrp')
-        sp_tax_type = request.POST.get('selling_price_tax_type')
-        ppe_tax = request.POST.get('purchase_price_exc_tax')
-        ppi_tax = request.POST.get('purchase_price_inc_tax')
-        margin = request.POST.get('margin')
-        spe_tax = request.POST.get('selling_price_exc_tax')
-        sale_mrp = request.POST.get('sale_mrp', 0)
-
-        tax_rate = TaxRate.objects.get(rate=applicable_tax)
-        Product.objects.filter(id=id).update(product_name=p_name, brand=brand, unit=unit, category=category, sub_category=sub_category, SKU=sku, barcode_type=b_type, alert_quantity=alert_quantity, Product_description=p_discription, product_image=p_image, weight=p_weight, applicable_tax=tax_rate, product_type=product_type, selling_price_tax_type=sp_tax_type, purchase_price_exc_tax=ppe_tax, purchase_price_inc_tax=ppi_tax, margin=margin, selling_price_exc_tax=spe_tax, selling_price=prod_obj.selling_price, purchase_price=prod_obj.purchase_price, current_stock=prod_obj.current_stock, status=True,
-        prod_mrp=prod_mrp, business_location=location, sale_mrp=sale_mrp)
+        Product.objects.filter(id=id).update(product_name=request.POST.get('product_name'), brand=Brand.objects.get(id=request.POST.get('brand')), unit=Units.objects.get(id=request.POST.get('unit')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), alert_quantity=request.POST.get('alert_quantity'), Product_description=request.POST.get('Product_description'), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax')), product_type=request.POST.get('product_type'), selling_price_tax_type=request.POST.get('selling_price_tax_type'), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax'), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax'), margin=request.POST.get('margin'), selling_price_exc_tax=request.POST.get('selling_price_exc_tax'), selling_price=prod_obj.selling_price_exc_tax, purchase_price=prod_obj.purchase_price_inc_tax, current_stock=prod_obj.current_stock, status=True, prod_mrp=prod_obj.purchase_price_exc_tax, business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), sale_mrp=request.POST.get('sale_mrp'))
 
         messages.success(request, 'Product ' + str(prod_obj.product_name) + ' update success...!')
         return redirect('list_products')

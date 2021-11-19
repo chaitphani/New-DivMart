@@ -208,9 +208,12 @@ def admin_user_creation(request):
         location = BusinessLocation.objects.get(id=request.POST.get('business_location'))
         r_obj = Role.objects.get(id=request.POST.get("role"))
 
-        usr = User.objects.filter(Q(username=username) | Q(email=email))
-        if len(usr) > 0:
-            messages.error(request, 'User with the details already exist...')
+        try:
+            usr = User.objects.get(username=username) | User.objects.get(email=email)
+            return render(request,'divmart_dashboard/admin_user_creation.html',{'errore':"email or username already exists"})
+        except:
+            # messages.error(request, 'User with the details already exist...')
+            pass
 
         # try:
         #     usr_email = AdminUser.objects.get(email=request.POST.get('email'))
@@ -407,7 +410,6 @@ def role_deletion(request,id):
 
 
 @login_required(login_url='/useraccount/common_login')
-<<<<<<< HEAD
 def add_new_product(request):
     
     unit = Units.objects.filter(status=True)
@@ -442,8 +444,6 @@ def add_new_product(request):
 
 
 @login_required(login_url='/useraccount/common_login')
-=======
->>>>>>> 10998a0b09284122f144b0e37a2e13060ddfc0ee
 def purchase_return_api(request,product_name):
     purhase_item = Purchase.objects.filter(product_name__product_name=product_name)
     data = {'x':0}
@@ -1409,7 +1409,6 @@ def edit_new_product(request, id):
 
     if request.method == "POST":
 
-<<<<<<< HEAD
         p_name = request.POST.get('product_name')
         brand = request.POST.get('brand')
         unit = request.POST.get('unit')
@@ -1435,9 +1434,6 @@ def edit_new_product(request, id):
         tax_rate = TaxRate.objects.get(rate=applicable_tax)
         Product.objects.filter(id=id).update(product_name=p_name, brand=brand, unit=unit, category=category, sub_category=sub_category, SKU=sku, barcode_type=b_type, alert_quantity=alert_quantity, Product_description=p_discription, product_image=p_image, weight=p_weight, applicable_tax=tax_rate, product_type=product_type, selling_price_tax_type=sp_tax_type, purchase_price_exc_tax=ppe_tax, purchase_price_inc_tax=ppi_tax, margin=margin, selling_price_exc_tax=spe_tax, selling_price=prod_obj.selling_price, purchase_price=prod_obj.purchase_price, current_stock=prod_obj.current_stock, status=True,
         prod_mrp=prod_mrp, business_location=location, sale_mrp=sale_mrp)
-=======
-        Product.objects.filter(id=id).update(product_name=request.POST.get('product_name'), brand=Brand.objects.get(id=request.POST.get('brand')), unit=Units.objects.get(id=request.POST.get('unit')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), alert_quantity=request.POST.get('alert_quantity'), Product_description=request.POST.get('Product_description'), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax')), product_type=request.POST.get('product_type'), selling_price_tax_type=request.POST.get('selling_price_tax_type'), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax'), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax'), margin=request.POST.get('margin'), selling_price_exc_tax=request.POST.get('selling_price_exc_tax'), selling_price=prod_obj.selling_price_exc_tax, purchase_price=prod_obj.purchase_price_inc_tax, current_stock=prod_obj.current_stock, status=True, prod_mrp=prod_obj.purchase_price_exc_tax, business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), sale_mrp=request.POST.get('sale_mrp'))
->>>>>>> 10998a0b09284122f144b0e37a2e13060ddfc0ee
 
         messages.success(request, 'Product ' + str(prod_obj.product_name) + ' update success...!')
         return redirect('list_products')

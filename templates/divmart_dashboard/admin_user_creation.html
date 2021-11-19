@@ -41,9 +41,7 @@
                     <select class="form-control" id="role" name="role" required="required">
                         <option value="">Please select</option>
                         {% for role in main_role %}
-                            {% if role.is_deleted == 0 %}
-                                <option value="{{ role.title }}">{{ role.title }}</option>
-                            {% endif %}
+                            <option value="{{ role.id }}">{{ role.title }}</option>
                         {% endfor %}
                     </select>
                 </div>

@@ -84,7 +84,7 @@
                                             class="fa fa-external-link" aria-hidden="true"></i> &nbsp;Edit
                                     </a>
                                     {% if request.user.is_superuser %}
-                                    <a class="dropdown-item del_cust" href="{% url 'customer_delete' cust.id %}}"> <i
+                                    <a class="dropdown-item del_cust" href="{% url 'customer_delete' cust.id %}"> <i
                                             class="fa fa-trash" aria-hidden="true"></i>
                                         &nbsp;Delete
                                     </a>
@@ -353,7 +353,6 @@
 
 <script>
     $('.del_cust').click(function (e) {
-        e.preventDefault();
         var action = confirm('Are you sure to remove..?');
         if (action == false) {
             e.preventDefault();

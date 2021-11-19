@@ -158,7 +158,7 @@
                 <div class="col-lg-4 col-md-4">
                     <label>Applicable Tax</label>
                     <!-- <input type="number" name="applicable_tax" class="form-control"> -->
-                    <select id="tax" class="form-control" name="applicable_tax" onchange="pricecal()">
+                    <select id="tax" class="form-control" name="applicable_tax" onchange="pricecal()" required>
                         <option value="">Please select</option>
                         {% for rate in rates %}
                             <option value="{{rate.rate}}">{{rate.name}}-{{rate.rate}}</option>
@@ -298,6 +298,7 @@
         }
     }
 </script>
+
 <script>
     $(document).ready(function () {
         $(document).on('change', '.btn-file :file', function () {
@@ -332,4 +333,5 @@
         });
     });
 </script>
-{%endblock%}
+
+{% endblock %}

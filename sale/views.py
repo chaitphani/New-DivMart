@@ -16,8 +16,8 @@ from membership.crons import CreditedPointsSerializer
 # from my side...
 @login_required(login_url='/useraccount/common_login')
 def sale_list(request):
-
     sell_list = ''
+
     if request.method == 'POST':
         location = request.POST.get('business_location')
         # customer = request.POST.get('customer')
@@ -56,9 +56,9 @@ def sale_list(request):
 
     else:
         if request.user.is_superuser:
-            sell_list = Sell.objects.filter(status="F", is_deleted=False)
+            sell_list = Sell.objects.filter(status="Final", is_deleted=False)
         else:
-            sell_list = Sell.objects.filter(status="F", business_location=StaffUser.objects.get(user=request.user).business_location, is_deleted=False)
+            sell_list = Sell.objects.filter(status="Final", business_location=StaffUser.objects.get(user=request.user).business_location, is_deleted=False)
 
     customers = CustomerUser.objects.filter(is_deleted=0)
     business_locations = BusinessLocation.objects.filter(status=True)

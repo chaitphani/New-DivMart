@@ -54,7 +54,7 @@ class LoginUser(BaseUser):
         (0, False),
         (1, True),
     )
-    # marital_status_choice = 
+
     Prefix = models.CharField(max_length=10,blank=True,null=True)
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     username = models.CharField(max_length=50)
@@ -69,7 +69,7 @@ class LoginUser(BaseUser):
     permanent_address = models.CharField(max_length=100)
     current_address = models.CharField(max_length=100)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
-    business_location = models.ForeignKey(BusinessLocation, on_delete=models.SET_NULL, null=True)
+    business_location = models.ForeignKey(BusinessLocation, on_delete=models.SET_NULL, null=True, blank=True)
     guardian_name = models.CharField(max_length=50,blank=True)
     sales_commission_percentage = models.FloatField(default=0)
     account_holder_name = models.CharField(max_length=30,blank=True)

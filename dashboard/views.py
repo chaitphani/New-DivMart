@@ -183,22 +183,8 @@ def sales_commission_agent(request):
 
 
 def admin_user_creation(request):
-    main_role = Role.objects.all()
+
     if request.method == 'POST':
-
-        try:
-            usr = User.objects.get(username=request.POST.get('username'))
-            return render(request,'divmart_dashboard/admin_user_creation.html',{'error':"Username has been already taken"})
-        except User.DoesNotExist:
-            email = request.POST.get('email')
-
-        try:
-            usr_email = AdminUser.objects.get(email=request.POST.get('email'))
-            return render(request,'divmart_dashboard/admin_user_creation.html',{'errore':"email already exists"})
-        except:
-            pass
-
-        entered_role = request.POST.get("role")
         prefix = request.POST.get('prefix')
         username = request.POST.get('username')
         fname = request.POST.get('first_name')
@@ -207,12 +193,9 @@ def admin_user_creation(request):
         password  = request.POST.get('password1')
         conform_password = request.POST.get('password2')
         mobile = request.POST.get('mobile')
-        contact = request.POST.get('contact')
         id_proof_front = request.FILES.get('id_proof_front')
         id_proof_back = request.FILES.get('id_proof_back')
         guardain_name= request.POST.get('guardian_name')
-        b_day =  request.POST.get('birth_date')
-        location = request.POST.get('business_location')
         per_address = request.POST.get("permanent_address")
         curr_address = request.POST.get("current_address")
         acc_holder_name = request.POST.get("account_holder_name")
@@ -221,32 +204,49 @@ def admin_user_creation(request):
         branch = request.POST.get("branch")
         taxpid = request.POST.get("tax_payer_id")   
         bank_identifier_code = request.POST.get("bank_identifier_code")
-        location = BusinessLocation.objects.get(id=location)
 
-        r_obj = Role.objects.get(title=entered_role)
-        if entered_role == "Admin":
-            try:
-                user = User.objects.create_user(username=request.POST['username'],password=request.POST['password1'],email= request.POST.get('email'),is_superuser=True,is_staff=True)
+        location = BusinessLocation.objects.get(id=request.POST.get('business_location'))
+        r_obj = Role.objects.get(id=request.POST.get("role"))
 
-                user_obj = AdminUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile,role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code, business_location=location)
+        usr = User.objects.filter(Q(username=username) | Q(email=email))
+        if len(usr) > 0:
+            messages.error(request, 'User with the details already exist...')
+
+        # try:
+        #     usr_email = AdminUser.objects.get(email=request.POST.get('email'))
+        #     return render(request,'divmart_dashboard/admin_user_creation.html',{'errore':"email already exists"})
+        # except:
+        #     pass
+
+        if password == conform_password:
+            user = User.objects.create_user(first_name=fname, last_name=lname, username=username,password=password,email=email, is_staff=True)
+
+            if r_obj.title != "cashier" or r_obj.title != 'CASHIER' or r_obj.title != 'Cashier':
+                user.is_superuser = True
+                # try:
+                user_obj = AdminUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile,role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code)
                 user_obj.save()
-            except Exception as e:
-                usercreated = User.objects.last()
-                usercreated.delete()
+                # except Exception as e:
+                #     usercreated = User.objects.last()
+                #     usercreated.delete()
+            else:
+                if request.POST.get('business_location') != '' or request.POST.get('business_location') != None:
+                    # try:
+                    user_obj = StaffUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile, role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code,business_location=location)
+                    user_obj.save()
+                    # except Exception as e:
+                    #     usercreated = User.objects.last()
+                    #     usercreated.delete()
+                else:
+                    messages.error(request, 'Should provide location...')
         else:
-            try:
-                user = User.objects.create_user(username=request.POST['username'],password=request.POST['password1'],email= request.POST.get('email'),is_staff=True)
-
-                user_obj = StaffUser.objects.create(user=user,Prefix= prefix,username=username,password=password,first_name=fname,last_name=lname,id_proof_front=id_proof_front,id_proof_back=id_proof_back,email=email,permanent_address=per_address,current_address=curr_address,mobile=mobile, role=r_obj,account_holder_name=acc_holder_name,account_number=acc_num,bank_name=bank_name,branch=branch,tax_payer_id=taxpid,guardian_name=guardain_name,bank_identifier_code=bank_identifier_code,business_location=location)
-                user_obj.save()
-            except Exception as e:
-                usercreated = User.objects.last()
-                usercreated.delete()
+            messages.error(request, 'Both passwords should match...')
 
         messages.success(request, 'User create success...')
         return redirect('user')
     
     business_location = BusinessLocation.objects.filter(status=True)
+    main_role = Role.objects.filter(is_deleted=0)
     return render(request,'divmart_dashboard/admin_user_creation.html',{'main_role':main_role, 'locations':business_location})  
 
 
@@ -407,6 +407,7 @@ def role_deletion(request,id):
 
 
 @login_required(login_url='/useraccount/common_login')
+<<<<<<< HEAD
 def add_new_product(request):
     
     unit = Units.objects.filter(status=True)
@@ -441,6 +442,8 @@ def add_new_product(request):
 
 
 @login_required(login_url='/useraccount/common_login')
+=======
+>>>>>>> 10998a0b09284122f144b0e37a2e13060ddfc0ee
 def purchase_return_api(request,product_name):
     purhase_item = Purchase.objects.filter(product_name__product_name=product_name)
     data = {'x':0}
@@ -1372,6 +1375,28 @@ def list_products(request):
 
 
 @login_required(login_url='/useraccount/common_login')
+def add_new_product(request):
+    
+    unit = Units.objects.filter(status=True)
+    brand = Brand.objects.filter(status=True)
+    cat = Category.objects.filter(status=True)
+    sub_cat = SubCategory.objects.filter(status=True)
+    tax_rates = TaxRate.objects.filter(status=True)
+    business_location = BusinessLocation.objects.filter(status=True)
+
+    if request.method == 'POST':
+        prod_obj = Product.objects.create(product_name=request.POST.get('product_name', ''), business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), brand=Brand.objects.get(id=request.POST.get('brand', '')), unit=Units.objects.get(id=request.POST.get('unit', '')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), barcode_type='EAN13', alert_quantity=request.POST.get('alert_quantity', 0), Product_description=request.POST.get('Product_description', ''), product_image=request.FILES.get('product_image', ''), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax', 0)), product_type=request.POST.get('product_type', ''), sale_mrp=request.POST.get('sale_mrp', 0), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax', 0), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax', 0), margin=request.POST.get('margin', 0), status=True, selling_price_exc_tax=request.POST.get('selling_price_exc_tax', 0))
+
+        prod_obj.selling_price = prod_obj.selling_price_exc_tax
+        prod_obj.purchase_price = prod_obj.purchase_price_inc_tax
+        prod_obj.prod_mrp = prod_obj.purchase_price_exc_tax
+        prod_obj.save()
+        return redirect('list_products')
+    
+    return render(request,'divmart_dashboard/add_new_product.html',{'unit':unit,'brand':brand,'cat':cat,'sub_cat': sub_cat, 'rates':tax_rates,'business_location':business_location})  
+
+
+@login_required(login_url='/useraccount/common_login')
 def edit_new_product(request, id):
 
     prod_obj = Product.objects.get(id=id)
@@ -1384,6 +1409,7 @@ def edit_new_product(request, id):
 
     if request.method == "POST":
 
+<<<<<<< HEAD
         p_name = request.POST.get('product_name')
         brand = request.POST.get('brand')
         unit = request.POST.get('unit')
@@ -1409,6 +1435,9 @@ def edit_new_product(request, id):
         tax_rate = TaxRate.objects.get(rate=applicable_tax)
         Product.objects.filter(id=id).update(product_name=p_name, brand=brand, unit=unit, category=category, sub_category=sub_category, SKU=sku, barcode_type=b_type, alert_quantity=alert_quantity, Product_description=p_discription, product_image=p_image, weight=p_weight, applicable_tax=tax_rate, product_type=product_type, selling_price_tax_type=sp_tax_type, purchase_price_exc_tax=ppe_tax, purchase_price_inc_tax=ppi_tax, margin=margin, selling_price_exc_tax=spe_tax, selling_price=prod_obj.selling_price, purchase_price=prod_obj.purchase_price, current_stock=prod_obj.current_stock, status=True,
         prod_mrp=prod_mrp, business_location=location, sale_mrp=sale_mrp)
+=======
+        Product.objects.filter(id=id).update(product_name=request.POST.get('product_name'), brand=Brand.objects.get(id=request.POST.get('brand')), unit=Units.objects.get(id=request.POST.get('unit')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), alert_quantity=request.POST.get('alert_quantity'), Product_description=request.POST.get('Product_description'), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax')), product_type=request.POST.get('product_type'), selling_price_tax_type=request.POST.get('selling_price_tax_type'), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax'), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax'), margin=request.POST.get('margin'), selling_price_exc_tax=request.POST.get('selling_price_exc_tax'), selling_price=prod_obj.selling_price_exc_tax, purchase_price=prod_obj.purchase_price_inc_tax, current_stock=prod_obj.current_stock, status=True, prod_mrp=prod_obj.purchase_price_exc_tax, business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), sale_mrp=request.POST.get('sale_mrp'))
+>>>>>>> 10998a0b09284122f144b0e37a2e13060ddfc0ee
 
         messages.success(request, 'Product ' + str(prod_obj.product_name) + ' update success...!')
         return redirect('list_products')
@@ -2039,6 +2068,15 @@ def view_members(request, id):
 
 def members(request):
     member_app_list = RegisteredMembers.objects.filter(status=1)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(member_app_list, 10)
+    try:
+        member_app_list = paginator.page(page)
+    except PageNotAnInteger:
+        member_app_list = paginator.page(1)
+    except EmptyPage:
+        member_app_list = paginator.page(paginator.num_pages)
     return render(request,'divmart_dashboard/members.html', {'lists':member_app_list}) 
 
 

@@ -60,7 +60,7 @@ urlpatterns = (
     path('role/<int:id>/delete',views.role_deletion, name='role_deletion'),
 
     path('member/direct',views.direct_members,name='direct_members'),
-    path('member/manage-transactions',views.manage_transaction,name='manage_transaction'),
+    path('member/manage-transactions',views.manage_transaction,name='member_direct_transaction'),
     path('member/points-transaction',views.all_point_transaction,name='all_point_transaction'),
 
     # changes done by.....

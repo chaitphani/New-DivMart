@@ -45,11 +45,11 @@
                     <tr>
                         <th>S.no</th>
                         <th>UserName</th>
-                        <!-- <th>Name</th> -->
+                        <th>Name</th>
                         <th>Email</th>
                         <th>Mobile Number</th>
-                        <!-- <th>Pending SC</th>
-                    <th>Approved SC</th> -->
+                        <th>Pending SC</th>
+                         <th>Approved SC</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -58,14 +58,15 @@
                     {% for list in lists %}
                     <tr>
                         <td>{{forloop.counter}}</td>
+                        <td>DG001</td>
                         <td>{{list.fname}} {{list.lname}}</td>
                         <td>{{list.email}}</td>
                         <td>{{list.contact}}</td>
-                        <!-- <td>{{list.}}</td>
-                        <td>{{list.}}</td> -->
+                        <td>{{list.}}</td>
+                        <td>{{list.}}</td>
                         <td>{% if list.status == 1 %}Active{% else %}Inactive{% endif %}</td>
                         <td>
-                            <div class="btn-group">
+                            <div class="btn-group btn-sm">
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action
@@ -76,6 +77,15 @@
                                     </a>
                                     <a href="{% url 'view_members' list.id %}" class="dropdown-item">
                                         <i class="fa fa-eye" aria-hidden="true"></i>&nbsp;View
+                                    </a>
+                                    <a href="{%url 'direct_members'%}" class="dropdown-item">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Direct
+                                    </a>
+                                    <a href="{%url 'member_direct_transaction'%}" class="dropdown-item">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>&nbsp;D. Trans
+                                    </a>
+                                    <a href="{%url 'all_point_transaction'%}" class="dropdown-item">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>&nbsp;P. Trans
                                     </a>
                                     <a href="{% url 'member-remove' list.id %}" class="dropdown-item btn-click">
                                         <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Delete

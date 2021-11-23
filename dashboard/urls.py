@@ -195,5 +195,7 @@ urlpatterns = (
 
     path('credit-sale',views.credit_sale, name='credit_sale'),
     path('credit-sale_report',views.credit_sale_report, name='credit_sale_report'),
+
+    path('add_opening_stock/<int:id>',views.add_opening_stock,name='add_opening_stock'),
 )
 

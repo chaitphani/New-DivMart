@@ -31,28 +31,28 @@ def sale_list(request):
 
             if date == '' or date == None:
                 if request.user.is_superuser:
-                    sell_list = Sell.objects.filter(business_location__name__icontains = location).filter(status='F', is_deleted=False)
+                    sell_list = Sell.objects.filter(business_location__name__icontains = location).filter(status="Final", is_deleted=False)
                 else:
-                    sell_list = Sell.objects.filter(status='F', business_location=StaffUser.objects.get(user=request.user).business_location)
+                    sell_list = Sell.objects.filter(status="Final", business_location=StaffUser.objects.get(user=request.user).business_location)
 
             elif location == '' or location == None:
                 if request.user.is_superuser:
-                    sell_list = Sell.objects.filter(sale_date__year = year, sale_date__month = month, sale_date__day = day).filter(status='F', is_deleted=False)
+                    sell_list = Sell.objects.filter(sale_date__year = year, sale_date__month = month, sale_date__day = day).filter(status="Final", is_deleted=False)
                 else:
-                    sell_list = Sell.objects.filter(sale_date__year = year, sale_date__month = month, sale_date__day = day).filter(status='F', business_location=StaffUser.objects.get(user=request.user).business_location)
+                    sell_list = Sell.objects.filter(sale_date__year = year, sale_date__month = month, sale_date__day = day).filter(status="Final", business_location=StaffUser.objects.get(user=request.user).business_location)
 
             else:
                 if request.user.is_superuser:
-                    sell_list = Sell.objects.filter(Q(sale_date__year = year, sale_date__month = month, sale_date__day = day) & Q(business_location__name__icontains = location)).filter(status='F', is_deleted=False)
+                    sell_list = Sell.objects.filter(Q(sale_date__year = year, sale_date__month = month, sale_date__day = day) & Q(business_location__name__icontains = location)).filter(status="Final", is_deleted=False)
                 else:
-                    sell_list = Sell.objects.filter(sale_date__year = year, sale_date__month = month, sale_date__day = day).filter(status='F', business_location=StaffUser.objects.get(user=request.user).business_location)
+                    sell_list = Sell.objects.filter(sale_date__year = year, sale_date__month = month, sale_date__day = day).filter(status="Final", business_location=StaffUser.objects.get(user=request.user).business_location)
               
         except Exception as e:
             # print('---error----', e)
             if request.user.is_superuser:
-                sell_list = Sell.objects.filter(business_location__name__icontains = location).filter(status='F', is_deleted=False)
+                sell_list = Sell.objects.filter(business_location__name__icontains = location).filter(status="Final", is_deleted=False)
             else:
-                sell_list = Sell.objects.filter(status='F', business_location=StaffUser.objects.get(user=request.user).business_location)
+                sell_list = Sell.objects.filter(status='Final', business_location=StaffUser.objects.get(user=request.user).business_location)
 
     else:
         if request.user.is_superuser:
@@ -64,7 +64,7 @@ def sale_list(request):
     business_locations = BusinessLocation.objects.filter(status=True)
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(sell_list, 5)
+    paginator = Paginator(sell_list.order_by('-id'), 5)
     try:
         sell_list = paginator.page(page)
     except PageNotAnInteger:
@@ -155,22 +155,24 @@ def sale_add(request):
         # if(ser_obj.is_valid()):
         #     ser_obj.save()
 
+        sale_obj = Sell.objects.create(ref_no=str_ref, business_location=bus_locations, customer=cus_obj, pay_term=pay_term, sale_date=sale_date, status=status, total_amount=total_amount, discount_type=discount_type, discount_amount=discount_amount, shipping_details=shipping_details, shipping_charges=shipping_charges, total_payable=total_payable, sell_notes=sell_notes, payment_info=pay_obj, invoice_no=last_invoice, order_tax=order_tax)
+
         if not request.user.is_superuser:
-            sale_obj = Sell.objects.create(ref_no=str_ref, business_location=bus_locations, customer=cus_obj, pay_term=pay_term, sale_date=sale_date, status=status, total_amount=total_amount, discount_type=discount_type, discount_amount=discount_amount, shipping_details=shipping_details, shipping_charges=shipping_charges, total_payable=total_payable, sell_notes=sell_notes, payment_info=pay_obj, invoice_no=last_invoice, cashier=staffuser_obj, order_tax=order_tax)
-        else:
-            sale_obj = Sell.objects.create(ref_no=str_ref, business_location=bus_locations, customer=cus_obj, pay_term=pay_term, sale_date=sale_date, status=status, total_amount=total_amount, discount_type=discount_type, discount_amount=discount_amount, shipping_details=shipping_details, shipping_charges=shipping_charges, total_payable=total_payable, sell_notes=sell_notes, payment_info=pay_obj, invoice_no=last_invoice, order_tax=order_tax)
+            sale_obj.cashier = staffuser_obj
+        sale_obj.save()
 
         for v in range(1,int(count)+1):
             prod_name = request.POST.get("nam"+str(v))
             prod_qan = request.POST.get("qan"+str(v))
             unit_price = request.POST.get("usp"+str(v))
             sub_total = request.POST.get("sub"+str(v))
+            prod_ids = request.POST.get('ids'+str(v))
             prod_obj = Product.objects.get(product_name=prod_name)
-
+            
+            prod_stock_aftr_sale = float(prod_obj.current_stock) - float(prod_qan)
             if float(prod_obj.current_stock) >= float(prod_qan):
                 ItemSold.objects.create(sell=sale_obj, items_name=prod_obj, price=unit_price, quantity=prod_qan, sub_total=sub_total, date=datetime.now())
-                prod_obj.current_stock = prod_obj.current_stock - float(prod_qan)
-                prod_obj.save()
+                Product.objects.filter(id=prod_ids).update(current_stock=prod_stock_aftr_sale)
 
             else:
                 # sale_obj.status = 'D'
@@ -188,7 +190,9 @@ def sale_add(request):
                     payment_account_obj.openning_balance = float(cus_obj.total_sales_due) - float(pay_due)
                     payment_account_obj.save()
 
-                messages.error(request, 'Not much stock available for selected product/products')
+                # messages.error(request, 'Not much stock available for selected product/products')
+                return render(request,'divmart_dashboard/add_sale.html', {'errors':'Not much stock available for selected product/products'})
+
         return redirect('sale_list')
 
     business_locations = BusinessLocation.objects.filter(status=True)

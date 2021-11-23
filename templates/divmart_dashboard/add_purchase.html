@@ -629,6 +629,7 @@
                         let HTML = `<tr>
                         <th scope="row">${count}</th>
                         <input type="hidden" name="count" value="${count}"/>
+                        <input type="hidden" name="id${count}" value="${prod_inf.id}"/>
                         <td><input type="text" class='form-control' name="nam${count}" id="nam${count}" value="${product.value}" readonly/></td> 
                         <td><input type="text" class='form-control' name="qan${count}" id="qan${count}"  value="1" onkeyup="calcul(${count});"/></td>
                         <td><input type="text" class='form-control' name="pp${count}"  id="pp${count}" value="${prod_inf.purchase_price_exc_tax}" readonly/></td>

@@ -1,4 +1,8 @@
 {% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
@@ -16,7 +20,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Units*</label>
                     <div class="input-group mb-3">
-                        <select class="form-control" name="unit" required>
+                        <select class="form-control" name="unit" id='units' required>
                             <option value="">Please Select</option>
                             {% for u in unit %}
                                 <option value="{{ u.id }}" {% if u.id == prod.unit.id %} selected {% endif %}>{{ u.name }}</option>
@@ -31,7 +35,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Brand*</label>
                     <div class="input-group mb-3">
-                        <select class="form-control" name="brand" required>
+                        <select class="form-control" name="brand" id="brands" required>
                             <option value="">Please Select</option>
                             {% for b in brand %}
                                 <option value="{{ b.id }}" {% if b.id == prod.brand.id %}selected{% endif %}>{{ b.brand_name }}</option>
@@ -47,7 +51,7 @@
             <div class="form-group row ">
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Category(optional)</label>
-                    <select class="form-control" name="category">
+                    <select class="form-control" name="category" id="categories">
                         <option value="">Please select</option>
                         {% for u in cat %}
                             <option value="{{ u.id }}" {% if u.id == prod.category.id %}selected{% endif %}>{{ u.name }}</option>
@@ -252,5 +256,11 @@
         }
     }
 </script>
-
+<script>
+    $(document).ready(function(){
+         $("#units").select2();
+         $("#categories").select2();
+         $("#brands").select2();
+    });
+</script>
 {%endblock%}

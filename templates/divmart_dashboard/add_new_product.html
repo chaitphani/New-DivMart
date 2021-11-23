@@ -1,4 +1,9 @@
 {% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
 <div class="container-fluid">
     <h5>Add New Product</h5>
     <form name="myForm" method="POST" enctype="multipart/form-data">
@@ -7,12 +12,12 @@
             <div class="form-group row ">
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Product Name*</label>
-                    <input type="text" class="form-control" name="product_name" placeholder="Product Name">
+                    <input type="text" class="form-control" name="product_name" placeholder="Product Name" required>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Units*</label>
                     <div class="input-group mb-3">
-                        <select class="form-control" name="unit" >
+                        <select class="form-control" name="unit" id="units" required>
                             <option value="">Please Select</option>
                             {% for u in unit %}
                             <option value="{{ u.id }}">{{ u.name }}</option>
@@ -27,7 +32,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Brand*</label>
                     <div class="input-group mb-3">
-                        <select class="form-control" name="brand">
+                        <select class="form-control" name="brand" id="brands" required>
                             <option value="">Please Select</option>
                             {% for b in brand %}
                             <option value="{{ b.id }}">{{ b.brand_name }}</option>
@@ -42,12 +47,10 @@
             <div class="form-group row ">
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Category (optional)</label>
-                    <select class="form-control" name="category">
+                    <select class="form-control" name="category" id="categories">
                         <option value="">Please Select</option>
                         {% for u in cat %}
-                        {% if u.status == 1 %}
-                        <option value="{{ u.id }}">{{ u.name }}</option>
-                        {% endif %}
+                            <option value="{{ u.id }}">{{ u.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -62,28 +65,18 @@
                 </div> -->
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>SKU*</label>
-                    <input type="text" class="form-control" name="SKU" placeholder="Product Name" >
+                    <input type="text" class="form-control" name="SKU" placeholder="Product Name" required>
                 </div>
             </div>
             <div class="form-group row ">
-                <!-- <div class="col-sm-4 col-md-4">
-                    <label>Barcode Type (optional)</label>
-                    <select class="mdb-select form-control select2" name="barcode_type" searchable="Search here..">
-                        <option value="">Please Select</option>
-                        <option selected value="EAN13">EAN13</option>
-                    </select>
-                </div> -->
-                <!-- <div class="col-sm-4 col-md-4 pt-4">
-                    <input type="checkbox"><label class="ml-1">Manage Stock</label> <br>
-                    <small>Enable stock management at product level</small>
-                </div> -->
+
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Alert Quantity (optional)</label>
                     <input type="text" class="form-control" name="alert_quantity" placeholder="Alert Quantity">
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Business Location*</label>
-                    <select class="form-control" name="business_location" >
+                    <select class="form-control" name="business_location" required>
                         <option value="">Please Select</option>
                         {% for b in business_location %}
                             <option value="{{ b.id }}">{{ b.name }}</option>
@@ -122,43 +115,12 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="row card pl-3 ml-2 mr-2 pr-3 pt-3" style="border-top:2px solid green"> -->
-        <!-- <div class="form-group row">
-                <div class="col-lg-12 col-md-12">
-                    <input type="checkbox"><label class="ml-1"> Enable Product description, IMEI or Serial Number</label>
-                </div>
-            </div> -->
-        <!-- <div class="form-group row">
-                <div class="col-sm-6 col-md-6 col-lg-6">
-                    <label>Weight</label>
-                    <input type="text" class="form-control" name="weight" placeholder="Weight">
-                </div>
-            </div> -->
-        <!-- <div class="form-group row">
-                <div class="col-sm-3 col-md-3 col-lg-3">
-                    <label>Custom Field1</label>
-                    <input type="text" name="custom_field1" class="form-control" placeholder="custom_field1">
-                </div>
-                <div class="col-sm-3 col-md-3 col-lg-3">
-                    <label>Custom Field2</label>
-                    <input type="text" class="form-control" name="custom_field2" placeholder="custom_field2">
-                </div>
-                <div class="col-sm-3 col-md-3 col-lg-3">
-                    <label>Custom Field3</label>
-                    <input type="text" class="form-control" name="custom_field3" placeholder="custom_field3">
-                </div>
-                <div class="col-sm-3 col-md-3 col-lg-3">
-                    <label>Custom Field4</label>
-                    <input type="text" class="form-control" name="custom_field4" placeholder="custom_field4">
-                </div>
-            </div> -->
-        <!-- </div> -->
         <div class="section card p-3" style="border-top:3px solid green">
             <div class="form-group row">
                 <div class="col-lg-4 col-md-4">
                     <label>Applicable Tax</label>
                     <!-- <input type="number" name="applicable_tax" class="form-control"> -->
-                    <select id="tax" class="form-control" name="applicable_tax" onchange="pricecal()" required>
+                    <select id="tax" class="form-control" name="applicable_tax" onchange="pricecal()">
                         <option value="">Please select</option>
                         {% for rate in rates %}
                             <option value="{{rate.rate}}">{{rate.name}}-{{rate.rate}}</option>
@@ -167,20 +129,20 @@
                 </div>
                 <div class="col-lg-4 col-md-4">
                     <label>Selling Price Tax Type*</label>
-                    <select class="form-control" name="selling_price_tax_type" >
+                    <select class="form-control" name="selling_price_tax_type" required>
                         <option value="">Please select</option>
-                        <option value="I">Inclusive</option>
-                        <option value="E">Exclusive</option>
+                        <option value="inclusive">Inclusive</option>
+                        <option value="exclusive">Exclusive</option>
                     </select>
                 </div>
                 <!-- </div> -->
                 <!-- <div class="form-group row"> -->
                 <div class="col-lg-4 col-md-4">
                     <label class="">Product Type*</label>
-                    <select class="form-control" name="product_type" >
+                    <select class="form-control" name="product_type" required>
                         <option value="">Please select</option>
-                        <option value="S">single</option>
-                        <option value="V">variable</option>
+                        <option value="single">single</option>
+                        <option value="variable">variable</option>
                     </select>
                 </div>
             </div>

@@ -84,8 +84,8 @@ class PaymentAccount(models.Model):
 
 class Product(models.Model):
 
-    tax_choices = [('E','Exclusive'),('I','Inclusive')]
-    prod_type = [('S','Single'),('V','Variable')]
+    tax_choices = [('exclusive','exclusive'),('inclusive','inclusive')]
+    prod_type = [('single','single'),('variable','variable')]
 
     product_name = models.CharField(max_length=50)
     business_location = models.ForeignKey(BusinessLocation, on_delete=models.SET_NULL, null=True)
@@ -98,13 +98,13 @@ class Product(models.Model):
     barcode_type = models.CharField(max_length=50, null=True, blank=True)
     alert_quantity = models.CharField(max_length=30,null=True, blank=True)
     Product_description = models.CharField(max_length=500, null=True, blank=True)
-    product_image = models.ImageField(upload_to='media/image/products',null=True, blank=True,default=None)
+    product_image = models.ImageField(upload_to='media/image/products',null=True, blank=True)
     weight = models.FloatField(default=0, null=True, blank=True)
     applicable_tax = models.ForeignKey(TaxRate, on_delete=models.SET_NULL, null=True, blank=True)
     product_type = models.CharField(max_length=10, choices=prod_type, null=True, blank=True)
     prod_mrp = models.FloatField(max_length=120, null=True, blank=True)
     sale_mrp = models.FloatField(default=0)
-    selling_price_tax_type = models.CharField(max_length=1, choices=tax_choices, null=True, blank=True)
+    selling_price_tax_type = models.CharField(max_length=10, choices=tax_choices, null=True, blank=True)
     selling_price = models.FloatField(default=0, null=True, blank=True)
     selling_price_exc_tax =  models.FloatField(default=0, null=True)
     purchase_price = models.FloatField(default=0, null=True, blank=True)
@@ -113,11 +113,6 @@ class Product(models.Model):
     margin =  models.FloatField(default=0, null=True, blank=True)
     current_stock = models.FloatField(default=0, null=True, blank=True)
     status = models.BooleanField(default=True)
-
-    # custom_field1 = models.CharField(max_length=50,null=True,blank=True)
-    # custom_field2 = models.CharField(max_length=50,null=True,blank=True)
-    # custom_field3 = models.CharField(max_length=50,null=True,blank=True)
-    # custom_field4 = models.CharField(max_length=50,null=True,blank=True)
 
     def __str__(self):
         return str(self.product_name)
@@ -192,7 +187,7 @@ class Purchase(models.Model):
 class Sell(models.Model):
 
     dis_choice = (("F","Fixed"),("P","Percentage"))
-    st_choice = (("Final","Final"),("Draft","Draft"),("Quotation","Quotation"), ("Credit", "Credit"))
+    st_choice = (("F","Final"),("D","Draft"),("Q","Quotation"), ("C", "Credit"))
     per_choice = ((0, False),(1, True),)
 
     ref_no = models.CharField(max_length=40)
@@ -200,9 +195,9 @@ class Sell(models.Model):
     customer = models.ForeignKey(CustomerUser, on_delete=models.SET_NULL, null=True)
     pay_term = models.CharField(max_length=80, null=True, blank=True)
     sale_date = models.DateTimeField(null=True, blank=True)
-    status = models.CharField(max_length=15, choices=st_choice, default='Final')
+    status = models.CharField(max_length=20, choices=st_choice, default="Final")
     total_amount = models.FloatField()
-    discount_type = models.CharField(max_length=1, choices=dis_choice, null=True, blank=True)
+    discount_type = models.CharField(max_length=15, choices=dis_choice, null=True, blank=True)
     discount_amount = models.FloatField(default=0.0)
     shipping_details = models.CharField(max_length=100, null=True, blank=True)
     shipping_charges = models.FloatField(default=0.0)
@@ -216,7 +211,7 @@ class Sell(models.Model):
     is_deleted = models.BooleanField(default=False)
     
     def __str__(self):
-        return '{}-{}'.format(self.customer.first_name, self.total_payable)
+        return '{}-{}'.format(self.ref_no, self.total_payable)
 
 
 class Barcode_storage(models.Model):

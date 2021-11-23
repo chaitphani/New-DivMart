@@ -47,13 +47,13 @@ def home(request):
             purchase_total = Purchase_info.objects.filter(status=True, purchase_date__day=today_date.day, purchase_date__month=today_date.month, purchase_date__year=today_date.year)\
                 .aggregate(Sum('purchase_total'))['purchase_total__sum']
 
-            sales_total = Sell.objects.filter(status='F', sale_date__day=today_date.day, sale_date__month=today_date.month, sale_date__year=today_date.year, is_deleted=False)\
+            sales_total = Sell.objects.filter(status='Final', sale_date__day=today_date.day, sale_date__month=today_date.month, sale_date__year=today_date.year, is_deleted=False)\
                 .aggregate(Sum('total_payable'))['total_payable__sum']
 
             purchase_due = Purchase_info.objects.filter(status=True, purchase_date__day=today_date.day, purchase_date__month=today_date.month, purchase_date__year=today_date.year)\
                 .aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
 
-            sales_due = Sell.objects.filter(status='F', sale_date__day=today_date.day, sale_date__month=today_date.month, sale_date__year=today_date.year, is_deleted=False)\
+            sales_due = Sell.objects.filter(status='Final', sale_date__day=today_date.day, sale_date__month=today_date.month, sale_date__year=today_date.year, is_deleted=False)\
                 .aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
 
         elif week != None:
@@ -61,13 +61,13 @@ def home(request):
             purchase_total = Purchase_info.objects.filter(status=True, purchase_date__date__week=datetime.date.today().isocalendar()[1])\
                 .aggregate(Sum('purchase_total'))['purchase_total__sum']
 
-            sales_total = Sell.objects.filter(status='F', sale_date__date__week=datetime.date.today().isocalendar()[1], is_deleted=False)\
+            sales_total = Sell.objects.filter(status='Final', sale_date__date__week=datetime.date.today().isocalendar()[1], is_deleted=False)\
                 .aggregate(Sum('total_payable'))['total_payable__sum']
 
             purchase_due = Purchase_info.objects.filter(status=True, purchase_date__date__week=datetime.date.today().isocalendar()[1])\
                 .aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
 
-            sales_due = Sell.objects.filter(status='F', sale_date__date__week=datetime.date.today().isocalendar()[1], is_deleted=False)\
+            sales_due = Sell.objects.filter(status='Final', sale_date__date__week=datetime.date.today().isocalendar()[1], is_deleted=False)\
                 .aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
 
         elif month != None:
@@ -75,13 +75,13 @@ def home(request):
             purchase_total = Purchase_info.objects.filter(status=True, purchase_date__month=today_date.month, purchase_date__year=today_date.year)\
                 .aggregate(Sum('purchase_total'))['purchase_total__sum']
 
-            sales_total = Sell.objects.filter(status='F', sale_date__month=today_date.month, sale_date__year=today_date.year, is_deleted=False)\
+            sales_total = Sell.objects.filter(status='Final', sale_date__month=today_date.month, sale_date__year=today_date.year, is_deleted=False)\
                 .aggregate(Sum('total_payable'))['total_payable__sum']
 
             purchase_due = Purchase_info.objects.filter(status=True, purchase_date__month=today_date.month, purchase_date__year=today_date.year)\
                 .aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
 
-            sales_due = Sell.objects.filter(status='F', sale_date__month=today_date.month, sale_date__year=today_date.year, is_deleted=False)\
+            sales_due = Sell.objects.filter(status='Final', sale_date__month=today_date.month, sale_date__year=today_date.year, is_deleted=False)\
                 .aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
 
         elif year != None:
@@ -89,22 +89,22 @@ def home(request):
                 .aggregate(Sum('purchase_total'))['purchase_total__sum']
 
             # today_date = today_date - timedelta(days=30)
-            sales_total = Sell.objects.filter(status='F', sale_date__year=today_date.year)\
+            sales_total = Sell.objects.filter(status='Final', sale_date__year=today_date.year)\
                 .aggregate(Sum('total_payable'))['total_payable__sum']
 
             purchase_due = Purchase_info.objects.filter(status=True, purchase_date__year=today_date.year)\
                 .aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
 
-            sales_due = Sell.objects.filter(status='F', sale_date__year=today_date.year)\
+            sales_due = Sell.objects.filter(status='Final', sale_date__year=today_date.year)\
                 .aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']  
 
     else:
         purchase_total = Purchase_info.objects.filter(status=True).aggregate(Sum('purchase_total'))['purchase_total__sum']
-        sales_total = Sell.objects.filter(status='F', is_deleted=False).aggregate(Sum('total_payable'))['total_payable__sum']
+        sales_total = Sell.objects.filter(status='Final', is_deleted=False).aggregate(Sum('total_payable'))['total_payable__sum']
         purchase_due = Purchase_info.objects.filter(status=True).aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
-        sales_due = Sell.objects.filter(status='F', is_deleted=False).aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
+        sales_due = Sell.objects.filter(status='Final', is_deleted=False).aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
 
-    revenue_total = Sell.objects.filter(status='F', is_deleted=False).aggregate(Sum('payment_info__amount'))
+    revenue_total = Sell.objects.filter(status='Final', is_deleted=False).aggregate(Sum('payment_info__amount'))
     cost_total = Purchase_info.objects.filter(status=True).aggregate(Sum('payment_info__amount'))
 
     return render(request, 'divmart_dashboard/home.html', {
@@ -502,30 +502,29 @@ def delete_customer_group(request,id):
 
 @login_required(login_url='/useraccount/common_login')
 def import_contact(request):
-    if request.method == "POST":
-        csv_file = request.FILES.get("csv_file")
 
-        # result_list = []
-        # title_headers = []
-        # int_blacklist = ['id']
-        # float_blacklist = []
-        with open(csv_file, "r") as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=',')
-    #         line_count = 0
-            for row in csv_reader:
-                print(row)
-#             temp = {}
-    #             if line_count == 0:
-    #                 title_headers = row
-    #             else:
-    #                 for i in range(len(row)):
-    #                     if title_headers[i] in int_blacklist:
-    #                         temp[title_headers[i]] = int(row[i])
-    #                     else:
-    #                         temp[title_headers[i]] = row[i]
-    #             line_count += 1
-    #             result_list.append(temp)
-    # return result_list
+    if request.method == 'POST':
+        file = request.FILES.get('customers')
+        try:
+            data_set = file.read().decode('UTF-8')
+            io_string = io.StringIO(data_set)
+            csv_reader = csv.reader(io_string)
+            next(csv_reader)
+
+            for values in csv_reader:
+                try:
+                    city = values[3].split(',')[0]
+                    state = values[3].split(',')[1]
+                    country = values[3].split(',')[2]
+                except Exception as e:
+                    city = ''
+                    state = ''
+                    country = ''
+
+                CustomerUser(contact_id=values[0], business_location=BusinessLocation.objects.get(id=1), first_name=values[1], city=city, state=state, country=country, mobile=values[4], total_sales_due=values[5], total_sales_return_due=values[6])
+
+        except Exception as e:
+            messages.error(request, e)
     return render(request,'divmart_dashboard/import_contact.html')
 
 
@@ -1334,7 +1333,7 @@ def list_products(request):
             prod_search = Product.objects.filter(status=True, business_location=StaffUser.objects.get(user=request.user).business_location)
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(prod_search, 10)
+    paginator = Paginator(prod_search.order_by('-id'), 10)
     try:
         prod_search = paginator.page(page)
     except PageNotAnInteger:
@@ -1356,12 +1355,14 @@ def add_new_product(request):
     business_location = BusinessLocation.objects.filter(status=True)
 
     if request.method == 'POST':
-        prod_obj = Product.objects.create(product_name=request.POST.get('product_name', ''), business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), brand=Brand.objects.get(id=request.POST.get('brand', '')), unit=Units.objects.get(id=request.POST.get('unit', '')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), barcode_type='EAN13', alert_quantity=request.POST.get('alert_quantity', 0), Product_description=request.POST.get('Product_description', ''), product_image=request.FILES.get('product_image', ''), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax', 0)), product_type=request.POST.get('product_type', ''), sale_mrp=request.POST.get('sale_mrp', 0), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax', 0), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax', 0), margin=request.POST.get('margin', 0), status=True, selling_price_exc_tax=request.POST.get('selling_price_exc_tax', 0))
+
+        prod_obj = Product.objects.create(product_name=request.POST.get('product_name', ''), business_location=BusinessLocation.objects.get(id=request.POST.get('business_location')), brand=Brand.objects.get(id=request.POST.get('brand', '')), unit=Units.objects.get(id=request.POST.get('unit', '')), category=Category.objects.get(id=request.POST.get('category')), SKU=request.POST.get('SKU'), barcode_type='EAN13', alert_quantity=request.POST.get('alert_quantity', 0), Product_description=request.POST.get('Product_description', ''), product_image=request.FILES.get('product_image', ''), weight=request.POST.get('weight'), applicable_tax=TaxRate.objects.get(rate=request.POST.get('applicable_tax', 0)), product_type=request.POST.get('product_type', ''), selling_price_tax_type=request.POST.get('selling_price_tax_type'), sale_mrp=request.POST.get('sale_mrp', 0), purchase_price_exc_tax=request.POST.get('purchase_price_exc_tax', 0), purchase_price_inc_tax=request.POST.get('purchase_price_inc_tax', 0), margin=request.POST.get('margin', 0), status=True, selling_price_exc_tax=request.POST.get('selling_price_exc_tax', 0))
 
         prod_obj.selling_price = prod_obj.selling_price_exc_tax
         prod_obj.purchase_price = prod_obj.purchase_price_inc_tax
         prod_obj.prod_mrp = prod_obj.purchase_price_exc_tax
         prod_obj.save()
+        messages.success(request, 'Product add success...')
         return redirect('list_products')
     
     return render(request,'divmart_dashboard/add_new_product.html',{'unit':unit,'brand':brand,'cat':cat,'sub_cat': sub_cat, 'rates':tax_rates,'business_location':business_location})  
@@ -1611,89 +1612,79 @@ def dashboard_pos(request):
         # print('---exception error in pos---', e)
         str_ref = 'SL-10001'
         invoice_last = 1000
-    try:
+
+    if not request.user.is_superuser:
         staffuser_obj = StaffUser.objects.get(user=request.user)
-    except:
-        pass
 
     product_list = Product.objects.filter(status=True)
     business_location_list = BusinessLocation.objects.filter(status=True)
-
-    try:
-        staffuser_obj = StaffUser.objects.get(user=request.user)
-    except:
-        pass
 
     if request.user.is_superuser:
         customers = CustomerUser.objects.filter(is_deleted=0)
     else:
         customers = CustomerUser.objects.filter(is_deleted=0, business_location=staffuser_obj.business_location)
 
-    try:
-        if request.method == 'POST':
-            count = request.POST.get('count',)
-            location = request.POST.get('business_location')
-            customer = request.POST.get('customer')
-            total_amount = request.POST.get('total_amount', 0)
-            discount_amount = request.POST.get('discount_amount', 0)
-            shipping_charges = request.POST.get('shipping_charges', 0)
-            payable = request.POST.get('total_payable', 0)
+    if request.method == 'POST':
+        count = request.POST.get('count',)
+        location = request.POST.get('business_location')
+        customer = request.POST.get('customer')
+        total_amount = request.POST.get('total_amount', 0)
+        discount_amount = request.POST.get('discount_amount', 0)
+        shipping_charges = request.POST.get('shipping_charges', 0)
+        payable = request.POST.get('total_payable', 0)
 
-            if not request.user.is_superuser:
-                location_obj = BusinessLocation.objects.get(id=staffuser_obj.business_location.id)
+        if not request.user.is_superuser:
+            location_obj = BusinessLocation.objects.get(id=staffuser_obj.business_location.id)
+        else:
+            location_obj = BusinessLocation.objects.get(id=location)
+            
+        customer_obj = CustomerUser.objects.get(id=customer)
+
+        pay_obj = Add_Payments.objects.create(amount=total_amount, payment_method=0, payment_notes='', payment_due=0.0, payment_status=True)
+
+        if request.POST.get('draft') == 'Draft':
+            sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='Draft', invoice_no=invoice_last, payment_info=pay_obj, is_deleted=False)
+
+        elif request.POST.get('quote') == "Quotation":
+            sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='Quotation', invoice_no=invoice_last, payment_info=pay_obj, is_deleted=False)
+
+        elif request.POST.get('credit') == "Credit Sale":
+            sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='Credit', invoice_no=invoice_last, payment_info=pay_obj, is_deleted=False)
+
+        else:
+            sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='Final', invoice_no=invoice_last, payment_info=pay_obj, is_deleted=False)
+
+        if not request.user.is_superuser:
+            sale_obj.cashier = staffuser_obj 
+
+        sale_obj.save()
+        for v in range(1, int(count)+1):
+            prod_name = request.POST.get("nam"+str(v))
+            prod_qan = request.POST.get("qan"+str(v))
+            unit_price = request.POST.get("usp"+str(v))
+            sub_total = request.POST.get("sub"+str(v))
+            prod_id = request.POST.get("id"+str(v))
+            prod_obj = Product.objects.get(product_name=prod_name)
+            new_stock_aftr_sale = float(prod_obj.current_stock) - float(prod_qan)
+
+            if float(prod_obj.current_stock) >= float(prod_qan):
+                ItemSold.objects.create(sell=sale_obj, items_name=prod_obj, price=unit_price, quantity=prod_qan, sub_total=sub_total, date=date_now)
+                Product.objects.filter(id=prod_id).update(current_stock=new_stock_aftr_sale)
             else:
-                location_obj = BusinessLocation.objects.get(id=location)
-                
-            customer_obj = CustomerUser.objects.get(id=customer)
+                sale_obj.delete()
+                return render(request,'divmart_dashboard/index_pos.html', {'errors':'Not much stock available for selected product/products'})
 
-            pay_obj = Add_Payments.objects.create(amount=total_amount, payment_method=0, payment_notes='', payment_due=0.0, payment_status=True)
-
-            if request.POST.get('draft') == 'Draft':
-                sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='D', invoice_no=invoice_last, payment_info=pay_obj, cashier=staffuser_obj)
-
-            elif request.POST.get('quote') == "Quotation":
-                sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='Q', invoice_no=invoice_last, payment_info=pay_obj, cashier=staffuser_obj)
-
-            elif request.POST.get('credit') == "Credit Sale":
-                sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='C', invoice_no=invoice_last, payment_info=pay_obj, cashier=staffuser_obj)
-
-            else:
-                sale_obj = Sell.objects.create(ref_no=str_ref,business_location=location_obj, customer=customer_obj, sale_date=date_now, total_amount=total_amount, discount_amount=discount_amount, shipping_charges=shipping_charges, total_payable=payable, status='F', invoice_no=invoice_last, payment_info=pay_obj, cashier=staffuser_obj)
-
-            sale_obj.save()
-            for v in range(1, int(count)+1):
-                prod_name = request.POST.get("nam"+str(v))
-                prod_qan = request.POST.get("qan"+str(v))
-                unit_price = request.POST.get("usp"+str(v))
-                sub_total = request.POST.get("sub"+str(v))
-                prod_obj = Product.objects.get(product_name=prod_name)
-                
-                # try:
-                if float(prod_obj.current_stock) >= float(prod_qan):
-                    ItemSold.objects.create(sell=sale_obj, items_name=prod_obj, price=unit_price, quantity=prod_qan, sub_total=sub_total, date=date_now)
-                    prod_obj.current_stock = float(prod_obj.current_stock) + float(prod_qan)
-                    prod_obj.save()
-                else:
-                    sale_obj.delete()
-                    messages.error(request, 'Not much stock available for selected product/products')
-                # except Exception as e:
-                #     messages.error(request, e)
-                #     sale_obj.delete()
-                #     return redirect('dashboard_pos')
-
-            messages.success(request, 'sale added successfully...!')
-            return redirect(reverse('invoice_view', kwargs={'id':int(sale_obj.id)}))
-    except Exception as e:
-        messages.error(request, e)
+        messages.success(request, 'sale added successfully...!')
+        return redirect(reverse('invoice_view', kwargs={'id':int(sale_obj.id)}))
 
     if not request.user.is_superuser:
-        pos_list_final = Sell.objects.filter(status='F', business_location=staffuser_obj.business_location, is_deleted=False)[:5]
-        pos_list_quotes = Sell.objects.filter(status='Q', business_location=staffuser_obj.business_location, is_deleted=False)[:5]
-        pos_list_draft = Sell.objects.filter(status='D', business_location=staffuser_obj.business_location, is_deleted=False)[:5]
+        pos_list_final = Sell.objects.filter(status='Final', business_location=staffuser_obj.business_location, is_deleted=False)[:5]
+        pos_list_quotes = Sell.objects.filter(status='Quotation', business_location=staffuser_obj.business_location, is_deleted=False)[:5]
+        pos_list_draft = Sell.objects.filter(status='Draft', business_location=staffuser_obj.business_location, is_deleted=False)[:5]
     else:
-        pos_list_final = Sell.objects.filter(status='F', is_deleted=False)[:5]
-        pos_list_quotes = Sell.objects.filter(status='Q', is_deleted=False)[:5]
-        pos_list_draft = Sell.objects.filter(status='D', is_deleted=False)[:5]
+        pos_list_final = Sell.objects.filter(status='Final', is_deleted=False)[:5]
+        pos_list_quotes = Sell.objects.filter(status='Quotation', is_deleted=False)[:5]
+        pos_list_draft = Sell.objects.filter(status='Draft', is_deleted=False)[:5]
 
     customer_group = CustomerGroups.objects.filter(is_deleted=0)
 
@@ -1817,13 +1808,14 @@ def add_purchase(request):
             l_total = request.POST.get("lt"+str(v))
             margin = request.POST.get("margin"+str(v))
             unit_sp = request.POST.get("usp"+str(v))
+            id_prod = request.POST.get("id"+str(v))
             prod_obj = Product.objects.get(product_name=prod_name)
+
+            new_stock_aftr_purc = float(prod_obj.current_stock) + float(prod_qan)
+            Product.objects.filter(id=id_prod).update(current_stock=new_stock_aftr_purc)
 
             pur_obj = Purchase(product_name=prod_obj,purchase_quantity=prod_qan,purchase_details= pur_info_obj,unit_cost_before_discount=prod_price,unit_cost_before_tax=unit_cost_before_tax,discount_percentage=discount,sub_total=subtotal_btax,product_tax=tax,net_costs=net_cost,line_total=l_total,profit_margin=margin,unit_selling_price=unit_sp)
             pur_obj.save()
-            
-            prod_obj.current_stock = prod_obj.current_stock + float(prod_qan)
-            prod_obj.save()
 
         messages.success(request, str(pur_info_obj.ref_no) + ' create success..!')
         return redirect('list_purchase')
@@ -1871,6 +1863,16 @@ def list_purchase(request):
 
     business_location_list = BusinessLocation.objects.filter(status=True)
     supplier_users = SupplierUser.objects.filter(is_deleted=0)
+    pur_info = pur_info.order_by('-id')
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(pur_info, 10)
+    try:
+        pur_info = paginator.page(page)
+    except PageNotAnInteger:
+        pur_info = paginator.page(1)
+    except EmptyPage:
+        pur_info = paginator.page(paginator.num_pages)
 
     return render(request,'divmart_dashboard/list_purchase.html',
     {'pur_info':pur_info,'pay_obj':pay_obj, 'business_location_list':business_location_list, 'supplier_users':supplier_users}) 
@@ -2035,9 +2037,9 @@ def member_status_change(request, id):
 def list_draft(request):
     if not request.user.is_superuser:
         staff_user = StaffUser.objects.get(user=request.user)
-        draft_list = Sell.objects.filter(status='D', business_location=staff_user.business_location, is_deleted=False)
+        draft_list = Sell.objects.filter(status='Draft', business_location=staff_user.business_location, is_deleted=False)
     else:
-        draft_list = Sell.objects.filter(status='D', is_deleted=False)
+        draft_list = Sell.objects.filter(status='Draft', is_deleted=False)
     return render(request,'divmart_dashboard/list_draft.html', {'drafts':draft_list})
 
 
@@ -2045,9 +2047,9 @@ def list_draft(request):
 def list_quotations(request):
     if request.user.is_superuser:
         staff_user = StaffUser.objects.get(user=request.user)
-        quotes_list = Sell.objects.filter(status='Q', business_location=staff_user.business_location, is_deleted=False)
+        quotes_list = Sell.objects.filter(status='Quotation', business_location=staff_user.business_location, is_deleted=False)
     else:
-        quotes_list = Sell.objects.filter(status='Q', is_deleted=False)
+        quotes_list = Sell.objects.filter(status='Quotation', is_deleted=False)
 
     return render(request,'divmart_dashboard/list_quotations.html', {'quotes':quotes_list})
 
@@ -2066,6 +2068,7 @@ def product_informtion_api(request, product):
     try:
         product =  Product.objects.get(product_name=str(product))
         product_info = {}
+        product_info["id"] = product.id
         product_info["applicable_tax"] = product.applicable_tax.rate
         product_info["sale_mrp"] = product.sale_mrp
         product_info["mrp"] = product.prod_mrp
@@ -2091,8 +2094,8 @@ def purchase_sales_report(request):
     purchase_total_inc_tax = Purchase_info.objects.filter(status=True).aggregate(Sum('purchase_total'))
     purchase_total_return = Purchase_info.objects.filter(status=True, purchase_return=1).aggregate(Sum('purchase_total'))
 
-    sale_total = Sell.objects.filter(status='F', is_deleted=False).aggregate(Sum('total_payable'))
-    total_sale_return = Sell.objects.filter(status='F', sale_return=1, is_deleted=False).aggregate(Sum('total_payable'))
+    sale_total = Sell.objects.filter(status='Final', is_deleted=False).aggregate(Sum('total_payable'))
+    total_sale_return = Sell.objects.filter(status='Final', sale_return=1, is_deleted=False).aggregate(Sum('total_payable'))
 
     sale_total_fig = sale_total['total_payable__sum'] if sale_total['total_payable__sum'] else 0.00
     sale_return_fig = total_sale_return['total_payable__sum'] if total_sale_return['total_payable__sum'] else 0.00
@@ -2131,8 +2134,8 @@ def profit_loss_report(request):
 
     stock_total_adjustment = StockAdjustment.objects.filter(status=True).aggregate(Sum('total_amount_recovered'))
 
-    sale_total = Sell.objects.filter(status='F', is_deleted=False).aggregate(Sum('total_payable'))
-    total_selling_discount = Sell.objects.filter(status='F', is_deleted=False).aggregate(Sum('discount_amount'))
+    sale_total = Sell.objects.filter(status='Final', is_deleted=False).aggregate(Sum('total_payable'))
+    total_selling_discount = Sell.objects.filter(status='Final', is_deleted=False).aggregate(Sum('discount_amount'))
     total_sale_return = Sell.objects.filter(status=1, sale_return=1, is_deleted=False).aggregate(Sum('total_payable'))
 
     open_stock_fig = opening_stock['total'] if opening_stock['total'] else 0.00
@@ -2484,10 +2487,10 @@ def sell_payment_report(request): # fine
         location = request.POST.get('location')
         customer = request.POST.get('customer')
 
-        sale_pays = Sell.objects.filter(Q(business_location__name__icontains = location) & Q(customer__first_name__icontains = customer)).filter(status='F', is_deleted=False)
+        sale_pays = Sell.objects.filter(Q(business_location__name__icontains = location) & Q(customer__first_name__icontains = customer)).filter(status='Final', is_deleted=False)
 
     else:
-        sale_pays = Sell.objects.filter(status='F', is_deleted=False)
+        sale_pays = Sell.objects.filter(status='Final', is_deleted=False)
 
     customers = CustomerUser.objects.all()
     busienss_locations = BusinessLocation.objects.filter(status=True)
@@ -2555,13 +2558,13 @@ def sales_representative_report(request):
             month = date_split.split('-')[1]
             day = date_split.split('-')[2]
 
-            sell_objs = Sell.objects.filter(Q(cashier__role__title='cashier') | Q(cashier__role__title='Cashier') | Q(cashier__role__title='CASHIER')).filter(Q(cashier__username=user) | Q(business_location__name=location) | Q(sale_date__year=year, sale_date__month=month, sale_date__day=day)).filter(sale_return=0, status='F', is_deleted=False)
+            sell_objs = Sell.objects.filter(Q(cashier__role__title='cashier') | Q(cashier__role__title='Cashier') | Q(cashier__role__title='CASHIER')).filter(Q(cashier__username=user) | Q(business_location__name=location) | Q(sale_date__year=year, sale_date__month=month, sale_date__day=day)).filter(sale_return=0, status='Final', is_deleted=False)
             
         except:
-            sell_objs = Sell.objects.filter(Q(cashier__role__title='cashier') | Q(cashier__role__title='Cashier') | Q(cashier__role__title='CASHIER')).filter(Q(cashier__username=user) | Q(business_location__name=location)).filter(sale_return=0, status='F', is_deleted=False)
+            sell_objs = Sell.objects.filter(Q(cashier__role__title='cashier') | Q(cashier__role__title='Cashier') | Q(cashier__role__title='CASHIER')).filter(Q(cashier__username=user) | Q(business_location__name=location)).filter(sale_return=0, status='Final', is_deleted=False)
 
     else:
-        sell_objs = Sell.objects.filter(Q(cashier__role__title='cashier') | Q(cashier__role__title='Cashier') | Q(cashier__role__title='CASHIER')).filter(sale_return=0, status='F', is_deleted=False)
+        sell_objs = Sell.objects.filter(Q(cashier__role__title='cashier') | Q(cashier__role__title='Cashier') | Q(cashier__role__title='CASHIER')).filter(sale_return=0, status='Final', is_deleted=False)
 
     total_amount_sum = sell_objs.aggregate(Sum('total_amount'))
     total_paid = sell_objs.aggregate(Sum('payment_info__amount'))
@@ -2581,7 +2584,7 @@ def payment_balance_sheet(request):
 
     opening_stock = Product.objects.filter(status=True).aggregate(total=Sum(F('current_stock')*F('purchase_price')))
     purchase_total = Purchase_info.objects.filter(status=True).aggregate(Sum('purchase_total'))
-    sale_total = Sell.objects.filter(status='F', is_deleted=False).aggregate(Sum('total_payable'))
+    sale_total = Sell.objects.filter(status='Final', is_deleted=False).aggregate(Sum('total_payable'))
 
     opening_stock_fig = opening_stock['total'] if opening_stock['total'] else 0.00
     purchase_fig = purchase_total['purchase_total__sum'] if purchase_total['purchase_total__sum'] else 0.00
@@ -2610,7 +2613,7 @@ def payment_trial_balance(request):
 @login_required(login_url='/useraccount/common_login')
 def payment_account_report(request):
 
-    sale_obj = Sell.objects.filter(status='F', is_deleted=False)
+    sale_obj = Sell.objects.filter(status='Final', is_deleted=False)
     payment_accounts = PaymentAccount.objects.filter(status=True)
     return render(request,'divmart_dashboard/payment_account_report.html', {'sales':sale_obj, 'accounts':payment_accounts})
 
@@ -2618,22 +2621,36 @@ def payment_account_report(request):
 @login_required(login_url='/useraccount/common_login')
 def register_details(request):
 
-    today = datetime.datetime.now()
-    cash_trans = Add_Payments.objects.filter(payment_status=True, payment_method=0, created_on__year=today.year, created_on__month=today.month, created_on__day=today.day).aggregate(Sum('amount'))
-    card_trans = Add_Payments.objects.filter(payment_status=True, payment_method=1, created_on__year=today.year, created_on__month=today.month, created_on__day=today.day).aggregate(Sum('amount'))
-    cheque_trans = Add_Payments.objects.filter(payment_status=True, payment_method=2, created_on__year=today.year, created_on__month=today.month, created_on__day=today.day).aggregate(Sum('amount'))
-    banktrans_obj = Add_Payments.objects.filter(payment_status=True, payment_method=3, created_on__year=today.year, created_on__month=today.month, created_on__day=today.day).aggregate(Sum('amount'))
-    other_trans = Add_Payments.objects.filter(payment_status=True, payment_method=4, created_on__year=today.year, created_on__month=today.month, created_on__day=today.day).aggregate(Sum('amount'))
+    # today = datetime.datetime.now()
+    cash_trans = Add_Payments.objects.filter(payment_status=True, payment_method=0).aggregate(Sum('amount'))
+    # cash_trans = Add_Payments.objects.filter(payment_status=True, payment_method=0, created_on__year=today.year, created_on__month=today.month, created_on__day=today.day).aggregate(Sum('amount'))
 
-    total_sale_value = ItemSold.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day).aggregate(Sum('sub_total'))
-    sales_from_sell = Sell.objects.filter(status='F', sale_date__year=today.year, sale_date__month=today.month, sale_date__day=today.day, is_deleted=False).aggregate(Sum('payment_info__amount'))
+    card_trans = Add_Payments.objects.filter(payment_status=True, payment_method=1).aggregate(Sum('amount'))
+    # card_trans = Add_Payments.objects.filter(payment_status=True, payment_method=1, created_on__year=today.year, created_on__month=today.month, created_on__day=today.day).aggregate(Sum('amount'))
+
+    cheque_trans = Add_Payments.objects.filter(payment_status=True, payment_method=2).aggregate(Sum('amount'))
+    # cheque_trans = Add_Payments.objects.filter(payment_status=True, payment_method=2, created_on__year=today.year, created_on__month=today.month, created_on__day=today.day).aggregate(Sum('amount'))
+
+    banktrans_obj = Add_Payments.objects.filter(payment_status=True, payment_method=3).aggregate(Sum('amount'))
+    # banktrans_obj = Add_Payments.objects.filter(payment_status=True, payment_method=3, created_on__year=today.year, created_on__month=today.month, created_on__day=today.day).aggregate(Sum('amount'))
+
+    other_trans = Add_Payments.objects.filter(payment_status=True, payment_method=4).aggregate(Sum('amount'))
+    # other_trans = Add_Payments.objects.filter(payment_status=True, payment_method=4, created_on__year=today.year, created_on__month=today.month, created_on__day=today.day).aggregate(Sum('amount'))
+
+    total_sale_value = ItemSold.objects.all().aggregate(Sum('sub_total'))
+    # total_sale_value = ItemSold.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day).aggregate(Sum('sub_total'))
+    sales_from_sell = Sell.objects.filter(status='Final', is_deleted=False).aggregate(Sum('payment_info__amount'))
+    # sales_from_sell = Sell.objects.filter(status='Final', sale_date__year=today.year, sale_date__month=today.month, sale_date__day=today.day, is_deleted=False).aggregate(Sum('payment_info__amount'))
 
     new_list = []
-    brands = Brand.objects.all()
+    brands = Brand.objects.all().order_by('brand_name')
     for brand in brands:
         new_dict = {}
-        sold = ItemSold.objects.filter(items_name__brand__brand_name=brand, date__year=today.year, date__month=today.month, date__day=today.day).aggregate(Sum('quantity'))
-        sub_total_sold = ItemSold.objects.filter(items_name__brand__brand_name=brand, date__year=today.year, date__month=today.month, date__day=today.day).aggregate(Sum('sub_total'))
+        sold = ItemSold.objects.filter(items_name__brand__brand_name=brand).aggregate(Sum('quantity'))
+        # sold = ItemSold.objects.filter(items_name__brand__brand_name=brand, date__year=today.year, date__month=today.month, date__day=today.day).aggregate(Sum('quantity'))
+
+        sub_total_sold = ItemSold.objects.filter(items_name__brand__brand_name=brand).aggregate(Sum('sub_total'))
+        # sub_total_sold = ItemSold.objects.filter(items_name__brand__brand_name=brand, date__year=today.year, date__month=today.month, date__day=today.day).aggregate(Sum('sub_total'))
 
         new_dict['brand'] = brand.brand_name
         new_dict['sold'] = sold['quantity__sum']
@@ -2653,12 +2670,9 @@ def register_details(request):
 
     staff_users = StaffUser.objects.filter(is_deleted = 0)
     return render(request, 'divmart_dashboard/registerdetails.html', {
-                                                'cash':cash_trans['amount__sum'],
-                                                'card':card_trans['amount__sum'],
-                                                'cheque':cheque_trans['amount__sum'],
-                                                'bank':banktrans_obj['amount__sum'],
-                                                'other':other_trans['amount__sum'],
-                                                'new_dict':new_list,
+                                                'cash':cash_trans['amount__sum'], 'card':card_trans['amount__sum'],
+                                                'cheque':cheque_trans['amount__sum'], 'bank':banktrans_obj['amount__sum'],
+                                                'other':other_trans['amount__sum'], 'new_dict':new_list,
                                                 'total_sale_value':total_sale_value['sub_total__sum'],
                                                 'sale_value_from_payments':sales_from_sell['payment_info__amount__sum'],
                                                 'staff_users':staff_users,
@@ -2681,7 +2695,7 @@ def list_purchase_return(request):
 
 @login_required(login_url='/useraccount/common_login')
 def list_sell_return(request):
-    sell_return_list = Sell.objects.filter(status='F', sale_return=1, is_deleted=False)
+    sell_return_list = Sell.objects.filter(status='Final', sale_return=1, is_deleted=False)
     return render(request,'divmart_dashboard/list_sell_return.html', {'returns':sell_return_list}) 
 
 
@@ -2690,7 +2704,7 @@ def customer_detail(request,id):
 
     items_sold_of_sales = ''
     cust = CustomerUser.objects.get(id=id)
-    sale_of_customer = Sell.objects.filter(customer_id=cust, status='F', is_deleted=False)
+    sale_of_customer = Sell.objects.filter(customer_id=cust, status='Final', is_deleted=False)
     total_sale_value_of_cusotomer = sale_of_customer.aggregate(Sum('total_payable'))['total_payable__sum']
     total_sale_payment_of_cusotomer = sale_of_customer.aggregate(Sum('payment_info__amount'))['payment_info__amount__sum']
     total_sale_due_of_cusotomer = sale_of_customer.aggregate(Sum('payment_info__payment_due'))['payment_info__payment_due__sum']
@@ -2847,4 +2861,19 @@ def credit_sale_report(request):
     customers = CustomerUser.objects.filter(is_deleted=0)
     locations = BusinessLocation.objects.filter(status=True)
     return render(request,'divmart_dashboard/credit_sell_report.html', {'customers':customers, 'locations':locations, 'credit_sale_list':credit_sale_list})
+
+
+@login_required(login_url='/useraccount/common_login')
+def add_opening_stock(request, id):
+
+    product_obj = Product.objects.get(id=id)
+    if request.method == 'POST':
+        product_obj.current_stock = request.POST.get('current_stock')
+        product_obj.purchase_price_exc_tax = request.POST.get('purchase_price_exc_tax')
+        product_obj.save()
+        messages.success(request, 'added success...')
+        return redirect('list_products')
+
+    locations = BusinessLocation.objects.filter(status=True)
+    return render(request, 'divmart_dashboard/add_opening_stock.html', {'product':product_obj, 'locations':locations})
 

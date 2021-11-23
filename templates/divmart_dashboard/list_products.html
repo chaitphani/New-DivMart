@@ -153,6 +153,10 @@
                                             class="fa fa-pencil fa-fw"></i>&nbsp; Edit</a>
                                     <a class="dropdown-item del_obj" href="{% url 'product_delete' val.id %}"><i
                                             class="fa fa-trash fa-fw"></i>&nbsp; Delete</a>
+                                    <a class="dropdown-item" href="{% url 'add_opening_stock' %}">
+                                   <small>Add or Edit opening stock</small> </a>
+
+                                            
                                     {% endif %}
                                 </div>
                             </div>

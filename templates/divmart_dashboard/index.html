@@ -1005,7 +1005,19 @@
             </div>
         </div>
     </div>
-
+<style>
+    .active{
+        color:red;
+    }
+</style>
+    <script>
+        $(function(){
+    $('.nav-treeview').click(function(){
+        $('.nav-treeview.active').removeClass('active');
+        $(this).addClass('active');
+    });
+});
+    </script>
     <script>
         var date = new Date;
         formatted_date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();

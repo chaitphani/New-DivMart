@@ -192,7 +192,7 @@ urlpatterns = (
     path('purchase/<int:id>/remove',views.delete_purchase,name='delete_purchase'),
 
     path('user/<id>/view',views.user_detail, name='user_detail'),
-
+    path('add_opening_stock',views.add_opening_stock,name='add_opening_stock'),
     path('credit-sale',views.credit_sale, name='credit_sale'),
     path('credit-sale_report',views.credit_sale_report, name='credit_sale_report'),
 )

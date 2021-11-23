@@ -2809,6 +2809,13 @@ def transaction_history(request):
 
 
 @login_required(login_url='/useraccount/common_login')
+def add_opening_stock(request):
+    return render(request, 'divmart_dashboard/add_opening_stock.html')
+
+
+
+
+@login_required(login_url='/useraccount/common_login')
 def credit_sale(request):
 
     if request.user.is_superuser:

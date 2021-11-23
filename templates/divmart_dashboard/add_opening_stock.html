@@ -1,0 +1,47 @@
+{% extends 'divmart_dashboard/index.html' %}
+{% load static %} {% block home%}
+<div class="container-fluid">
+    <a class="btn btn-primary text-white"><i class="fa fa-arrow-left text-white" aria-hidden="true"></i>&nbsp;Back</a>
+    <div class="card p-5 mt-3">
+        
+        <div class="row ">
+            <p class="text-white bg-success col-lg-12 col-md-12 p-2">Add Opening Stock</p>
+        </div>
+        <div class="row">
+            <table class="table  table-bordered table-sm">
+                <thead class="dark">
+                  <tr class="text-center">
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Quantity Remaining</th>
+                    <th scope="col">Unit Cost (Before Tax)</th>
+                    <th scope="col">Subtotal (Before Tax)</th>
+                    <th scope="col">Business Location</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="text-center">
+                
+                    <td><input type="text" class="form-control" name="product_name" readonly></td>
+                    <td><input type="text" class="form-control" name="quantity_remaining" required></td>
+                    <td><input type="text" class="form-control" name="unit_cost" required></td>
+                    <td><input type="text" class="form-control" name="sub_total" required></td>
+                    <td>
+                        <select class="form-control" required>
+                            <option value="">Please Select</option>
+                            <option>xxxx</option>
+                        </select>
+                    </td>
+                    <td><button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus text-white" aria-hidden="true"></i></button></td>
+                  </tr>
+               
+                </tbody>
+              </table>
+</div>
+            <div class="col-lg-12 col-md-12 float-right">
+                <a class="btn btn-success text-white">SAVE</a>
+            </div>
+    </div>
+</div>
+
+{% endblock %}

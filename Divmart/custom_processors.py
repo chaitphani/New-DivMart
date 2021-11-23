@@ -7,13 +7,9 @@ from datetime import datetime
 def custom_data_for_index(request):
     
     today = datetime.now()
-    # print('-----today-----', today)
-
     opening_stock = Product.objects.filter(status=True).aggregate(total=Sum(F('current_stock')*F('purchase_price')))
 
     purchase_total = Purchase_info.objects.filter(status=True, purchase_date__year=today.year, purchase_date__month=today.month, purchase_date__day=today.day).aggregate(Sum('purchase_total'))
-    # print('---purcahse total-----', purchase_total['purchase_total__sum'])
-
     total_purchase_shipping = Purchase_info.objects.filter(status=True, purchase_date__year=today.year, purchase_date__month=today.month, purchase_date__day=today.day).aggregate(Sum('additional_ship_charges'))
 
     expense_obj = Expenses.objects.filter(status=True, date__year=today.year, date__month=today.month, date__day=today.day).aggregate(Sum('amount'))

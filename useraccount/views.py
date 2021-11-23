@@ -15,9 +15,9 @@ def common_login(request):
         password = request.POST['pwd']
         user = auth.authenticate(username=username, password=password)
         if user:
-            login_user = LoginUser.objects.filter(user=user)
-            if len(login_user) > 0:
-                print('login user role-------', login_user[0].role)
+            # login_user = LoginUser.objects.filter(user=user)
+            # if len(login_user) > 0:
+            #     print('login user role-------', login_user[0].role)
             if user.is_superuser:
                 auth.login(request,user)
                 return redirect('home')

@@ -42,6 +42,11 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 
+    <!-- select 2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
     <style>
         .footer {
             left: 0;
@@ -154,6 +159,9 @@
             border: 2px solid #ccc;
 
         }
+        .bg-info-1{
+            background-color: #605ca8;
+        }
     </style>
     <script>
         $(function () {
@@ -254,14 +262,14 @@
                         style="border-top:3px solid green;background-color:rgb(255, 255, 255, 0.8)">
                         <div class="form-group row pl-2">
                             <div class="col-lg-6 col-md-6">
-                                <div class="input-group mb-3">
+                                <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon3">
                                             <i class="fa fa-map-marker"></i>
                                         </span>
                                     </div>
                                     {% if request.user.is_superuser %}
-                                    <select class="form-control" name="business_location">
+                                    <select class="form-control" name="business_location" required>
                                         <option value="">Please select</option>
                                         {% for location in locations %}
                                         <option value="{{location.id}}">{{location.name}}</option>
@@ -289,7 +297,7 @@
                                         <span class="input-group-text" id="basic-addon3"><i
                                                 class="fa fa-user"></i></span>
                                     </div>
-                                    <select class="form-control" name="customer">
+                                    <select class="form-control" name="customer" id="customers" required>
                                         <option value="">Please select customer</option>
                                         {% for customer in customers %}
                                         <option value="{{customer.id}}">{{customer.first_name}}</option>
@@ -306,35 +314,9 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-group row pl-2">
-                            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon3"><i class="fa fa-money"></i></span>
-                                </div>
-                                <select class="form-control">
-                                    <option>Default Selling Price</option>
-                                </select>
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon3">
-                                        <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="bottom"
-                                            title="Selling Price Group in wich you want sell">
-                                        </i>
-                                    </span>
-                                </div>
-                            </div>
-                            </div> -->
-                            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
-                                <div class="custom-control custom-checkbox checkbox-xl float-right pr-5 pt-3">
-                                    <input type="checkbox" class="custom-control-input" id="checkbox-3" checked="">
-                                    <label class="custom-control-label text-dark" for="checkbox-3" data-toggle="modal"
-                                        data-target=".subscribemdl" style="cursor: pointer;">Subscribe ?
-                                        <span><i class="fa fa-external-link text-info"></i></span>
-                                    </label>
-                                </div>
-                            </div> -->
-                        </div>
+                        {% if errors %}
+                            <span class="text-center text-white bg-info-1 font-weight-bold p-2 h5"><span class="text-danger">Warning:</span> {{errors}}</span>
+                        {% endif %}
                         <div class="form-group row pl-2">
                             <div class="col-12">
                                 <div class="rounded bg-white">
@@ -400,7 +382,7 @@
                                         <td colspan="2" class="text-dark">
                                             <small class="font-weight-bold">Total Amount:</small><br>
                                             <input type="number" class="form-control" name="total_amount"
-                                                id="total_amount" readonly value="0">
+                                                id="total_amount" readonly value="0" required>
                                             <!-- <span id="total_amount"></span> -->
                                         </td>
                                         <td class="text-dark">
@@ -443,7 +425,7 @@
                                             </i> -->
                                             </small>
                                             <input type="number" value="0" name="shipping_charges" id="shipping_charges"
-                                                class="form-control" onkeyup="shippAmount()" disabled>
+                                                class="form-control" onkeyup="shippAmount()">
                                             <!-- <span>
                                             <i class="fa fa-pencil-square-o font-weight-bold text-info"
                                                 style="cursor: pointer;">
@@ -453,7 +435,7 @@
                                         <td class="text-dark">
                                             <small class="font-weight-bold">Total Payable:</small><br>
                                             <input type="number" value="0" name="total_payable" id="total_payable"
-                                                class="form-control" readonly />
+                                                class="form-control" readonly required/>
                                         </td>
                                         <!-- <td>
                                         <a class="btn btn-danger text-white btn-sm mt-3">Cancel</a>
@@ -1086,6 +1068,7 @@
                             let HTML = `<tr>
                         <th scope="row">${count}</th>
                         <input type="hidden" name="count" value="${count}"/>
+                        <input type="hidden" name="id${count}" value="${prod_inf.id}"/>
                         <td><input type="text" class='form-control' name="nam${count}" id="nam${count}" value="${product.value}" readonly required/></td> 
                         <td><input type="text" class='form-control qunatity' name="qan${count}" id="qan${count}" onkeyup="sub_tot_cal(${count}); cal();" value='1'/></td>
                         <td><input type="text" class='form-control' name="mrp${count}" id="mrp${count}" value='${prod_inf.sale_mrp}' readonly/></td> 
@@ -1282,7 +1265,11 @@
             }
         }
     </script>
-
+    <script>
+        $(document).ready(function(){
+            $("#customers").select2();
+        });
+    </script>
     <!-- REQUIRED SCRIPTS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <script src="https://kit.fontawesome.com/ccfee95074.js" crossorigin="anonymous"></script>

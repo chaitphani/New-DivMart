@@ -146,23 +146,29 @@
     {% if new_dict.has_other_pages %}
     <ul class="pagination">
         {% if new_dict.has_previous %}
-        <li><a href="?page={{ new_dict.previous_page_number }}">&laquo;</a></li>
+            <li><a href="?page={{ new_dict.previous_page_number }}"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
         {% else %}
-        <li class="disabled"><span>&laquo;</span></li>
+            <li class="disabled"><span><i class="fa fa-chevron-left" aria-hidden="true"></i></span></li>
+        {% endif %}
+        {% if new_dict.number|add:'-4' > 1 %}
+            <li><a href="?page={{ new_dict.number|add:'-5' }}">&hellip;</a></li>
         {% endif %}
         {% for i in new_dict.paginator.page_range %}
-        {% if new_dict.number == i %}
-            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-        {% else %}
-            <li><a href="?page={{ i }}">{{ i }}</a></li>
-        {% endif %}
+            {% if new_dict.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% elif i > new_dict.number|add:'-5' and i < new_dict.number|add:'5' %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
         {% endfor %}
-        {% if new_dict.has_next %}
-        <li><a href="?page={{ new_dict.next_page_number }}">&raquo;</a></li>
-        {% else %}
-        <li class="disabled"><span>&raquo;</span></li>
+        {% if new_dict.paginator.num_pages > new_dict.number|add:'4' %}
+            <li><a href="?page={{ new_dict.number|add:'5' }}">&hellip;</a></li>
         {% endif %}
-    </ul>
+        {% if new_dict.has_next %}
+            <li><a href="?page={{ new_dict.next_page_number }}"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+        {% else %}
+            <li class="disabled"><span><i class="fa fa-chevron-right" aria-hidden="true"></i></span></li>
+        {% endif %}
+        </ul>
     {% endif %}
 </div>
 <script language="javascript" type="text/javascript">

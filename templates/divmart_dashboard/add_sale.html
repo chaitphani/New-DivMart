@@ -1,5 +1,16 @@
 {% extends 'divmart_dashboard/index.html' %} {% load i18n %} {% load static %} {% block home%}
+<style>
+    .bg-info-1{
+        background-color: #605ca8;
+    }
+</style>
 <div class="container-fluid">
+    {% if errors %}
+        <div class="text-center">
+            <span class="text-center text-white bg-info-1 font-weight-bold p-2 h5 mb-2"><span class="text-danger">Warning:</span> 
+            {{errors}}</span>
+        </div>
+    {% endif %}
     <h5>Add Sales</h5>
     <form method="POST" id="submtFrom">
         {% csrf_token %}
@@ -65,8 +76,8 @@
                 <div class="col-sm-4 col-md-4 col-lg-4">
                     <label>Pay Term*</label>
                     <div class="input-group ml-0 mb-3 row">
-                        <select class="form-control col-md-6 col-lg-6" name="pay_term_period" id="pay_duration"
-                            required onchange="payFunction()">
+                        <select class="form-control col-md-6 col-lg-6" name="pay_term_period" id="pay_duration" required
+                            onchange="payFunction()">
                             <option value="">Please Select</option>
                             <option value="M">Months</option>
                             <option value="D">Days</option>
@@ -93,9 +104,10 @@
                     <label>Status*</label>
                     <select class="form-control" name="status" required id="status">
                         <option value="">Please Select</option>
-                        <option value="F">Final</option>
-                        <option value="D">Draft</option>
-                        <option value="Q">Quotation</option>
+                        <option value="Final">Final</option>
+                        <option value="Draft">Draft</option>
+                        <option value="Quotation">Quotation</option>
+                        <option value="Credit">Credit</option>
                     </select>
                 </div>
 
@@ -161,7 +173,8 @@
             <div class="row mb-3">
                 <div class="col-md-9 col-lg-9"></div>
                 <div class="col-md-3 col-lg-3 float-right">
-                    <label for="">Total Amount</label><input type="text" id="total_amount" class="form-control"
+                    <label for="">Total Amount</label>
+                    <input type="text" id="total_amount" class="form-control"
                         name="total_amount" readonly>
                 </div>
             </div>
@@ -178,8 +191,8 @@
                         </div>
                         <select class="form-control" name="discount_type" id="discount_type" onchange="discAmount()">
                             <option value="">Please select</option>
-                            <option value="F">Fixed</option>
-                            <option value="P">Percentage</option>
+                            <option value="Fixed">Fixed</option>
+                            <option value="Percentage">Percentage</option>
                         </select>
                     </div>
                 </div>
@@ -191,13 +204,13 @@
                                 <i class="fa fa-info" aria-hidden="true"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" name="discount_amount"
-                            id="discount_amount" value="0" onkeyup="discAmount()" readonly />
+                        <input type="text" class="form-control" name="discount_amount" id="discount_amount" value="0"
+                            onkeyup="discAmount()" readonly />
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-2">
                     <label>Total Discount(-):</label>
-                    <input type="text" name='order_tax' id="provided_discount" readonly class="form-control">
+                    <input type="text" name='order_tax' value="0" id="provided_discount" readonly class="form-control">
                     <!-- <span style="font-weight: normal;" id="provided_discount"></span> -->
                 </div>
             </div>
@@ -240,8 +253,8 @@
                                 <i class="fa fa-info" aria-hidden="true"></i>
                             </span>
                         </div>
-                        <input type="text" placeholder="0.00" class="form-control pay_term" id="shipping_charges" value="0"
-                            name="shipping_charges" onkeyup="shippAmount()" readonly />
+                        <input type="text" placeholder="0.00" class="form-control pay_term" id="shipping_charges"
+                            value="0" name="shipping_charges" onkeyup="shippAmount()" readonly />
                     </div>
                 </div>
                 <!-- <div class="col-lg-3 col-md-3 float-right">
@@ -892,6 +905,7 @@
                         let HTML = `<tr>
                         <th scope="row">${count}</th>
                         <input type="hidden" name="count" value="${count}"/>
+                        <input type="hidden" name="ids${count}" value="${prod_inf.id}"/>
                         <td><input type="text" class='form-control' name="nam${count}" id="nam${count}" value="${product.value}" readonly required/></td> 
                         <td><input type="text" class='form-control qunatity' name="qan${count}" id="qan${count}" onkeyup="sub_tot_cal(${count}); cal();" value='1'/></td>
                         <td><input type="text" class='form-control' name="mrp${count}" id="mrp${count}" value='${prod_inf.sale_mrp}' readonly/></td>
@@ -1047,12 +1061,5 @@
         }
     }
 </script>
-<!-- 
-<script>
-    $('.qunatity').keyup(function () { 
-        if (this.value != this.value.replace(/[^0-9\.]/g, '')) { 
-            this.value = this.value.replace(/[^0-9\.]/g, ''); 
-		}
-	});
-</script> -->
+
 {%endblock%}

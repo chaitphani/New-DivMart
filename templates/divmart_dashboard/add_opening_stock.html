@@ -1,4 +1,5 @@
 {% extends 'divmart_dashboard/index.html' %}
+<<<<<<< HEAD
 {% load static %} {% block home%}
 <div class="container-fluid">
     <a class="btn btn-primary text-white"><i class="fa fa-arrow-left text-white" aria-hidden="true"></i>&nbsp;Back</a>
@@ -44,4 +45,68 @@
     </div>
 </div>
 
+=======
+{% load static %}
+{% block home%}
+<div class="container-fluid">
+	<a class="btn btn-primary text-white mb-3"><i class="fa fa-arrow-left text-white"
+			aria-hidden="true"></i>&nbsp;Back</a>
+	<div class="section card p-3" id="accordionExample" style="border-top:3px solid green">
+		<div class="card-header bg-white" id="headingOne">
+			<i class="fas fa- accordion text-primary" id="accordionExample" data-toggle="collapse"
+				data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+				<h4 class="text-primary font-weight-bold">Add/Edit Opening Stock</h5>
+			</i>
+		</div>
+		<form action="" method="post">
+			{% csrf_token %}
+			<div class="row">
+				<div class="col-md-6 col-lg-6">
+					<label for="">Product Name</label>
+					<input type="text" class="form-control prod_name" value="{% if product.product_name %}{{product.product_name}}{% endif %}" name="product_name" readonly>
+				</div>
+				<div class="col-md-6 col-lg-6">
+					<label for="">Quantity</label>
+					<input type="text" class="form-control" name="current_stock"value="{% if product.current_stock %}{{product.current_stock}}{% else %}0{% endif %}" onkeyup="multifunc()" required id="cur_stock">
+				</div>
+				<div class="col-md-6 col-lg-6 mt-2">
+					<label for="">Unit Cost(Before Tax)</label>
+					<input type="text" class="form-control" name="purchase_price_exc_tax" value="{% if product.purchase_price_exc_tax %}{{product.purchase_price_exc_tax}} {% elif product.prod_mrp %}{{product.prod_mrp}}{% else %}0{% endif %}" id="pur_b_tax">
+				</div>
+				<div class="col-md-6 col-lg-6 mt-2">
+					<label for="">Sub Total</label>
+					<input type="text" class="form-control" name="sub_total" id="sub_total" value="">
+				</div>
+				<div class="col-lg-6 col-md-6 mt-2">
+					<label for="">Business Location</label>
+					<select class="form-control" name="business_location" required>
+						<option value="">Please Select</option>
+						{% for location in locations %}
+							<option value="{{location.id}}" 
+								{% if location.id == product.business_location.id %}selected{% endif %}>{{location.name}}
+							</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<input type="submit" value="Submit" class="btn btn-primary w-25 float-right mt-2">
+		</form>
+	</div>
+</div>
+<script>
+	function multifunc(){
+		var quanti = document.getElementById('cur_stock');
+		var ucbt = document.getElementById('pur_b_tax');
+		var sub_total = document.getElementById('sub_total');
+		
+		if(quanti.value > 0){
+			sub_total_val = quanti.value * ucbt.value;
+			sub_total.value = parseFloat(sub_total_val).toFixed(2);
+		}
+		else{
+			sub_total.value = 0.00;
+		}
+	}
+</script>
+>>>>>>> a23fd385bf445ef3171a544621b46d67ab51a2b5
 {% endblock %}

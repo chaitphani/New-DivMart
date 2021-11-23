@@ -14,8 +14,9 @@ class SellAdmin(admin.ModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'category', 'unit' , 'brand', 'current_stock', 'status')
-    list_filter = ('status', 'selling_price_tax_type', 'product_type', 'category__name')
-
+    list_filter = ('status', 'selling_price_tax_type', 'product_type', )
+    search_fields = ('product_name',)
+    
 class PurchaseAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'purchase_quantity', 'sub_total',)
     list_filter = ('product_name__business_location__name', 'product_name__status',)

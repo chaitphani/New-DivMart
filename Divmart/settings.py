@@ -22,8 +22,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'divmartsales@gmail.com'
-EMAIL_HOST_PASSWORD = 'Divmart@97'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 
 
 INSTALLED_APPS = [
@@ -101,17 +101,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'divmart_deployment',
-#         'USER': 'root',
-#         'PASSWORD': 'Divsolution@98765',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
 
 
 
